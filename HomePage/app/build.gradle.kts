@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.homepage"
+    namespace = "com.example.qrcheckin"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.homepage"
+        applicationId = "com.example.qrcheckin"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
