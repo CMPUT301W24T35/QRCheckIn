@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
+import kotlinx.coroutines.channels.Send;
+
 
 public class CreateEventActivity extends AppCompatActivity {
     EditText newEventName;
@@ -21,6 +23,9 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText newLocation;
     Button confirmButton;
     Button editPosterImageButton;
+
+    Button generateQRCodeButton;
+    Button reuseQRCodeButton;
 
     ImageView posterImage;
 
@@ -41,12 +46,8 @@ public class CreateEventActivity extends AppCompatActivity {
         confirmButton = findViewById(R.id.confirmCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
-
-        // TODO On Confirm button click
-        //     send to new fragment
-        //     generate new QR code
-        //
-
+        generateQRCodeButton = findViewById(R.id.generateQRCodeButton);
+        reuseQRCodeButton = findViewById(R.id.reuseQRCodeButton);
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -75,7 +76,17 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
+    // TODO - Generate QR Code
+        // Generate new QR Code
+        // Set to display
 
+
+    // TODO - Reuse QR Code
+
+    // TODO - Confirm button
+        // Gather all data entered inc PosterImage, QRCode
+        // Perform data input checks
+        // Write data to db
 
     }
 }
