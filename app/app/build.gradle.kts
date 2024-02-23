@@ -30,7 +30,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+
 }
+
 
 dependencies {
 
@@ -43,7 +46,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
     // QR Generator: https://github.com/androidmads/QRGenerator
-    //implementation ("androidmads.library.qrgenearator:QRGenearator:1.0.3")
+    implementation ("androidmads.library.qrgenerator:QRGenerator:1.0.3")
+
 
     // Glide library for image processing
     implementation("com.github.bumptech.glide:glide:4.12.0")
