@@ -1,5 +1,5 @@
 package com.example.qrcheckin;
-
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,8 +11,11 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.bumptech.glide.Glide;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
 import kotlinx.coroutines.channels.Send;
 
 
@@ -28,6 +31,9 @@ public class CreateEventActivity extends AppCompatActivity {
     Button reuseQRCodeButton;
 
     ImageView posterImage;
+    ImageView QRCodeImage;
+
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class CreateEventActivity extends AppCompatActivity {
         posterImage = findViewById(R.id.posterImageView);
         generateQRCodeButton = findViewById(R.id.generateQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseQRCodeButton);
+        QRCodeImage = findViewById(R.id.QRCodeImageView);
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -76,17 +83,67 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
+
     // TODO - Generate QR Code
         // Generate new QR Code
         // Set to display
+        generateQRCodeButton.setOnClickListener(v->{
+            //isEventInputValid();
+            if (isEventInputValid()) {
+                        String inputValue = String.valueOf(newEventName.getText());
+                        Log.d("DEBUG", "QRCode InputValue:" + inputValue);
+                        QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
+
+                        // Getting QR-Code as Bitmap
+                        bitmap = qrgEncoder.getBitmap(0);
+                        // Setting Bitmap to ImageView (Assuming qrImage is your ImageView)
+                        QRCodeImage.setImageBitmap(bitmap);
+                    }
+            else {
+                return;
+                    }
+        }
+        );
 
     // TODO - Reuse QR Code
+        // Add once implemented by person assigned to QR Scanner
 
     // TODO - Confirm button
         // Gather all data entered inc PosterImage, QRCode
         // Perform data input checks
         // Write data to db
-
+        confirmButton.setOnClickListener(v-> {
+            if (isEventInputValid()) {
+                // Do stuff
+            } else {
+                // Toast
+            }
+        });
     }
+
+    public boolean isEventInputValid(){
+        if (String.valueOf(newEventName.getText()).isEmpty()){
+            newEventName.setError("Enter Event Name");
+            return false;
+        }
+        if (String.valueOf(newStartTime.getText()).isEmpty()){
+            newStartTime.setError("Enter Start Time");
+            return false;
+        }
+        if (String.valueOf(newEndTime.getText()).isEmpty()){
+            newEndTime.setError("Enter End Time");
+            return false;
+        }
+        if (String.valueOf(newLocation.getText()).isEmpty()){
+           newLocation.setError("Enter Event Location");
+            return false;
+
+        }
+
+        return true;
+
+
+    };
+
 }
