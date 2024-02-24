@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import kotlinx.coroutines.channels.Send;
-
 
 public class CreateEventActivity extends AppCompatActivity {
     EditText newEventName;
