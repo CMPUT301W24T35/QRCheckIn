@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-
 public class CreateEventActivity extends AppCompatActivity {
     EditText newEventName;
     EditText newStartTime;
