@@ -1,6 +1,5 @@
 package com.example.qrcheckin;
 
-import java.util.Collection;
 import java.util.Date;
 
 public class Event {
@@ -12,7 +11,7 @@ public class Event {
     private String organizerID;
 
     // TODO private ArrayList<Announcement> announcements;
-    private ArrayList<Attendee> attendees;
+    //private ArrayList<Attendee> attendees;
 
 
 
