@@ -46,7 +46,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
     // QR Generator: https://github.com/androidmads/QRGenerator
-    implementation ("androidmads.library.qrgenerator:QRGenerator:1.0.3")
+    implementation("com.github.androidmads:QRGenerator:1.0.1")
 
 
     // Glide library for image processing

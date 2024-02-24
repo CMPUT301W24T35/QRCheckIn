@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
-import kotlinx.coroutines.channels.Send;
 
 
 public class CreateEventActivity extends AppCompatActivity {
@@ -52,9 +51,10 @@ public class CreateEventActivity extends AppCompatActivity {
         confirmButton = findViewById(R.id.confirmCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
-        generateQRCodeButton = findViewById(R.id.generateQRCodeButton);
-        reuseQRCodeButton = findViewById(R.id.reuseQRCodeButton);
-        QRCodeImage = findViewById(R.id.QRCodeImageView);
+        generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
+        reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
+        QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
+        // TODO Optional Field - limit number of attendees
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
