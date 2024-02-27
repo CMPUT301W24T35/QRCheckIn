@@ -1,8 +1,12 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode.*
+
 pluginManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") } // for QR Code Generator library
         gradlePluginPortal()
+
     }
 }
 dependencyResolutionManagement {
@@ -10,6 +14,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
