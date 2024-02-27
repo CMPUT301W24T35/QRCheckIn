@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            android:textColor="@color/white"
+            android:textColor ="@color/White"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="start|center_vertical"/>
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your Checked-In Events"
-        android:textColor="@color/white"
+        android:textColor="@color/White"
         android:paddingStart="16dp"
         android:textStyle="bold"
         android:paddingTop = "16dp"
