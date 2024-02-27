@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/location"
+            android:id="@+id/button_location"
             android:paddingEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="location"/>
@@ -41,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="plus"
+            android:id = "@+id/button_notification"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingEnd="8dp"
             android:src="@drawable/notification" />
@@ -93,10 +95,10 @@
         android:padding="16dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_events"
+            android:id="@+id/button_organize_events"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MY EVENTS"
+            android:text="ORGANIZE EVENTS"
             app:backgroundTint="#3D5AF1"
             android:textColor="@android:color/white"
             android:autofillHints="Events"
@@ -109,10 +111,10 @@
             android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_checkIn"
+            android:id="@+id/button_signed_up_events"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHECK IN"
+            android:text="SIGNED-UP EVENTS"
             app:backgroundTint="#3D5AF1"
             android:textColor="@android:color/white"
             android:autofillHints="check in"
