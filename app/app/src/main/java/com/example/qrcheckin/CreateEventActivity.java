@@ -25,13 +25,8 @@ public class CreateEventActivity extends AppCompatActivity {
     Button confirmButton;
     Button editPosterImageButton;
 
-    Button generateQRCodeButton;
-    Button reuseQRCodeButton;
-
     ImageView posterImage;
-    ImageView QRCodeImage;
 
-    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +45,8 @@ public class CreateEventActivity extends AppCompatActivity {
         confirmButton = findViewById(R.id.confirmCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
-        generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
-        reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
-        QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
+
+
         // TODO Optional Field - limit number of attendees
 
         // Registers a photo picker activity launcher in single-select mode.
@@ -83,30 +77,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
 
-    // TODO - Generate QR Code
-        // Generate new QR Code
-        // Set to display
-        generateQRCodeButton.setOnClickListener(v->{
-            //isEventInputValid();
-            if (isEventInputValid()) {
-                        String inputValue = String.valueOf(newEventName.getText());
-                        Log.d("DEBUG", "QRCode InputValue:" + inputValue);
-                        QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
-
-                        // Getting QR-Code as Bitmap
-                        bitmap = qrgEncoder.getBitmap(0);
-                        // Setting Bitmap to ImageView (Assuming qrImage is your ImageView)
-                        QRCodeImage.setImageBitmap(bitmap);
-                    }
-            else {
-                return;
-                    }
-        }
-        );
-
-    // TODO - Reuse QR Code
-        // Add once implemented by person assigned to QR Scanner
 
     // TODO - Confirm button
         // Gather all data entered inc PosterImage, QRCode
