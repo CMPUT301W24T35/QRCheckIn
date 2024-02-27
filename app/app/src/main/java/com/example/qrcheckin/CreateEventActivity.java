@@ -1,5 +1,5 @@
 package com.example.qrcheckin;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -13,16 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.bumptech.glide.Glide;
-
-import androidmads.library.qrgenearator.QRGContents;
-import androidmads.library.qrgenearator.QRGEncoder;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CreateEventActivity extends AppCompatActivity {
+    FirebaseFirestore db;
+    boolean isDBConnected;
     EditText newEventName;
     EditText newStartTime;
     EditText newEndTime;
     EditText newLocation;
-    Button confirmButton;
+    Button continueButton;
     Button editPosterImageButton;
 
     ImageView posterImage;
@@ -42,9 +42,10 @@ public class CreateEventActivity extends AppCompatActivity {
         newStartTime = findViewById(R.id.eventStartTimeEditText);
         newEndTime = findViewById(R.id.eventEndTimeEditText);
         newLocation = findViewById(R.id.eventLocationEditText);
-        confirmButton = findViewById(R.id.confirmCreateEventButton);
+        continueButton = findViewById(R.id.continueCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
+        db = FirebaseFirestore.getInstance();
 
 
         // TODO Optional Field - limit number of attendees
@@ -76,18 +77,27 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
+    // State intent to move to QRGenerator activity
+    Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
 
 
-
-    // TODO - Confirm button
+    // TODO - Continue button
         // Gather all data entered inc PosterImage, QRCode
         // Perform data input checks
         // Write data to db
-        confirmButton.setOnClickListener(v-> {
-            if (isEventInputValid()) {
-                // Do stuff
+        continueButton.setOnClickListener(v-> {
+
+            if (isEventInputValid()){
+                intent.putExtras(bundle); // Attach bundle to intent
+                dbConnected(); // Call to check if connected and set isDBConnect variable
+            }
+
+            if (isDBConnected){
+                // Get Unique Event ID / document ID
+                // Go to QRGenerator
+                startActivity(intent);
             } else {
-                // Toast
+                // Toast - need network connection to proceed
             }
         });
     }
@@ -115,5 +125,22 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     };
+
+    public void dbConnected(){
+        FirebaseFirestore.getInstance()
+                .enableNetwork()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Firestore is connected
+                        Log.d("Firestore", "Connected to Firestore");
+                        isDBConnected = true;
+                    } else {
+                        // Firestore connection failed
+                        Log.d("Firestore", "Disconnected from Firestore");
+                        isDBConnected = false;
+                    }
+                });
+
+    }
 
 }

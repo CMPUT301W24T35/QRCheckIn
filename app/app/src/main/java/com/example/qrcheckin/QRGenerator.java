@@ -34,6 +34,7 @@ public class QRGenerator extends AppCompatActivity {
         // Generate new QR Code
         // Set to display
         generateQRCodeButton.setOnClickListener(v->{
+            //String inputValue = documentID from bundle
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
