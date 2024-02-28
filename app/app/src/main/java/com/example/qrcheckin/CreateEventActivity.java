@@ -92,6 +92,7 @@ public class CreateEventActivity extends AppCompatActivity {
         // Write data to db
         continueButton.setOnClickListener(v-> {
             // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
+            bundle = new Bundle();
             bundle.putString("eventName", String.valueOf(newEventName.getText()));
             bundle.putString("startTime", String.valueOf(newStartTime.getText()));
             bundle.putString("endTime", String.valueOf(newEndTime.getText()));
