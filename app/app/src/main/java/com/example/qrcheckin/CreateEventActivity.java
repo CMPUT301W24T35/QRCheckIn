@@ -1,5 +1,6 @@
 package com.example.qrcheckin;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
