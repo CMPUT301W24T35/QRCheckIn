@@ -17,7 +17,7 @@ public class QRGenerator extends AppCompatActivity {
     Button generateQRCodeButton;
     Button reuseQRCodeButton;
     ImageView QRCodeImage;
-
+    String inputValue;
     Bitmap bitmap;
 
     @Override
@@ -35,6 +35,7 @@ public class QRGenerator extends AppCompatActivity {
         // Set to display
         generateQRCodeButton.setOnClickListener(v->{
             //String inputValue = documentID from bundle
+            inputValue = "tester";
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
@@ -45,7 +46,6 @@ public class QRGenerator extends AppCompatActivity {
 
         // TODO - Reuse QR Code
         // Add once implemented by person assigned to QR Scanner
-
     }
 
 }

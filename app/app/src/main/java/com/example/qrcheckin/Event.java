@@ -10,7 +10,7 @@ public class Event {
     private Date endTime;
     private String Location;
     private Integer attendeeCapacity;
-    private String organizerID;
+    private String organizerID; // ID string for Firebase (use built in firebase functionality to generate this)
 
     // TODO private ArrayList<Announcement> announcements;
     // TODO private ArrayList<Attendee> attendees;

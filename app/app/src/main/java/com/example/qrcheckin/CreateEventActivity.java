@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -24,8 +25,12 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText newLocation;
     Button continueButton;
     Button editPosterImageButton;
+    CheckBox generatePromoQRCodeCheckbox;
+    boolean needPromoQRCode;
 
     ImageView posterImage;
+
+    Bundle bundle;
 
 
     @Override
@@ -86,23 +91,42 @@ public class CreateEventActivity extends AppCompatActivity {
         // Perform data input checks
         // Write data to db
         continueButton.setOnClickListener(v-> {
+            // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
+            bundle.putString("eventName", String.valueOf(newEventName.getText()));
+            bundle.putString("startTime", String.valueOf(newStartTime.getText()));
+            bundle.putString("endTime", String.valueOf(newEndTime.getText()));
+            bundle.putString("Location", String.valueOf(newLocation.getText()));
+
+            if (generatePromoQRCodeCheckbox.isChecked()) {
+                // CheckBox is checked
+                // Create new bitmap QR Code STUART
+                Log.d("Checkbox", "Checkbox is checked");
+            } else {
+                // CheckBox is not checked
+                Log.d("Checkbox", "Checkbox is not checked");
+            }
 
             if (isEventInputValid()){
                 intent.putExtras(bundle); // Attach bundle to intent
                 dbConnected(); // Call to check if connected and set isDBConnect variable
+            } else {
+                return;
             }
 
+            // TODO Check database connected and get unique document ID - AYAN
             if (isDBConnected){
                 // Get Unique Event ID / document ID
                 // Go to QRGenerator
                 startActivity(intent);
             } else {
                 // Toast - need network connection to proceed
+                return;
+
             }
         });
     }
-
-    public boolean isEventInputValid(){
+    // CHECK IF INPUTS EMPTY
+    public boolean isEventInputValid(){ // TODO rename
         if (String.valueOf(newEventName.getText()).isEmpty()){
             newEventName.setError("Enter Event Name");
             return false;
@@ -125,6 +149,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     };
+
+    // TODO: CHECK INPUTS ARE VALID - ANN
+
 
     public void dbConnected(){
         FirebaseFirestore.getInstance()
