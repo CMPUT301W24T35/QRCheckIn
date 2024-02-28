@@ -98,7 +98,10 @@
             android:layout_height="wrap_content"
             android:hint="Location" />
     </com.google.android.material.textfield.TextInputLayout>
-
+        <CheckBox android:id="@+id/checkboxGeneratePromoQRCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate Promo QR Code"/>
 
 
 
@@ -106,69 +109,18 @@
 
     </LinearLayout>
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
 
-        <RadioButton
-            android:id="@+id/generateCheckinQRradioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Generate new QR Code" />
 
-        <RadioButton
-            android:id="@+id/reuseCheckinQRradioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reuse existing QR Code" />
-    </RadioGroup>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:id="@+id/generateCheckinQRCodeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Generate QR Code"
-            />
-        <Button
-            android:id="@+id/reuseCheckinQRCodeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reuse QR Code"
-            />
-    </LinearLayout>
-    <ImageView
-        android:id="@+id/checkinQRCodeImageView"
-        android:layout_width="match_parent"
-        android:layout_height="300px"
-        android:padding="10dp"
-        android:src="@drawable/qr_code_placeholder"/>
-    <Button
-        android:id="@+id/generatePromoQRCodeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Generate Promo QR Code"
-        android:layout_gravity="center"
-        />
 
-    <ImageView
-        android:id="@+id/promoQRCodeImageView"
-        android:layout_width="match_parent"
-        android:layout_height="300px"
-        android:padding="10dp"
-        android:src="@drawable/qr_code_placeholder"/>
+
 
 
     <Button
-        android:id="@+id/confirmCreateEventButton"
+        android:id="@+id/continueCreateEventButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm"
+        android:text="Continue"
         android:layout_gravity="center"
         />
 
