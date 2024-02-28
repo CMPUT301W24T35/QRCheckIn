@@ -15,7 +15,7 @@
         android:padding="8dp"
         android:text="Event"
         android:background="#102341"
-        android:textColor="@color/white"
+        android:textColor="@color/White"
         android:textSize="14sp"
         android:ellipsize="end"
         android:maxLines="1" />
@@ -29,7 +29,7 @@
         android:padding="8dp"
         android:text="Organizer Name"
         android:textSize="14sp"
-        android:textColor="@color/white"
+        android:textColor="@color/White"
         android:ellipsize="end"
         android:maxLines="1" />
 
