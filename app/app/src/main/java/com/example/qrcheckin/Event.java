@@ -6,6 +6,7 @@ import java.util.Date;
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
+    private String description; // TODO - Add to figma etc
     private Date startTime;
     private Date endTime;
     private String Location;
