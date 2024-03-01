@@ -36,5 +36,12 @@
             android:layout_height="wrap_content"
             android:text="Reuse QR Code"
             />
+
         </LinearLayout>
+    <Button
+        android:id="@+id/confirmEventCreationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        />
 </LinearLayout>
