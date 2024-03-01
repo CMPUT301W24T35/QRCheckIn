@@ -16,16 +16,16 @@
         tools:targetApi="31">
         <activity
             android:name=".ViewProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".CreateProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity2"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".OrganizerHomeActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_organizer_home"
             android:theme="@style/Theme.QRCheckin" />
         <activity
