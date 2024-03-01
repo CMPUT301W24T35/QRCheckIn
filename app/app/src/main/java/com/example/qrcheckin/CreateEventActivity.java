@@ -1,6 +1,7 @@
 package com.example.qrcheckin;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -16,10 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+
 public class CreateEventActivity extends AppCompatActivity {
     FirebaseFirestore db;
     boolean isDBConnected;
     EditText newEventName;
+    EditText newEventDescription;
     EditText newStartTime;
     EditText newEndTime;
     EditText newLocation;
@@ -44,6 +49,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //TODO - EDIT POSTER button
 
         newEventName = findViewById(R.id.eventNameEditText);
+        newEventDescription = findViewById(R.id.eventDescriptionEditText);
         newStartTime = findViewById(R.id.eventStartTimeEditText);
         newEndTime = findViewById(R.id.eventEndTimeEditText);
         newLocation = findViewById(R.id.eventLocationEditText);
@@ -51,6 +57,7 @@ public class CreateEventActivity extends AppCompatActivity {
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
         db = FirebaseFirestore.getInstance();
+        generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
 
 
         // TODO Optional Field - limit number of attendees
@@ -94,13 +101,20 @@ public class CreateEventActivity extends AppCompatActivity {
             // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
             bundle = new Bundle();
             bundle.putString("eventName", String.valueOf(newEventName.getText()));
+            bundle.putString("eventDescription",String.valueOf(newEventDescription.getText()));
             bundle.putString("startTime", String.valueOf(newStartTime.getText()));
             bundle.putString("endTime", String.valueOf(newEndTime.getText()));
             bundle.putString("Location", String.valueOf(newLocation.getText()));
 
             if (generatePromoQRCodeCheckbox.isChecked()) {
                 // CheckBox is checked
-                // Create new bitmap QR Code STUART
+                // TODO Create new bitmap QR Code STUART
+                String inputValue = "tester";
+                QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
+
+                // Getting QR-Code as Bitmap
+                Bitmap bitmap = qrgEncoder.getBitmap(0);
+                //  Add bitmap to bundle
                 Log.d("Checkbox", "Checkbox is checked");
             } else {
                 // CheckBox is not checked

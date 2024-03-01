@@ -6,6 +6,7 @@ import java.util.Date;
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
+    private String description; // TODO - Add to figma etc
     private Date startTime;
     private Date endTime;
     private String Location;
@@ -17,16 +18,18 @@ public class Event {
 
 
     // Constructor
-    public Event(String eventName, Date start, Date end, String Location){
+    public Event(String eventName, String description, Date start, Date end, String Location){
         this.name = eventName;
+        this.description = description;
         this.startTime = start;
         this.endTime = end;
         this.Location = Location;
 
     }
     // Method overload for when number of attendees is OPTIONALLY limited
-    public Event(String eventName, Date start, Date end, String Location, Integer attendeeCapacity){
+    public Event(String eventName, String description, Date start, Date end, String Location, Integer attendeeCapacity){
         this.name = eventName;
+        this.description = description;
         this.startTime = start;
         this.endTime = end;
         this.Location = Location;
@@ -53,6 +56,14 @@ public class Event {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getStartTime() {
