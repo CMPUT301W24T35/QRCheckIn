@@ -51,6 +51,7 @@ public class CreateEventActivity extends AppCompatActivity {
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
         db = FirebaseFirestore.getInstance();
+        generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
 
 
         // TODO Optional Field - limit number of attendees
