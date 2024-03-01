@@ -1,6 +1,6 @@
 package com.example.qrcheckin;
-import android.content.Intent;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,16 +12,23 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 public class CreateEventActivity extends AppCompatActivity {
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
+    private CollectionReference eventsRef;
     boolean isDBConnected;
     EditText newEventName;
     EditText newEventDescription;
@@ -47,6 +54,8 @@ public class CreateEventActivity extends AppCompatActivity {
         // Bind UI
         //TODO posterImage = findViewById(R.id.posterImageView);
         //TODO - EDIT POSTER button
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
 
         newEventName = findViewById(R.id.eventNameEditText);
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
@@ -56,11 +65,29 @@ public class CreateEventActivity extends AppCompatActivity {
         continueButton = findViewById(R.id.continueCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
-        db = FirebaseFirestore.getInstance();
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
 
-
+        addNewEvent();
         // TODO Optional Field - limit number of attendees
+
+        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (querySnapshots != null) {
+                    for (QueryDocumentSnapshot doc : querySnapshots) {
+                        String eventName = doc.getId();
+                        String startTime = doc.getString("startTime");
+                        String endTime = doc.getString("endTime");
+                        String location = doc.getString("location");
+                        Log.d("Firestore", String.format("Event(%s, %s, %s, %s) fetched", eventName, startTime, endTime, location));
+                    }
+                }
+            }
+        });
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -140,6 +167,10 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void addNewEvent() {
+    }
+
     // CHECK IF INPUTS EMPTY
     public boolean isEventInputValid(){ // TODO rename
         if (String.valueOf(newEventName.getText()).isEmpty()){
