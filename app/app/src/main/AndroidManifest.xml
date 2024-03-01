@@ -15,6 +15,9 @@
         android:theme="@style/Theme.QRCheckin"
         tools:targetApi="31">
         <activity
+            android:name=".ViewProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateProfileActivity"
             android:exported="false" />
         <activity
