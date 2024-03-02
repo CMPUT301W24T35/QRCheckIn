@@ -157,7 +157,6 @@ public class CreateEventActivity extends AppCompatActivity {
         if (String.valueOf(newLocation.getText()).isEmpty()){
            newLocation.setError("Enter Event Location");
             return false;
-
         }
 
         return true;
