@@ -90,8 +90,7 @@
             android:id="@+id/eventStartTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Start"
-            android:inputType="datetime"/>
+            android:hint="Start" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -106,8 +105,8 @@
             android:id="@+id/eventEndTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="End"
-            android:inputType = "datetime"/>
+            android:hint="End" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
