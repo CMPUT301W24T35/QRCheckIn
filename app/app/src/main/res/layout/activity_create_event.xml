@@ -56,6 +56,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/TextInputStyle"
             android:id="@+id/eventNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,6 +71,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/eventDescriptionEditText"
+                style="@style/TextInputStyle"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:lines="8"
@@ -88,6 +90,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/eventStartTimeEditText"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Start" />
@@ -103,6 +106,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/eventEndTimeEditText"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="End" />
@@ -118,6 +122,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/eventLocationEditText"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Location" />
@@ -125,7 +130,8 @@
         <CheckBox android:id="@+id/checkboxGeneratePromoQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generate Promo QR Code"/>
+            android:text="Generate Promo QR Code"
+            android:textColor="@color/BodyText"/>
 
 
 

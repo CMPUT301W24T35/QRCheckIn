@@ -104,8 +104,8 @@ public class CreateEventActivity extends AppCompatActivity {
         if (!isEventInputValid()){
             return;
         }
-        continueButton.setEnabled(false);
-        FirebaseFirestore.getInstance().enableNetwork().addOnCompleteListener(task -> {
+        continueButton.setEnabled(false); // Disabled so 2 documents aren't created
+        db.enableNetwork().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 Log.d("Firestore","Connected to DB");
                 addEvent();
@@ -125,6 +125,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = newStartTime.getText().toString();
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
+        // TODO profileID to organizerID
 
         data.put("eventName", eventName);
         data.put("eventDescription", eventDescription);
@@ -195,7 +196,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
     public void dbConnected(){
-        FirebaseFirestore.getInstance()
+        db.getInstance()
                 .enableNetwork()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
