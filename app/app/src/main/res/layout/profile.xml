@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#111834"
+    tools:context=".ProfileActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Profile"
+            android:textColor ="@color/White"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="start|center_vertical"/>
+
+
+    </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image_button"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/deafult_profile_photo"
+        android:clickable="true"
+        android:layout_gravity="center_horizontal"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"
+        android:contentDescription="default profile photo"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:background="#102341"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/White" />
+
+        <EditText
+            android:id="@+id/user_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="     Enter Name"
+            android:textColorHint="@color/White"
+            android:textColor="@color/White" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:background="#102341"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone:"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/White" />
+
+        <EditText
+            android:id="@+id/user_phoneNumber_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="     Enter Phone number"
+            android:textColorHint="@color/White"
+            android:textColor="@color/White" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:background="#102341"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/White" />
+
+        <EditText
+            android:id="@+id/user_email_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="     Enter Email"
+            android:textColorHint="@color/White"
+            android:textColor="@color/White" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+
+        android:paddingEnd="16dp"
+        android:paddingBottom="180dp"
+        android:gravity="center_vertical">
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_back_events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BACK"
+            app:backgroundTint="#3D5AF1"
+            android:textColor="@android:color/white"
+            android:autofillHints="Back"
+            android:contentDescription="scan QR code" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_edit_events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT"
+            app:backgroundTint="#3D5AF1"
+            android:textColor="@android:color/white"
+            android:autofillHints="check in"
+            android:contentDescription="Edit" />
+
+    </LinearLayout>
+
+</LinearLayout>
