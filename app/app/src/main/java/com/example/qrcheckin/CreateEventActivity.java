@@ -91,9 +91,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     // TODO - Continue button
+        //continueButton.setOnClickListener(v -> startNextActivity());
+        // TEST
         continueButton.setOnClickListener(v -> startNextActivity());
 
-           // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
+        // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
 
                 // TODO Create new bitmap QR Code STUART
 
@@ -101,19 +103,9 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void startNextActivity() {
-        if (!isEventInputValid()){
-            return;
+        if (isEventInputValid()) {
+            addEvent();
         }
-        continueButton.setEnabled(false);
-        FirebaseFirestore.getInstance().enableNetwork().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Log.d("Firestore","Connected to DB");
-                addEvent();
-            }
-            else{
-                Log.d("Firestore","Error connecting to db");
-            }
-        });
     }
 
     private void addEvent() {
@@ -125,6 +117,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = newStartTime.getText().toString();
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
+        // TODO profileID to organizerID
 
         data.put("eventName", eventName);
         data.put("eventDescription", eventDescription);
@@ -137,6 +130,8 @@ public class CreateEventActivity extends AppCompatActivity {
         bundle.putString("startTime", startTime);
         bundle.putString("endTime", endTime);
         bundle.putString("location", location);
+
+        String docID = docIDHelper.createDocID(eventName, startTime, location);
 
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
@@ -155,19 +150,13 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         db.collection("event")
-                .add(data)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("Firestore", "Event added ID: " + documentReference.getId());
-                    bundle.putString("EventID", documentReference.getId());
-                    //data.put("eventID", documentReference.getId());
-                    Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("Firestore", "Error adding event", e);
-                    Toast.makeText(CreateEventActivity.this, "Failed to create event. Please try again.", Toast.LENGTH_LONG).show();
-                });
+                .document(docID)
+                .set(data);
+
+        Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
     }
 
     // CHECK IF INPUTS EMPTY
@@ -195,7 +184,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
     public void dbConnected(){
-        FirebaseFirestore.getInstance()
+        db.getInstance()
                 .enableNetwork()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
