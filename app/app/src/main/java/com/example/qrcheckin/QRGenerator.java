@@ -16,6 +16,8 @@ public class QRGenerator extends AppCompatActivity {
 
     Button generateQRCodeButton;
     Button reuseQRCodeButton;
+    Button createEventButton;
+
     ImageView QRCodeImage;
     String inputValue;
     Bitmap bitmap;
@@ -28,24 +30,32 @@ public class QRGenerator extends AppCompatActivity {
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
         QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
+        createEventButton = findViewById(R.id.confirmEventCreationButton);
 
 
-        // TODO - Generate QR Code
         // Generate new QR Code
-        // Set to display
         generateQRCodeButton.setOnClickListener(v->{
-            //String inputValue = documentID from bundle
+            //TODO String inputValue = documentID generated from firebase
             inputValue = "tester";
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
             bitmap = qrgEncoder.getBitmap(0);
-            // Setting Bitmap to ImageView (Assuming qrImage is your ImageView)
+            // Setting Bitmap to ImageView
             QRCodeImage.setImageBitmap(bitmap);
         });
 
-        // TODO - Reuse QR Code
-        // Add once implemented by person assigned to QR Scanner
+        reuseQRCodeButton.setOnClickListener(v->{
+            // TODO
+            //  Add once implemented by person assigned to QR Scanner
+        });
+
+        createEventButton.setOnClickListener(v->{
+            // TODO
+            //  1. Create instance of Event Class
+            //  2. Write Event to database
+            //  3. Navigate to new activity: EventPage (ORGANIZER)
+        });
     }
 
 }
