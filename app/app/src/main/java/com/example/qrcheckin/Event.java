@@ -18,7 +18,7 @@ public class Event {
 
     // TODO private ArrayList<Announcement> announcements;
 
-
+    private boolean CheckInStatus = false;
 
     // Constructor
     public Event(String eventName, String description, Date start, Date end, String Location){
@@ -148,6 +148,14 @@ public class Event {
 
     public void setOrganizerID(String organizerID) {
         this.organizerID = organizerID;
+    }
+
+    public boolean isCheckInStatus() {
+        return CheckInStatus;
+    }
+
+    public void setCheckInStatus(boolean checkInStatus) {
+        CheckInStatus = checkInStatus;
     }
 }
 
