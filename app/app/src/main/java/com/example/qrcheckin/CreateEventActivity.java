@@ -8,27 +8,23 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
-    private CollectionReference eventsRef;
     boolean isDBConnected;
     EditText newEventName;
     EditText newEventDescription;
@@ -54,8 +50,6 @@ public class CreateEventActivity extends AppCompatActivity {
         // Bind UI
         //TODO posterImage = findViewById(R.id.posterImageView);
         //TODO - EDIT POSTER button
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
 
         newEventName = findViewById(R.id.eventNameEditText);
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
@@ -66,28 +60,8 @@ public class CreateEventActivity extends AppCompatActivity {
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
-
-        addNewEvent();
+        db = FirebaseFirestore.getInstance();
         // TODO Optional Field - limit number of attendees
-
-        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (querySnapshots != null) {
-                    for (QueryDocumentSnapshot doc : querySnapshots) {
-                        String eventName = doc.getId();
-                        String startTime = doc.getString("startTime");
-                        String endTime = doc.getString("endTime");
-                        String location = doc.getString("location");
-                        Log.d("Firestore", String.format("Event(%s, %s, %s, %s) fetched", eventName, startTime, endTime, location));
-                    }
-                }
-            }
-        });
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -116,59 +90,84 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
-    // State intent to move to QRGenerator activity
-    Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-
-
     // TODO - Continue button
-        // Gather all data entered inc PosterImage, QRCode
-        // Perform data input checks
-        // Write data to db
-        continueButton.setOnClickListener(v-> {
-            // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
-            bundle = new Bundle();
-            bundle.putString("eventName", String.valueOf(newEventName.getText()));
-            bundle.putString("eventDescription",String.valueOf(newEventDescription.getText()));
-            bundle.putString("startTime", String.valueOf(newStartTime.getText()));
-            bundle.putString("endTime", String.valueOf(newEndTime.getText()));
-            bundle.putString("Location", String.valueOf(newLocation.getText()));
+        continueButton.setOnClickListener(v -> startNextActivity());
 
-            if (generatePromoQRCodeCheckbox.isChecked()) {
-                // CheckBox is checked
+           // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
+
                 // TODO Create new bitmap QR Code STUART
-                String inputValue = "tester";
-                QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
-
-                // Getting QR-Code as Bitmap
-                Bitmap bitmap = qrgEncoder.getBitmap(0);
-                //  Add bitmap to bundle
-                Log.d("Checkbox", "Checkbox is checked");
-            } else {
-                // CheckBox is not checked
-                Log.d("Checkbox", "Checkbox is not checked");
-            }
-
-            if (isEventInputValid()){
-                intent.putExtras(bundle); // Attach bundle to intent
-                dbConnected(); // Call to check if connected and set isDBConnect variable
-            } else {
-                return;
-            }
 
             // TODO Check database connected and get unique document ID - AYAN
-            if (isDBConnected){
-                // Get Unique Event ID / document ID
-                // Go to QRGenerator
-                startActivity(intent);
-            } else {
-                // Toast - need network connection to proceed
-                return;
+    }
 
+    private void startNextActivity() {
+        if (!isEventInputValid()){
+            return;
+        }
+        continueButton.setEnabled(false);
+        FirebaseFirestore.getInstance().enableNetwork().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Log.d("Firestore","Connected to DB");
+                addEvent();
+            }
+            else{
+                Log.d("Firestore","Error connecting to db");
             }
         });
     }
 
-    private void addNewEvent() {
+    private void addEvent() {
+        Bundle bundle = new Bundle();
+        HashMap<String, Object> data = new HashMap<>();
+
+        String eventName = newEventName.getText().toString();
+        String eventDescription = newEventDescription.getText().toString();
+        String startTime = newStartTime.getText().toString();
+        String endTime = newEndTime.getText().toString();
+        String location = newLocation.getText().toString();
+
+        data.put("eventName", eventName);
+        data.put("eventDescription", eventDescription);
+        data.put("startTime", startTime);
+        data.put("endTime", endTime);
+        data.put("location", location);
+
+        bundle.putString("eventName", eventName);
+        bundle.putString("eventDescription", eventDescription);
+        bundle.putString("startTime", startTime);
+        bundle.putString("endTime", endTime);
+        bundle.putString("location", location);
+
+        if (generatePromoQRCodeCheckbox.isChecked()) {
+
+            // CheckBox is checked
+            // TODO Create new bitmap QR Code STUART
+            String inputValue = "tester";
+            QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
+
+            // Getting QR-Code as Bitmap
+            Bitmap bitmap = qrgEncoder.getBitmap(0);
+            //  Add bitmap to bundle
+            Log.d("Checkbox", "Checkbox is checked");
+        } else {
+            // CheckBox is not checked
+            Log.d("Checkbox", "Checkbox is not checked");
+        }
+
+        db.collection("event")
+                .add(data)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Event added ID: " + documentReference.getId());
+                    bundle.putString("EventID", documentReference.getId());
+                    //data.put("eventID", documentReference.getId());
+                    Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firestore", "Error adding event", e);
+                    Toast.makeText(CreateEventActivity.this, "Failed to create event. Please try again.", Toast.LENGTH_LONG).show();
+                });
     }
 
     // CHECK IF INPUTS EMPTY
@@ -193,12 +192,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
         return true;
 
-
-    };
+    }
 
     // TODO: CHECK INPUTS ARE VALID - ANN
-
-
     public void dbConnected(){
         FirebaseFirestore.getInstance()
                 .enableNetwork()
@@ -213,7 +209,5 @@ public class CreateEventActivity extends AppCompatActivity {
                         isDBConnected = false;
                     }
                 });
-
     }
-
 }
