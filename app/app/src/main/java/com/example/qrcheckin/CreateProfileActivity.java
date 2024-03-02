@@ -1,10 +1,5 @@
 package com.example.qrcheckin;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,8 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -86,33 +89,78 @@ public class CreateProfileActivity extends AppCompatActivity {
         // Check if all input data are valid
         // Write data to db
         confirmButton.setOnClickListener(v-> {
+            Map<String, Object> userInfo = null;
             if (isProfileInputValid()) {
-                bundle.putString("userName", String.valueOf(newUserName.getText()));
-                bundle.putString("phone", String.valueOf(newUserPhone.getText()));
-                bundle.putString("email", String.valueOf(newUserEmail.getText()));
-                if (!String.valueOf(newUserHomepage.getText()).isEmpty()) {
-                    bundle.putString("homepage", String.valueOf(newUserHomepage.getText()));
+                String userName = newUserName.getText().toString();
+                String phone = newUserPhone.getText().toString();
+                String email = newUserEmail.getText().toString();
+                String url = newUserHomepage.getText().toString();
+
+                userInfo = new HashMap<>();
+                userInfo.put("name", userName);
+                userInfo.put("phone", phone);
+                userInfo.put("email", email);
+                if (!url.isEmpty()){
+                    userInfo.put("url", url);
                 }
-                intent.putExtras(bundle);
-                if (!isImageSet) {
-                    // Generate a unique default profile image based on the profile name
-                    String initials = getInitials(String.valueOf(newUserName.getText()));
-                    Bitmap initialsBitmap = generateInitialsImage(initials);
-                    profileImage.setImageBitmap(initialsBitmap);
-                }
-                dbConnected();
-            } else {
-                return;
+
+                db.collection("user")
+                        .add(userInfo)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d("Firestore","Added with ID: "+documentReference.getId());
+                            bundle.putString("name", userName);
+                            bundle.putString("phone", phone);
+                            bundle.putString("email", email);
+                            bundle.putString("UserID", documentReference.getId());
+                            if (!url.isEmpty()){
+                                bundle.putString("url", url);
+                            }
+                            intent.putExtras(bundle);
+
+                            if (!isImageSet) {
+                                String initials = getInitials(userName);
+                                Bitmap initialsBitmap = generateInitialsImage(initials);
+                                profileImage.setImageBitmap(initialsBitmap);
+                            }
+
+                            startActivity(intent);
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w("Firestore", "Error adding document", e);
+                        });
             }
-            // TODO Check database connected and get unique profile ID - AYAN
-            if (isDBConnected){
-                // Get Unique Event ID / document ID
-                // Go to QRGenerator
-                startActivity(intent);
-            } else {
-                // Toast - need network connection to proceed
-                return;
+            else{
+                Log.d("Validation", "Input validation failed.");
             }
+
+
+//            if (isProfileInputValid()) {
+//                bundle.putString("userName", String.valueOf(newUserName.getText()));
+//                bundle.putString("phone", String.valueOf(newUserPhone.getText()));
+//                bundle.putString("email", String.valueOf(newUserEmail.getText()));
+//                if (!String.valueOf(newUserHomepage.getText()).isEmpty()) {
+//                    bundle.putString("homepage", String.valueOf(newUserHomepage.getText()));
+//                }
+//                intent.putExtras(bundle);
+//                if (!isImageSet) {
+//                    // Generate a unique default profile image based on the profile name
+//                    String initials = getInitials(String.valueOf(newUserName.getText()));
+//                    Bitmap initialsBitmap = generateInitialsImage(initials);
+//                    profileImage.setImageBitmap(initialsBitmap);
+//                }
+//                dbConnected();
+//            } else {
+//                return;
+//            }
+//            // TODO Check database connected and get unique profile ID - AYAN
+//            if (isDBConnected){
+//                // Get Unique Event ID / document ID
+//                // Go to QRGenerator
+//                startActivity(intent);
+//            } else {
+//                // Toast - need network connection to proceed
+//                return;
+//            }
         });
     }
 
