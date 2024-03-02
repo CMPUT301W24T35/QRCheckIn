@@ -34,7 +34,9 @@
             android:exported="true" />
         <activity
             android:name=".CreateProfileActivity"
-            android:exported="true" />
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".SignedUpEventActivity"
             android:exported="true" />
