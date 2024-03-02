@@ -19,7 +19,6 @@
             android:exported="true" />
         <activity
             android:name=".CreateProfileActivity"
-
             android:exported="true">
 
         </activity>
