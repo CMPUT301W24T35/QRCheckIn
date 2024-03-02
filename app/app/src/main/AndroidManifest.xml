@@ -23,17 +23,6 @@
             android:exported="true">
 
         </activity>
-
-            android:exported="true" />
-
-        <activity
-            android:name=".MainActivity2"
-            android:exported="true" />
-        <activity
-            android:name=".OrganizerHomeActivity"
-            android:exported="true"
-            android:label="@string/title_activity_organizer_home"
-            android:theme="@style/Theme.QRCheckin" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
