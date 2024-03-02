@@ -56,7 +56,7 @@ public class Event {
 
     /**
      * Signs up attendee to Signed Up Attendee list, as long as there is space.
-     * If there is no space it throws an exceptio - remember to handle this!
+     * If there is no space it throws an exception - remember to handle this!
      * @param attendee
      *
      */
