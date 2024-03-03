@@ -1,6 +1,6 @@
 package com.example.qrcheckin;
-import android.content.Intent;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -17,11 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 public class CreateEventActivity extends AppCompatActivity {
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
     boolean isDBConnected;
     EditText newEventName;
     EditText newEventDescription;
@@ -56,10 +59,8 @@ public class CreateEventActivity extends AppCompatActivity {
         continueButton = findViewById(R.id.continueCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
-        db = FirebaseFirestore.getInstance();
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
-
-
+        db = FirebaseFirestore.getInstance();
         // TODO Optional Field - limit number of attendees
 
         // Registers a photo picker activity launcher in single-select mode.
@@ -89,57 +90,75 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
-    // State intent to move to QRGenerator activity
-    Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-
-
     // TODO - Continue button
-        // Gather all data entered inc PosterImage, QRCode
-        // Perform data input checks
-        // Write data to db
-        continueButton.setOnClickListener(v-> {
-            // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
-            bundle = new Bundle();
-            bundle.putString("eventName", String.valueOf(newEventName.getText()));
-            bundle.putString("eventDescription",String.valueOf(newEventDescription.getText()));
-            bundle.putString("startTime", String.valueOf(newStartTime.getText()));
-            bundle.putString("endTime", String.valueOf(newEndTime.getText()));
-            bundle.putString("Location", String.valueOf(newLocation.getText()));
+        //continueButton.setOnClickListener(v -> startNextActivity());
+        // TEST
+        continueButton.setOnClickListener(v -> startNextActivity());
 
-            if (generatePromoQRCodeCheckbox.isChecked()) {
-                // CheckBox is checked
+        // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
+
                 // TODO Create new bitmap QR Code STUART
-                String inputValue = "tester";
-                QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
-
-                // Getting QR-Code as Bitmap
-                Bitmap bitmap = qrgEncoder.getBitmap(0);
-                //  Add bitmap to bundle
-                Log.d("Checkbox", "Checkbox is checked");
-            } else {
-                // CheckBox is not checked
-                Log.d("Checkbox", "Checkbox is not checked");
-            }
-
-            if (isEventInputValid()){
-                intent.putExtras(bundle); // Attach bundle to intent
-                dbConnected(); // Call to check if connected and set isDBConnect variable
-            } else {
-                return;
-            }
 
             // TODO Check database connected and get unique document ID - AYAN
-            if (isDBConnected){
-                // Get Unique Event ID / document ID
-                // Go to QRGenerator
-                startActivity(intent);
-            } else {
-                // Toast - need network connection to proceed
-                return;
-
-            }
-        });
     }
+
+    private void startNextActivity() {
+        if (isEventInputValid()) {
+            addEvent();
+        }
+    }
+
+    private void addEvent() {
+        Bundle bundle = new Bundle();
+        HashMap<String, Object> data = new HashMap<>();
+
+        String eventName = newEventName.getText().toString();
+        String eventDescription = newEventDescription.getText().toString();
+        String startTime = newStartTime.getText().toString();
+        String endTime = newEndTime.getText().toString();
+        String location = newLocation.getText().toString();
+        // TODO profileID to organizerID
+
+        data.put("eventName", eventName);
+        data.put("eventDescription", eventDescription);
+        data.put("startTime", startTime);
+        data.put("endTime", endTime);
+        data.put("location", location);
+
+        bundle.putString("eventName", eventName);
+        bundle.putString("eventDescription", eventDescription);
+        bundle.putString("startTime", startTime);
+        bundle.putString("endTime", endTime);
+        bundle.putString("location", location);
+
+        String docID = docIDHelper.createDocID(eventName, startTime, location);
+
+        if (generatePromoQRCodeCheckbox.isChecked()) {
+
+            // CheckBox is checked
+            // TODO Create new bitmap QR Code STUART
+            String inputValue = "tester";
+            QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
+
+            // Getting QR-Code as Bitmap
+            Bitmap bitmap = qrgEncoder.getBitmap(0);
+            //  Add bitmap to bundle
+            Log.d("Checkbox", "Checkbox is checked");
+        } else {
+            // CheckBox is not checked
+            Log.d("Checkbox", "Checkbox is not checked");
+        }
+
+        db.collection("event")
+                .document(docID)
+                .set(data);
+
+        Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+
     // CHECK IF INPUTS EMPTY
     public boolean isEventInputValid(){ // TODO rename
         if (String.valueOf(newEventName.getText()).isEmpty()){
@@ -161,14 +180,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
         return true;
 
-
-    };
+    }
 
     // TODO: CHECK INPUTS ARE VALID - ANN
-
-
     public void dbConnected(){
-        FirebaseFirestore.getInstance()
+        db.getInstance()
                 .enableNetwork()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -181,7 +197,5 @@ public class CreateEventActivity extends AppCompatActivity {
                         isDBConnected = false;
                     }
                 });
-
     }
-
 }
