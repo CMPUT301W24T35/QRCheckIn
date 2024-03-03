@@ -1,5 +1,10 @@
 package com.example.qrcheckin;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -7,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * Helper class to generate document IDs for Firebase
  * collections.
  */
-public class docIDHelper {
+public class Helpers {
 
     public static String createDocID(String field1, String field2, String field3) {
         String combinedString = field1 + field2 + field3;
@@ -39,4 +44,22 @@ public class docIDHelper {
             return null;
         }
     }
+
+    /** Converts bitmap to Base64 string for saving as Firebase field
+     * Source: https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
+     * @param bitmap
+     * @return
+     */
+    public static String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public static Bitmap base64ToBitmap(String b64) {
+        byte[] imageAsBytes = Base64.decode(b64.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
 }
+
