@@ -26,6 +26,10 @@ public class QRGenerator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_generator);
+        Bundle bundle = getIntent().getExtras();
+
+        String eventID = bundle.getString("eventID");
+        Log.d("BUNDLE", "EventID passed as: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
@@ -36,13 +40,14 @@ public class QRGenerator extends AppCompatActivity {
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{
             //TODO String inputValue = documentID generated from firebase
-            inputValue = "tester";
-            QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
+            QRGEncoder qrgEncoder = new QRGEncoder(eventID, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
             bitmap = qrgEncoder.getBitmap(0);
             // Setting Bitmap to ImageView
             QRCodeImage.setImageBitmap(bitmap);
+            // Convert bitmap to Base64 for Firebase
+            String QRCodeBase64 = Helpers.bitmapToBase64(bitmap);
         });
 
         reuseQRCodeButton.setOnClickListener(v->{
@@ -54,6 +59,7 @@ public class QRGenerator extends AppCompatActivity {
             // TODO
             //  1. Create instance of Event Class
             //  2. Write Event to database
+
             //  3. Navigate to new activity: EventPage (ORGANIZER)
         });
     }
