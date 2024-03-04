@@ -1,5 +1,6 @@
 package com.example.qrcheckin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -83,7 +84,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         );
 
         // Create intent to move to the homepage after creating the profile
-        Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
+        Intent intent = new Intent(CreateProfileActivity.this, ProfileActivity.class);
 
         // Set onclick listener for confirm button
         // Check if all input data are valid

@@ -21,10 +21,19 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
 
-        //TODO:add name, email, and phone
+        //TODO:Add name, email, and phone
         TextView userName = findViewById(R.id.user_name_input);
         TextView userEmail = findViewById(R.id.user_email_input);
         TextView userPhone = findViewById(R.id.user_phoneNumber_input);
+
+        //TODO: Integrate with firebase and get the data from firebase
+        //String name =
+        //String email =
+        //String phoneNumber =
+
+        //userName.setText(name);
+        //userEmail.setText(email);
+        //userPhone.setText(phoneNumber);
 
 
         //edit button
@@ -33,8 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
-                //Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);// go to event activity need to connect with other activity
-                //startActivity(intent);
+                Intent intent = new Intent(ProfileActivity.this, CreateProfileActivity.class);// go to event activity need to connect with other activity
+                startActivity(intent);
             }
         });
         back = findViewById(R.id.button_back_events);
