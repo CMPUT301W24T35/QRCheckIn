@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -117,6 +116,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = newStartTime.getText().toString();
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
+        String docID = Helpers.createDocID(eventName, startTime, location);
+
         // TODO profileID to organizerID
 
         data.put("eventName", eventName);
@@ -130,8 +131,8 @@ public class CreateEventActivity extends AppCompatActivity {
         bundle.putString("startTime", startTime);
         bundle.putString("endTime", endTime);
         bundle.putString("location", location);
+        bundle.putString("eventID", docID);
 
-        String docID = docIDHelper.createDocID(eventName, startTime, location);
 
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
