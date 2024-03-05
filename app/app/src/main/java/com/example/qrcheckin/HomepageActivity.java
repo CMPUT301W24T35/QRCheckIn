@@ -100,7 +100,7 @@ public class HomepageActivity extends AppCompatActivity {
                 //Event clickedEvent = dataList.get(position);
 
                 // Create an Intent to start the new activity
-                //Intent intent = new Intent(MainActivity.this, eventDetail.class); //
+                Intent intent = new Intent(HomepageActivity.this, CreateEventActivity.class);
 
                 // Pass data to the eventDetail activity
                 //intent.putExtra("eventName", clickedEvent.getName()); // get name
@@ -111,7 +111,7 @@ public class HomepageActivity extends AppCompatActivity {
                 // Add other event details as needed
 
                 // Start the
-                //startActivity(intent);
+                startActivity(intent);
             }
         });
 
