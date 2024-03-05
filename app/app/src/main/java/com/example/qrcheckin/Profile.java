@@ -1,5 +1,8 @@
 package com.example.qrcheckin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Profile {
 
     private String userID; // Use for firebase reference
@@ -7,6 +10,12 @@ public class Profile {
     private String phone;
     private String email;
     private String homepage;
+
+    // This keeps track of the checked in events and the number of times
+    // the attendee has checked into that event.
+    private ArrayList<HashMap<Profile, Integer>> checkedInEventsAndCheckedInCount;
+
+
 
     // Constructor
     public Profile(String userName, String phone, String email, String homepage) {

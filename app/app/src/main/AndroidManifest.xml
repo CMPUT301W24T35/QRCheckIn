@@ -50,6 +50,9 @@
 
         </activity>
         <activity
+            android:name=".EditEventActivity"
+            android:exported="true"/>
+        <activity
             android:name=".SignedUpEventActivity"
             android:exported="true" />
         <activity

@@ -8,6 +8,9 @@
       <entry key="CreateProfileActivity">
         <State />
       </entry>
+      <entry key="EditEventActivity">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
