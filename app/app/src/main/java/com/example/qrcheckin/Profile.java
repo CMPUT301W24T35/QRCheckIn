@@ -65,4 +65,14 @@ public class Profile {
     public void setHomepage(String homepage) {
         this.homepage = homepage;
     }
+
+    public ArrayList<HashMap<Profile, Integer>> getCheckedInEventsAndCheckedInCount() {
+        return checkedInEventsAndCheckedInCount;
+    }
+
+    public void setCheckedInEventsAndCheckedInCount(ArrayList<HashMap<Profile, Integer>> checkedInEventsAndCheckedInCount) {
+        this.checkedInEventsAndCheckedInCount = checkedInEventsAndCheckedInCount;
+    }
+
+    // TODO implement method to update number of times checked in
 }
