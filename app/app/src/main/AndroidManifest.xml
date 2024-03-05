@@ -32,6 +32,8 @@
         <activity
             android:name=".NotificationActivity"
             android:exported="true" />
+        <activity android:name=".ViewEventActivity"
+            android:exported="true" />
         <activity
             android:name=".ProfileActivity"
             android:exported="true" />
