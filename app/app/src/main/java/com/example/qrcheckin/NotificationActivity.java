@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+/**
+ * Notification activity containing the list of notifications
+ */
 public class NotificationActivity extends AppCompatActivity {
 
     ImageButton back;
