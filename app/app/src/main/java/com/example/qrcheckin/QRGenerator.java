@@ -1,5 +1,6 @@
 package com.example.qrcheckin;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,8 @@ public class QRGenerator extends AppCompatActivity {
         reuseQRCodeButton.setOnClickListener(v->{
             // TODO
             //  Add once implemented by person assigned to QR Scanner
+            Intent intent = new Intent(QRGenerator.this, QRScannerActivity.class);
+            startActivity(intent);
         });
 
         createEventButton.setOnClickListener(v->{
@@ -61,6 +64,8 @@ public class QRGenerator extends AppCompatActivity {
             //  2. Write Event to database
 
             //  3. Navigate to new activity: EventPage (ORGANIZER)
+            //Intent intent = new Intent(QRGenerator.this, EventPageOrganizer.class);
+            //startActivity(intent);
         });
     }
 
