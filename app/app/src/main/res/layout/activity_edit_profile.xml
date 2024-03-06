@@ -135,11 +135,26 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/contAddProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/confirm"
-            android:layout_gravity="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="111dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/contAddProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="@string/confirm" />
+
+            <Button
+                android:id="@+id/contCancelProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Cancel" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
