@@ -5,7 +5,10 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+<<<<<<< HEAD
         <item name="android:textColorHint">@color/BodyText</item>
 
+=======
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
     </style>
 </resources>

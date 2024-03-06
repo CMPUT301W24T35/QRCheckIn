@@ -1,11 +1,17 @@
 package com.example.qrcheckin;
 
+<<<<<<< HEAD
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+=======
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -15,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+<<<<<<< HEAD
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -43,6 +50,25 @@ public class CreateEventActivity extends AppCompatActivity {
     Bundle bundle;
 
 
+=======
+
+import kotlinx.coroutines.channels.Send;
+
+
+public class CreateEventActivity extends AppCompatActivity {
+    EditText newEventName;
+    EditText newStartTime;
+    EditText newEndTime;
+    EditText newLocation;
+    Button confirmButton;
+    Button editPosterImageButton;
+
+    Button generateQRCodeButton;
+    Button reuseQRCodeButton;
+
+    ImageView posterImage;
+
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +80,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //TODO - EDIT POSTER button
 
         newEventName = findViewById(R.id.eventNameEditText);
+<<<<<<< HEAD
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
         newStartTime = findViewById(R.id.eventStartTimeEditText);
         newEndTime = findViewById(R.id.eventEndTimeEditText);
@@ -64,6 +91,16 @@ public class CreateEventActivity extends AppCompatActivity {
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
         db = FirebaseFirestore.getInstance();
         // TODO Optional Field - limit number of attendees
+=======
+        newStartTime = findViewById(R.id.eventStartTimeEditText);
+        newEndTime = findViewById(R.id.eventEndTimeEditText);
+        newLocation = findViewById(R.id.eventLocationEditText);
+        confirmButton = findViewById(R.id.confirmCreateEventButton);
+        editPosterImageButton = findViewById(R.id.editPosterImageButton);
+        posterImage = findViewById(R.id.posterImageView);
+        generateQRCodeButton = findViewById(R.id.generateQRCodeButton);
+        reuseQRCodeButton = findViewById(R.id.reuseQRCodeButton);
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -92,6 +129,7 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
 
+<<<<<<< HEAD
     // TODO - Continue button
         //continueButton.setOnClickListener(v -> startNextActivity());
         // TEST
@@ -188,6 +226,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
     public boolean isEventInputValid() {
+        // TODO: CHECK INPUTS ARE VALID - ANN
+
         // Check if event name is a non-empty string
         if (!isValidString(String.valueOf(newEventName.getText()))) {
             newEventName.setError("Enter Event Name"); // Set error message if empty
@@ -233,7 +273,6 @@ public class CreateEventActivity extends AppCompatActivity {
             return false; // If parsing fails, return false indicating invalid time format
         }
     }
-    
     public void dbConnected(){
         db.getInstance()
                 .enableNetwork()
@@ -248,5 +287,19 @@ public class CreateEventActivity extends AppCompatActivity {
                         isDBConnected = false;
                     }
                 });
+=======
+    // TODO - Generate QR Code
+        // Generate new QR Code
+        // Set to display
+
+
+    // TODO - Reuse QR Code
+
+    // TODO - Confirm button
+        // Gather all data entered inc PosterImage, QRCode
+        // Perform data input checks
+        // Write data to db
+
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
     }
 }

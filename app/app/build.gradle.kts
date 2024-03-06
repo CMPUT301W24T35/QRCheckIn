@@ -30,6 +30,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+<<<<<<< HEAD
 
 
 }
@@ -38,6 +39,11 @@ android {
 dependencies {
     // Circular profile view
     implementation("androidx.cardview:cardview:1.0.0")
+=======
+}
+
+dependencies {
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.activity:activity:1.7.0")
@@ -48,8 +54,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
     // QR Generator: https://github.com/androidmads/QRGenerator
+<<<<<<< HEAD
     implementation("com.github.androidmads:QRGenerator:1.0.1")
 
+=======
+    //implementation ("androidmads.library.qrgenearator:QRGenearator:1.0.3")
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 
     // Glide library for image processing
     implementation("com.github.bumptech.glide:glide:4.12.0")
@@ -58,7 +68,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+<<<<<<< HEAD
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+=======
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 
 }

@@ -9,5 +9,8 @@
     <color name="Line">#0073C0</color>
     <color name="SecondaryButton">#3E4E88</color>
     <color name="DangerButton">#FF7373</color>
+<<<<<<< HEAD
     <color name="Gray">#636366</color>
+=======
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+<<<<<<< HEAD
     <!-- Need write permissions to save generated QR code -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -12,6 +13,9 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA"/>
+=======
+
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,6 +24,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
         android:theme="@style/Base.Theme.QRCheckin"
         tools:targetApi="31">
         <activity
@@ -55,6 +60,11 @@
             android:name=".SignedUpEventActivity"
             android:exported="true" />
         <activity
+=======
+        android:theme="@style/Theme.QRCheckin"
+        tools:targetApi="31">
+        <activity
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -76,11 +86,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity
             android:name=".QRGenerator"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.QRCheckin" />
+=======
+>>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
     </application>
 
 </manifest>
