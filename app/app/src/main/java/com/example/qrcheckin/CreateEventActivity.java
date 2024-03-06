@@ -88,17 +88,8 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         );
 
-
-    // TODO - Continue button
-        //continueButton.setOnClickListener(v -> startNextActivity());
-        // TEST
         continueButton.setOnClickListener(v -> startNextActivity());
 
-        // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
-
-                // TODO Create new bitmap QR Code STUART
-
-            // TODO Check database connected and get unique document ID - AYAN
     }
 
     private void startNextActivity() {
