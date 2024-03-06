@@ -53,4 +53,11 @@
     <string name="homepage">Homepage</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_view_event">ViewEventActivity</string>
+    <string name="event_details">Event Details</string>
+    <string name="share_qr_code">share qr code</string>
+    <string name="announcements">Announcements</string>
+    <string name="attendees">Attendees</string>
+    <string name="edit_event">EDIT EVENT</string>
+    <string name="view_map">VIEW MAP</string>
 </resources>

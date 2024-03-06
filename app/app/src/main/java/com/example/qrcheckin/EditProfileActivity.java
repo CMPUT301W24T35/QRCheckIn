@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
     boolean isDBConnected;
     EditText newUserName;
@@ -40,15 +40,15 @@ public class CreateProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_profile);
+        setContentView(R.layout.activity_edit_profile);
 
-        newUserName = findViewById(R.id.userNameEditText);
-        newUserEmail = findViewById(R.id.userEmailEditText);
-        newUserPhone = findViewById(R.id.userPhoneEditText);
-        newUserHomepage = findViewById(R.id.userHomepageEditText);
-        confirmButton = findViewById(R.id.continueAddProfileButton);
-        editProfileImageButton = findViewById(R.id.editProfileImageButton);
-        profileImage = findViewById(R.id.profileImage);
+        newUserName = findViewById(R.id.editUserNameText);
+        newUserEmail = findViewById(R.id.edituserEmailText);
+        newUserPhone = findViewById(R.id.edituserPhoneText);
+        newUserHomepage = findViewById(R.id.edituserHomepageText);
+        confirmButton = findViewById(R.id.contAddProfileButton);
+        editProfileImageButton = findViewById(R.id.ProfileImageEditButton);
+        profileImage = findViewById(R.id.ProfileImage);
         db = FirebaseFirestore.getInstance();
 
         isImageSet = false; // Set flag to not true by default
@@ -72,19 +72,19 @@ public class CreateProfileActivity extends AppCompatActivity {
                 });
 
         editProfileImageButton.setOnClickListener(v->{
-            // Launch the photo picker and let the user choose only images.
-            pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
+                    // Launch the photo picker and let the user choose only images.
+                    pickMedia.launch(new PickVisualMediaRequest.Builder()
+                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                            .build());
             /*
             String initials = getInitials(String.valueOf(newUserName.getText()));
             Bitmap initialsBitmap = generateInitialsImage(initials);
             profileImage.setImageBitmap(initialsBitmap);*/
-            }
+                }
         );
 
         // Create intent to move to the homepage after creating the profile
-        Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
+        Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
 
         // Set onclick listener for confirm button
         // Check if all input data are valid

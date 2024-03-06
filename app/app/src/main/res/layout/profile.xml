@@ -67,8 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="     Enter Name"
-            android:textColorHint="@color/White"
-            android:textColor="@color/White" />
+            android:textColor="@color/White"
+            android:textColorHint="@color/White" />
 
 
     </LinearLayout>

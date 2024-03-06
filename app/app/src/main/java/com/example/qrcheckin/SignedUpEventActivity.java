@@ -48,8 +48,8 @@ public class SignedUpEventActivity extends AppCompatActivity {
         checkIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(HomePageActivity.this, checkInActivity.class);// go to event activity need to connect with other activity
-                //startActivity(intent);
+                Intent intent = new Intent(SignedUpEventActivity.this, QRScannerActivity.class);// go to event activity need to connect with other activity
+                startActivity(intent);
             }
         });
 
@@ -77,27 +77,7 @@ public class SignedUpEventActivity extends AppCompatActivity {
         eventAdapter = new SignedUpEventAdapter(this, dataList);
         eventList.setAdapter(eventAdapter);
 
-        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the clicked event
-                Event clickedEvent = dataList.get(position);
 
-                // Create an Intent to start the new activity
-                //Intent intent = new Intent(MainActivity.this, eventDetail.class); //
-
-                // Pass data to the eventDetail activity
-                //intent.putExtra("eventName", clickedEvent.getName()); // get name
-                //intent.putExtra("organizerName", clickedEvent.getOrganizerID()); // And a getOrganizerName method
-                //intent.putExtra("startTime", clickedEvent.getStartTime());
-                //intent.putExtra("endTime", clickedEvent.getEndTime());
-                //intent.putExtra("announcement", clickedEvent.getAnnouncement());
-                // Add other event details as needed
-
-                // Start the
-                //startActivity(intent);
-            }
-        });
 
 
     }
