@@ -129,6 +129,24 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     }
     public boolean isAttendee() {
         // TODO Check if it is an attendee
+        /*
+        * Intent intent = new Intent(Activity1.this,Activity2.class);
+          intent.putExtra("origin","organiser"); // or attendee if you're running it from activity3
+          startActivity(intent);
+        * */
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle!=null){
+            String origin = bundle.getString("origin");
+            if(origin!=null && origin.equals("organiser")){
+                //from organiser
+                return false;
+            }
+            if(origin!=null && origin.equals("attendee")){
+                //from attendee
+                return true;
+            }
+        }
         return false;
     }
 }
