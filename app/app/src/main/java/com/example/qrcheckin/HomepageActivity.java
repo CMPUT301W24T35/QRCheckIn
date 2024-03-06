@@ -1,20 +1,26 @@
 package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import java.util.Date;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,17 +31,21 @@ public class HomepageActivity extends AppCompatActivity {
     ImageButton notification;
     ImageButton local;
     CircleImageView profile;
+    private FirebaseFirestore db;
 
     private ArrayList<Event> dataList;
     private ListView eventList;
     private EventArrayAdapter eventAdapter;
-
 
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
+
+        db = FirebaseFirestore.getInstance();
+
+        getEvent();
 
         //click the organizeEvent button
         organizeEvent = findViewById(R.id.button_organize_events);
@@ -116,5 +126,28 @@ public class HomepageActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getEvent() {
+        db.collection("event").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                dataList.clear();
+
+                assert value != null;
+                for(QueryDocumentSnapshot doc: value){
+                    String eventName = doc.getString("eventName");
+                    Event event = new Event();
+                    event.setName(eventName);
+                    dataList.add(event);
+                }
+                eventAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
