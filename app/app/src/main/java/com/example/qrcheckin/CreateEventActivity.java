@@ -134,6 +134,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         checkPromoCodeAndGenerate();
 
+        Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
         // TODO profileID to organizerID
 
         data.put("eventName", eventName);
@@ -146,7 +147,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // If promo code was generated then add it to Firebase bundle
         if (promoCodeBase64 != null) {
-            data.put("promoCode", posterImageBase64);
+            Log.d("DEBUG", "promocode: " + promoCodeBase64);
+            data.put("promoQRCode", promoCodeBase64);
         }
 
         // TODO - only pass relevant bundle info for QR Code
@@ -223,7 +225,6 @@ public class CreateEventActivity extends AppCompatActivity {
             // Getting QR-Code as Bitmap
             promoCodeBitmap = qrgEncoder.getBitmap(0);
             promoCodeBase64 = Helpers.bitmapToBase64(promoCodeBitmap);
-            //  Add bitmap to bundle
             Log.d("Checkbox", "Checkbox is checked");
         } else {
             // CheckBox is not checked
