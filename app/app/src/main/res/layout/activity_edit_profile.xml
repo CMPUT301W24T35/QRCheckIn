@@ -16,7 +16,7 @@
             android:id="@+id/editProfileTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="VIEW PROFILE"
+            android:text="EDIT PROFILE"
             android:textColor="@color/White"
             android:textSize="25sp"
             android:textStyle="bold"
@@ -56,7 +56,26 @@
             android:padding="20dp" />
             -->
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
+            <Button
+                android:id="@+id/ProfileImageEditButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Edit Picture" />
+
+            <Button
+                android:id="@+id/ProfileImageDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Picture" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,15 +83,19 @@
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100">
-            <TextView
-                android:id="@+id/editUserNameText"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:textColor="@color/White"
-                android:textSize="25sp"
-                android:padding="20dp"
-                android:textAlignment="center"/>
+                android:layout_weight="25"
+                android:layout_marginBottom="10dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editUserNameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/White"
+                    android:hint="Name" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -84,6 +107,7 @@
                     android:id="@+id/edituserPhoneText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/White"
                     android:hint="@string/phone"
                     android:inputType="phone"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,6 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
+                    android:textColor="@color/White"
                     android:inputType = "textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -111,6 +136,7 @@
                     android:id="@+id/edituserHomepageText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/White"
                     android:hint="@string/homepage" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -122,17 +148,17 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/BackViewProfileButton"
+                android:id="@+id/contCancelProfileButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BACK" />
+                android:text="CANCEL" />
 
             <Button
-                android:id="@+id/EditInAddProfileButton"
+                android:id="@+id/contAddProfileButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:text="Edit Profile" />
+                android:text="@string/confirm" />
 
 
         </LinearLayout>
