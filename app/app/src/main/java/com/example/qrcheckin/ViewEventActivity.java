@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
     ImageView posterImage;
+    TextView eventName;
     TextView eventDescription;
     TextView eventStartTime;
     TextView eventEndTime;
@@ -52,11 +53,26 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventStartTime = findViewById(R.id.eventStartText);
         eventEndTime = findViewById(R.id.eventEndText);
         eventLocation = findViewById(R.id.eventLocationText);
+        eventName = findViewById(R.id.viewEventTitle);
 
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
         share = findViewById(R.id.button_share);
+
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("eventName");
+        String eventDes = intent.getStringExtra("eventDes");
+        String startTime = intent.getStringExtra("startTime");
+        String endTime = intent.getStringExtra("endTime");
+        String location = intent.getStringExtra("location");
+
+        eventDescription.setText(eventDes);
+        eventStartTime.setText(startTime);
+        eventEndTime.setText(endTime);
+        eventLocation.setText(location);
+        eventName.setText(name);
+
 
         if (isAttendee()) {
             // If it is an attendee, then hide unnecessary info

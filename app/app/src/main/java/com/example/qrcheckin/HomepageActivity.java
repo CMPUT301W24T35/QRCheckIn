@@ -107,17 +107,19 @@ public class HomepageActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the clicked event
-                //Event clickedEvent = dataList.get(position);
+                Event clickedEvent = dataList.get(position);
 
                 // Create an Intent to start the new activity
-                Intent intent = new Intent(HomepageActivity.this, CreateEventActivity.class);
+                Intent intent = new Intent(HomepageActivity.this, ViewEventActivity.class);
 
                 // Pass data to the eventDetail activity
-                //intent.putExtra("eventName", clickedEvent.getName()); // get name
+                intent.putExtra("eventName", clickedEvent.getName()); // get name
                 //intent.putExtra("organizerName", clickedEvent.getOrganizerID()); // And a getOrganizerName method
-                //intent.putExtra("startTime", clickedEvent.getStartTime());
-                //intent.putExtra("endTime", clickedEvent.getEndTime());
-                //intent.putExtra("announcement", clickedEvent.getAnnouncement());
+                intent.putExtra("startTime", clickedEvent.getStartTime());
+                intent.putExtra("endTime", clickedEvent.getEndTime());
+                intent.putExtra("eventDes", clickedEvent.getDescription());
+                intent.putExtra("location", clickedEvent.getLocation());
+                intent.putExtra("origin", "attendee");
                 // Add other event details as needed
 
                 // Start the
@@ -142,8 +144,16 @@ public class HomepageActivity extends AppCompatActivity {
                 assert value != null;
                 for(QueryDocumentSnapshot doc: value){
                     String eventName = doc.getString("eventName");
+                    String eventDes = doc.getString("eventDescription");
+                    String startTime = doc.getString("startTime");
+                    String endTime = doc.getString("endTime");
+                    String location = doc.getString("location");
                     Event event = new Event();
                     event.setName(eventName);
+                    event.setDescription(eventDes);
+                    event.setStartTime(startTime);
+                    event.setEndTime(endTime);
+                    event.setLocation(location);
                     dataList.add(event);
                 }
                 eventAdapter.notifyDataSetChanged();
