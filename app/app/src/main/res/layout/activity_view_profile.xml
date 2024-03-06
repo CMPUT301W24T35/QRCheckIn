@@ -125,11 +125,17 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/contCancelProfileButton"
+                android:id="@+id/BackViewProfileButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="EDIT PROFILE" />
+                android:text="BACK" />
 
+            <Button
+                android:id="@+id/EditInAddProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="Edit Profile" />
 
 
         </LinearLayout>
