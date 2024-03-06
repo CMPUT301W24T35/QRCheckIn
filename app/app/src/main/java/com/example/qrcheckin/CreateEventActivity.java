@@ -47,9 +47,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
         // Bind UI
-        //TODO posterImage = findViewById(R.id.posterImageView);
-        //TODO - EDIT POSTER button
-
         newEventName = findViewById(R.id.eventNameEditText);
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
         newStartTime = findViewById(R.id.eventStartTimeEditText);
@@ -93,7 +90,7 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void startNextActivity() {
-        if (isEventInputValid()) {
+        if (isTextEditInputEmpty()) {
             addEvent();
         }
     }
@@ -128,7 +125,6 @@ public class CreateEventActivity extends AppCompatActivity {
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
             // CheckBox is checked
-            // TODO Create new bitmap QR Code STUART
             String inputValue = "tester";
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
@@ -152,7 +148,7 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     // CHECK IF INPUTS EMPTY
-    public boolean isEventInputValid(){ // TODO rename
+    public boolean isTextEditInputEmpty(){
         if (String.valueOf(newEventName.getText()).isEmpty()){
             newEventName.setError("Enter Event Name");
             return false;
@@ -175,6 +171,8 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     // TODO: CHECK INPUTS ARE VALID - ANN
+
+
     public void dbConnected(){
         db.getInstance()
                 .enableNetwork()
