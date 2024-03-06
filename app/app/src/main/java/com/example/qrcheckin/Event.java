@@ -1,15 +1,13 @@
 package com.example.qrcheckin;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
     private String description; // TODO - Add to figma etc
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private String Location;
     private Integer attendeeCapacity;
     private String organizerID; // ID string for Firebase (use built in firebase functionality to generate this)
@@ -20,8 +18,12 @@ public class Event {
 
     private boolean CheckInStatus = false;
 
+    public Event(){
+
+    }
+
     // Constructor
-    public Event(String eventName, String description, Date start, Date end, String Location){
+    public Event(String eventName, String description, String start, String end, String Location){
         this.name = eventName;
         this.description = description;
         this.startTime = start;
@@ -30,7 +32,7 @@ public class Event {
 
     }
     // Method overload for when number of attendees is OPTIONALLY limited
-    public Event(String eventName, String description, Date start, Date end, String Location, Integer attendeeCapacity){
+    public Event(String eventName, String description, String start, String end, String Location, Integer attendeeCapacity){
         this.name = eventName;
         this.description = description;
         this.startTime = start;
@@ -94,19 +96,19 @@ public class Event {
         this.description = description;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
