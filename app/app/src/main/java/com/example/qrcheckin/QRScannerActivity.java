@@ -30,7 +30,7 @@ public class QRScannerActivity extends AppCompatActivity {
         scan.setOnClickListener(v -> {
             scanCode();
             //pass the qr information to eventActivity
-            //Intent intent = new Intent(QRScannerActivity.this, Event_AttendeeActivity.class);
+            //Intent intent = new Intent(QRScannerActivity.this, CreateEventActivity.class);
             //intent.putExtra("QR_content", qrContent);
             //startActivity(intent);
         });
@@ -52,7 +52,10 @@ public class QRScannerActivity extends AppCompatActivity {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+
+                    //Intent intent = new Intent(QRScannerActivity.this, CreateEventActivity.class);
+                    //intent.putExtra("QR_content", qrContent);
+                    //startActivity(intent);
                 }
             }).show();
         }

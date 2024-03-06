@@ -3,23 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
-
+    android:padding="10dp"
+    android:background="@color/Background">
 
     <TextView
-        android:id="@+id/event_text"
+        android:background="@color/Background"
+        android:id="@+id/attendee_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="7"
         android:maxLength="50"
         android:padding="8dp"
-        android:text="Event"
-        android:background="#102341"
+        android:text="Attendee"
         android:textColor="@color/White"
         android:textSize="14sp"
         android:ellipsize="end"
         android:maxLines="1" />
-
-
 
 </LinearLayout>
