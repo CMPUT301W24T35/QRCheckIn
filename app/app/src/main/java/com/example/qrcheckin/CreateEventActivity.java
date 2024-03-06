@@ -188,7 +188,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
     public boolean isEventInputValid() {
-        // TODO: CHECK INPUTS ARE VALID - ANN
+        // TODO: CHECK INPUTS ARE VALID
 
         // Check if event name is a non-empty string
         if (!isValidString(String.valueOf(newEventName.getText()))) {
