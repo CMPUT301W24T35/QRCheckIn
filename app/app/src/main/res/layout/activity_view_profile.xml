@@ -64,18 +64,15 @@
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100">
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
+            <TextView
+                android:id="@+id/editUserNameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:layout_marginBottom="10dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editUserNameText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Name" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:text="Name"
+                android:textColor="@color/White"
+                android:textSize="25sp"
+                android:padding="20dp"
+                android:textAlignment="center"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
