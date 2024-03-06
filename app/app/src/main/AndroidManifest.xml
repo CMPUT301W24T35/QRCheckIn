@@ -28,7 +28,7 @@
             android:exported="true" />
         <activity
             android:name=".ViewProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".QRScannerActivity"
             android:exported="true" />
