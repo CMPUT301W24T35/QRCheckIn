@@ -19,19 +19,7 @@
         android:textSize="14sp"
         android:ellipsize="end"
         android:maxLines="1" />
-    <TextView
-        android:id="@+id/organizer_text"
-        android:layout_width="0dp"
-        android:maxLength="30"
-        android:background="#102341"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:padding="8dp"
-        android:text="Organizer Name"
-        android:textSize="14sp"
-        android:textColor="@color/White"
-        android:ellipsize="end"
-        android:maxLines="1" />
+
 
 
 </LinearLayout>

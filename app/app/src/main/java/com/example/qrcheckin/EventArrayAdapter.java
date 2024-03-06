@@ -29,10 +29,10 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         Event event = getItem(position);
         //prefill the texts
         TextView eventName = view.findViewById(R.id.event_text);
-        TextView organizerName = view.findViewById(R.id.organizer_text);
+        //TextView organizerName = view.findViewById(R.id.organizer_text);
 
         eventName.setText(event.getName());
-        organizerName.setText(event.getOrganizerID());
+        //organizerName.setText(event.getOrganizerID());
 
         return view;
     }
