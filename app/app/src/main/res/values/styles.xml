@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <style name="TextInputStyle" parent="TextAppearance.AppCompat">
-            <item name="android:background">@color/ElementBackground</item>
-            <item name="android:textColorHint">@color/BodyText</item>
-        </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your base theme here. -->
+        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:fontFamily">@font/YourCustomFont</item>
+        <!-- Add more customizations here -->
+    </style>
+
+    <!-- TextInputLayout Style -->
+    <style name="TextInputStyle" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <!-- Customize your TextInputLayout style here -->
+        <item name="android:background">@color/ElementBackground</item>
+        <item name="hintTextColor">@color/HintColor</item>
+        <item name="android:textColorHint">@color/BodyText</item>
+    </style>
+
+    <!-- Button Style -->
+    <style name="ButtonStyle" parent="Widget.Material3.Button">
+        <!-- Customize your Button style here -->
+        <item name="android:background">@drawable/YourCustomButtonBackground</item>
+        <item name="android:textColor">@color/ButtonTextColor</item>
+        <!-- Add more customizations here -->
+    </style>
+
+    <!-- Add more styles here -->
 
 </resources>
