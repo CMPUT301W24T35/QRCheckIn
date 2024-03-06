@@ -11,7 +11,10 @@
       <entry key="EditProfileActivity">
         <State />
       </entry>
-      <entry key="QRScannerActivity">
+      <entry key="HomepageActivity">
+        <State />
+      </entry>
+      <entry key="ViewProfileActivity">
         <State />
       </entry>
       <entry key="app">
