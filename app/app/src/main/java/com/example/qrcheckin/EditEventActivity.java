@@ -34,7 +34,6 @@ public class EditEventActivity extends AppCompatActivity {
     Button editPosterImageButton;
     CheckBox generatePromoQRCodeCheckbox;
     boolean needPromoQRCode;
-
     ImageView posterImage;
 
     Bundle bundle;
