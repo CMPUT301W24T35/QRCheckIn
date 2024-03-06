@@ -190,6 +190,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
     }
 
+    public boolean isPosterChosen(){
+        return false;
+    }
+
     // TODO: CHECK INPUTS ARE VALID - ANN
 
 
@@ -226,4 +230,5 @@ public class CreateEventActivity extends AppCompatActivity {
             Log.d("Checkbox", "Checkbox is not checked");
         }
     }
+
 }

@@ -52,6 +52,8 @@ public class QRGenerator extends AppCompatActivity {
         reuseQRCodeButton.setOnClickListener(v->{
             // TODO
             //  Add once implemented by person assigned to QR Scanner
+            //  How do we link the QRScanner back to this event and activity once we
+            //  take a picture of the Qr Code?
             Intent intent = new Intent(QRGenerator.this, QRScannerActivity.class);
             startActivity(intent);
         });
