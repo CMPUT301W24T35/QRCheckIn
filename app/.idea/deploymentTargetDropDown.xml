@@ -17,6 +17,12 @@
       <entry key="ViewProfileActivity">
         <State />
       </entry>
+      <entry key="EditEventActivity">
+        <State />
+      </entry>
+      <entry key="QRScannerActivity">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>

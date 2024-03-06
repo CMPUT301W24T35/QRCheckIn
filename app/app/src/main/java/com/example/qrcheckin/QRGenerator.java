@@ -18,9 +18,7 @@ public class QRGenerator extends AppCompatActivity {
     Button generateQRCodeButton;
     Button reuseQRCodeButton;
     Button createEventButton;
-
     ImageView QRCodeImage;
-    String inputValue;
     Bitmap bitmap;
 
     @Override
