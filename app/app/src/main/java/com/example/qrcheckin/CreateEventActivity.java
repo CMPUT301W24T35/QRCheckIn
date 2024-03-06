@@ -30,11 +30,13 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText newStartTime;
     EditText newEndTime;
     EditText newLocation;
+    EditText newAttendeeCapacity;
     Button continueButton;
     Button editPosterImageButton;
     CheckBox generatePromoQRCodeCheckbox;
     boolean needPromoQRCode;
 
+    int attendeeCapacity;
     ImageView posterImage;
 
     Bundle bundle;
@@ -47,9 +49,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
         // Bind UI
-        //TODO posterImage = findViewById(R.id.posterImageView);
-        //TODO - EDIT POSTER button
-
         newEventName = findViewById(R.id.eventNameEditText);
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
         newStartTime = findViewById(R.id.eventStartTimeEditText);
@@ -58,9 +57,9 @@ public class CreateEventActivity extends AppCompatActivity {
         continueButton = findViewById(R.id.continueCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
+        newAttendeeCapacity = findViewById(R.id.attendeeCapacityEditText);
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
         db = FirebaseFirestore.getInstance();
-        // TODO Optional Field - limit number of attendees
 
         // Registers a photo picker activity launcher in single-select mode.
         // Source: https://developer.android.com/training/data-storage/shared/photopicker#select-single-item
@@ -88,21 +87,12 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         );
 
-
-    // TODO - Continue button
-        //continueButton.setOnClickListener(v -> startNextActivity());
-        // TEST
         continueButton.setOnClickListener(v -> startNextActivity());
 
-        // TODO: Create bundle to pass - VINCENT - pass instance object of Event class? whatever is easier
-
-                // TODO Create new bitmap QR Code STUART
-
-            // TODO Check database connected and get unique document ID - AYAN
     }
 
     private void startNextActivity() {
-        if (isEventInputValid()) {
+        if (isTextEditInputEmpty()) {
             addEvent();
         }
     }
@@ -117,6 +107,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
         String docID = Helpers.createDocID(eventName, startTime, location);
+        String attendeeCapacityString = newAttendeeCapacity.getText().toString();
+        Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
 
         // TODO profileID to organizerID
 
@@ -125,7 +117,9 @@ public class CreateEventActivity extends AppCompatActivity {
         data.put("startTime", startTime);
         data.put("endTime", endTime);
         data.put("location", location);
+        data.put("attendeeCapacity", attendeeCapacity);
 
+        // TODO - only pass relevant bundle info for QR Code
         bundle.putString("eventName", eventName);
         bundle.putString("eventDescription", eventDescription);
         bundle.putString("startTime", startTime);
@@ -137,7 +131,6 @@ public class CreateEventActivity extends AppCompatActivity {
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
             // CheckBox is checked
-            // TODO Create new bitmap QR Code STUART
             String inputValue = "tester";
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
@@ -161,7 +154,7 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     // CHECK IF INPUTS EMPTY
-    public boolean isEventInputValid(){ // TODO rename
+    public boolean isTextEditInputEmpty(){
         if (String.valueOf(newEventName.getText()).isEmpty()){
             newEventName.setError("Enter Event Name");
             return false;
@@ -184,6 +177,8 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     // TODO: CHECK INPUTS ARE VALID - ANN
+
+
     public void dbConnected(){
         db.getInstance()
                 .enableNetwork()
