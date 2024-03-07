@@ -27,9 +27,6 @@
             android:name=".EditProfileActivity"
             android:exported="true" />
         <activity
-            android:name=".ViewProfileActivity"
-            android:exported="true" />
-        <activity
             android:name=".QRScannerActivity"
             android:exported="true" />
         <activity
@@ -54,6 +51,9 @@
         <activity
             android:name=".CreateProfileActivity"
             android:exported="true" />
+        <activity
+            android:name=".EditEventActivity"
+            android:exported="true"/>
         <activity
             android:name=".SignedUpEventActivity"
             android:exported="true" />

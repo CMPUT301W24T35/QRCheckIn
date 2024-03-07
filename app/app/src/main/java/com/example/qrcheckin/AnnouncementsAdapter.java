@@ -17,8 +17,6 @@ public class AnnouncementsAdapter extends ArrayAdapter<Announcement> {
     //private ArrayList<Announcement> announcements;
     public AnnouncementsAdapter(Context context, ArrayList<Announcement> announcements) {
         super(context, 0, announcements);
-        //this.announcements = announcements;
-        //this.context = context;
     }
 
     @NonNull

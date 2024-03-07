@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/Background">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +12,8 @@
         android:textSize="25dp"
         android:textStyle="bold"
         android:padding="20dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@color/MainTextTitle"/>
     <ImageView
         android:id="@+id/checkinQRCodeImageView"
         android:layout_width="match_parent"

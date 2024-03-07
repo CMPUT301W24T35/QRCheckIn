@@ -1,15 +1,11 @@
 package com.example.qrcheckin;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,20 +14,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
     ImageView posterImage;
+    TextView eventName;
     TextView eventDescription;
     TextView eventStartTime;
     TextView eventEndTime;
     TextView eventLocation;
     Button editEventBtn;
     Button viewMapBtn;
+    Button signInBtn;
     ImageButton share;
     ImageButton addAnnouncement;
     ImageView qrCodeImage;
@@ -54,20 +54,52 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventStartTime = findViewById(R.id.eventStartText);
         eventEndTime = findViewById(R.id.eventEndText);
         eventLocation = findViewById(R.id.eventLocationText);
+        eventName = findViewById(R.id.viewEventTitle);
 
+        signInBtn = findViewById(R.id.signInButton);
+        qrCodeImage = findViewById(R.id.qrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
         share = findViewById(R.id.button_share);
 
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("eventName");
+        String eventDes = intent.getStringExtra("eventDes");
+        String startTime = intent.getStringExtra("startTime");
+        String endTime = intent.getStringExtra("endTime");
+        String location = intent.getStringExtra("location");
+        String qr = intent.getStringExtra("qr");
+        String promoqr = intent.getStringExtra("promoqr");
+        String poster = intent.getStringExtra("poster");
+
+        eventDescription.setText(eventDes);
+        eventStartTime.setText(startTime);
+        eventEndTime.setText(endTime);
+        eventLocation.setText(location);
+        eventName.setText(name);
+
+        if (poster!=null){
+            Bitmap posterBitmap = Helpers.base64ToBitmap(poster);
+            posterImage.setImageBitmap(posterBitmap);
+        }
+
+        if (qr!=null){
+            Bitmap qrBitmap = Helpers.base64ToBitmap(qr);
+            qrCodeImage.setImageBitmap(qrBitmap);
+        }
+
+
         if (isAttendee()) {
             // If it is an attendee, then hide unnecessary info
             ConstraintLayout eventButtons = findViewById(R.id.eventButtons);
             LinearLayout attendeeInfo = findViewById(R.id.attendeesInfo);
-            eventButtons.setVisibility(View.INVISIBLE);
-            attendeeInfo.setVisibility(View.INVISIBLE);
-            addAnnouncement.setVisibility(View.INVISIBLE);
-            share.setVisibility(View.INVISIBLE);
+            eventButtons.setVisibility(View.GONE);
+            attendeeInfo.setVisibility(View.GONE);
+            addAnnouncement.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
+            ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
+            signInBtnArea.setVisibility(View.VISIBLE);
         }
 
         // Edit event
@@ -82,11 +114,11 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         viewMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Create a map API to view map with attendees
+                // TODO Create a map API to view map with attendees - Project Part 4
             }
         });
 
-        qrCodeImage = findViewById(R.id.qrCodeImageView);
+
         // Share QR code
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +134,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
+            }
+        });
+        // Sign in to the event as an attendee
+        signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Add profileID to the Signed-in attendee list in the event collection in firestore.
             }
         });
 
@@ -124,11 +163,32 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
     @Override
     public void addAnnouncement(Announcement announcement) {
+        String message = announcement.getAnnouncement();
+        // TODO Get the eventID so that we can store announcements in the Event in firebase
         announcementDataList.add(0, announcement);
         announcementsAdapter.notifyDataSetChanged();
     }
     public boolean isAttendee() {
-        // TODO Check if it is an attendee
+        // Checks if the request for this page is coming from an attendee or an organizer
+        /*
+        Add the following wherever we create an intent to come to this page
+        * Intent intent = new Intent(Activity1.this,Activity2.class);
+          intent.putExtra("origin","organiser"); // or attendee if you're running it from activity3
+          startActivity(intent);
+        * */
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle!=null){
+            String origin = bundle.getString("origin");
+            if(origin!=null && origin.equals("organiser")){
+                //from organiser
+                return false;
+            }
+            if(origin!=null && origin.equals("attendee")){
+                //from attendee
+                return true;
+            }
+        }
         return false;
     }
 }

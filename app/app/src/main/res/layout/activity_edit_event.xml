@@ -7,14 +7,14 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/createEventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Event"
+        android:text="Edit Event"
         android:textSize="25dp"
         android:textStyle="bold"
         android:textColor="@color/MainTextTitle"
@@ -36,7 +36,7 @@
             android:id="@+id/editPosterImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ADD/EDIT POSTER"
+            android:text="EDIT POSTER"
 
 
             />
@@ -47,11 +47,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
-        android:weightSum="500">
+        android:weightSum="100">
     <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="25"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -65,15 +66,18 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/TextInputStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="25">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/eventDescriptionEditText"
                 style="@style/TextInputStyle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
+                android:lines="8"
                 android:minLines="6"
                 android:gravity="top|start"
+                android:maxLines="10"
                 android:hint="Description" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,6 +85,7 @@
             style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="25"
             android:background="@color/ElementBackground">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -95,7 +100,7 @@
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:layout_weight="25"
 
         >
 
@@ -111,32 +116,25 @@
     <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       >
+        android:layout_height="match_parent"
+        android:layout_weight="25"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
-            style="@style/TextInputStyle"
             android:id="@+id/eventLocationEditText"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Location" />
     </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/TextInputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/attendeeCapacityEditText"
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Attendee Capacity" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/PromoQRCodeStatusTextView"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This Event does/does not have a Promo QR Code"
+            android:textColor="@color/BodyText"/>
         <CheckBox android:id="@+id/checkboxGeneratePromoQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,7 +158,7 @@
         android:id="@+id/continueCreateEventButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Continue"
+        android:text="Confirm"
         android:layout_gravity="center"
         />
 

@@ -9,6 +9,10 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
@@ -18,10 +22,11 @@ public class QRGenerator extends AppCompatActivity {
     Button generateQRCodeButton;
     Button reuseQRCodeButton;
     Button createEventButton;
-
     ImageView QRCodeImage;
-    String inputValue;
+    String QRCodeBase64;
     Bitmap bitmap;
+
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +35,13 @@ public class QRGenerator extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         String eventID = bundle.getString("eventID");
-        Log.d("BUNDLE", "EventID passed as: " + eventID);
+        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
         QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
         createEventButton = findViewById(R.id.confirmEventCreationButton);
-
+        db = FirebaseFirestore.getInstance();
 
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{
@@ -48,24 +53,32 @@ public class QRGenerator extends AppCompatActivity {
             // Setting Bitmap to ImageView
             QRCodeImage.setImageBitmap(bitmap);
             // Convert bitmap to Base64 for Firebase
-            String QRCodeBase64 = Helpers.bitmapToBase64(bitmap);
+            QRCodeBase64 = Helpers.bitmapToBase64(bitmap);
+            Log.d("DEBUG", "QRCodeBase64: " + QRCodeBase64);
         });
 
         reuseQRCodeButton.setOnClickListener(v->{
             // TODO
             //  Add once implemented by person assigned to QR Scanner
+            //  How do we link the QRScanner back to this event and activity once we
+            //  take a picture of the Qr Code?
             Intent intent = new Intent(QRGenerator.this, QRScannerActivity.class);
             startActivity(intent);
         });
 
         createEventButton.setOnClickListener(v->{
-            // TODO
-            //  1. Create instance of Event Class
-            //  2. Write Event to database
+            // Write checkinQRCode to database
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("checkinQRCode", QRCodeBase64);
 
-            //  3. Navigate to new activity: EventPage (ORGANIZER)
-            //Intent intent = new Intent(QRGenerator.this, EventPageOrganizer.class);
-            //startActivity(intent);
+            assert eventID != null;
+            db.collection("event")
+                    .document(eventID)
+                    .update(data);
+
+            // Navigate to Organizer Homepage
+            Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
+            startActivity(intent);
         });
     }
 

@@ -1,12 +1,14 @@
 package com.example.qrcheckin;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
@@ -20,9 +22,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.rpc.Help;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.grpc.LoadBalancer;
 
 public class CreateProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -32,9 +39,14 @@ public class CreateProfileActivity extends AppCompatActivity {
     EditText newUserEmail;
     EditText newUserHomepage;
     Button confirmButton;
-    Button editProfileImageButton;
+    Button addProfileImageButton;
     ImageView profileImage;
+    Bitmap profileImageBitmap;
+    Bitmap initialsBitmap;
+    String initialsBase64;
+    String profileImageBase64;
     Bundle bundle;
+    String mainUserID;
     boolean isImageSet;
 
     @Override
@@ -47,7 +59,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         newUserPhone = findViewById(R.id.userPhoneEditText);
         newUserHomepage = findViewById(R.id.userHomepageEditText);
         confirmButton = findViewById(R.id.continueAddProfileButton);
-        editProfileImageButton = findViewById(R.id.editProfileImageButton);
+        addProfileImageButton = findViewById(R.id.editProfileImageButton);
         profileImage = findViewById(R.id.profileImage);
         db = FirebaseFirestore.getInstance();
 
@@ -66,12 +78,18 @@ public class CreateProfileActivity extends AppCompatActivity {
                                 .load(uri)
                                 .into(profileImage);
                         isImageSet = true; // Update the flag because user added an image
+                        try {
+                            profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            profileImageBase64 = Helpers.bitmapToBase64(profileImageBitmap);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
                 });
 
-        editProfileImageButton.setOnClickListener(v->{
+        addProfileImageButton.setOnClickListener(v->{
             // Launch the photo picker and let the user choose only images.
             pickMedia.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
@@ -104,25 +122,42 @@ public class CreateProfileActivity extends AppCompatActivity {
                 if (!url.isEmpty()){
                     userInfo.put("url", url);
                 }
+                if (isImageSet) {
+                    userInfo.put("profileImage", profileImageBase64);
+                } else {
+                    String initials = getInitials(userName);
+                    initialsBitmap = generateInitialsImage(initials);
+                    //profileImage.setImageBitmap(initialsBitmap);
+                    initialsBase64 = Helpers.bitmapToBase64(initialsBitmap);
+                    userInfo.put("profileImage", initialsBase64);
+                }
 
                 db.collection("user")
                         .add(userInfo)
                         .addOnSuccessListener(documentReference -> {
                             Log.d("Firestore","Added with ID: "+documentReference.getId());
-                            bundle.putString("name", userName);
-                            bundle.putString("phone", phone);
-                            bundle.putString("email", email);
-                            bundle.putString("UserID", documentReference.getId());
-                            if (!url.isEmpty()){
-                                bundle.putString("url", url);
+                            // Adding userID of the user in the local file
+                            mainUserID = documentReference.getId();
+                            try {
+                                FileOutputStream fos = openFileOutput("localStorage.txt", Context.MODE_PRIVATE);
+                                fos.write(mainUserID.getBytes());
+                                fos.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            intent.putExtras(bundle);
-
-                            if (!isImageSet) {
-                                String initials = getInitials(userName);
-                                Bitmap initialsBitmap = generateInitialsImage(initials);
-                                profileImage.setImageBitmap(initialsBitmap);
-                            }
+//                            bundle.putString("name", userName);
+//                            bundle.putString("phone", phone);
+//                            bundle.putString("email", email);
+//                            bundle.putString("UserID", documentReference.getId());
+//                            if (!url.isEmpty()){
+//                                bundle.putString("url", url);
+//                            }
+//                            if (isImageSet) {
+//                                bundle.putString("profileImage", profileImageBase64);
+//                            } else {
+//                                bundle.putString("profileImage", initialsBase64);
+//                            }
+//                            intent.putExtras(bundle);
 
                             startActivity(intent);
                         })

@@ -1,16 +1,42 @@
 package com.example.qrcheckin;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
     private String description; // TODO - Add to figma etc
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private String Location;
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public String getPromoQR() {
+        return promoQR;
+    }
+
+    public void setPromoQR(String promoQR) {
+        this.promoQR = promoQR;
+    }
+
+    private String qrCode;
+    private String poster;
+    private String promoQR;
     private Integer attendeeCapacity;
     private String organizerID; // ID string for Firebase (use built in firebase functionality to generate this)
     private ArrayList<Profile> SignedUpAttendees;
@@ -20,24 +46,60 @@ public class Event {
 
     private boolean CheckInStatus = false;
 
-    // Constructor
-    public Event(String eventName, String description, Date start, Date end, String Location){
+    public Event(){
+
+    }
+
+    // Constructor no attendee capacity with promo
+    public Event(String eventName, String description, String start, String end, String Location, String qrCode, String promoQR, String poster, String organizerID){
         this.name = eventName;
         this.description = description;
         this.startTime = start;
         this.endTime = end;
         this.Location = Location;
-
+        this.qrCode = qrCode;
+        this.promoQR = promoQR;
+        this.poster = poster;
+        this.organizerID = organizerID;
     }
-    // Method overload for when number of attendees is OPTIONALLY limited
-    public Event(String eventName, String description, Date start, Date end, String Location, Integer attendeeCapacity){
+
+    // Constructor no attendee capacity without promo
+    public Event(String eventName, String description, String start, String end, String Location, String qrCode, String poster, String organizerID){
+        this.name = eventName;
+        this.description = description;
+        this.startTime = start;
+        this.endTime = end;
+        this.Location = Location;
+        this.qrCode = qrCode;
+        this.poster = poster;
+        this.organizerID = organizerID;
+    }
+
+    // Method overload for when number of attendees is OPTIONALLY limited with promo
+    public Event(String eventName, String description, String start, String end, String Location, Integer attendeeCapacity, String qrCode, String promoQR, String poster, String organizerID){
         this.name = eventName;
         this.description = description;
         this.startTime = start;
         this.endTime = end;
         this.Location = Location;
         this.attendeeCapacity = attendeeCapacity;
+        this.qrCode = qrCode;
+        this.promoQR = promoQR;
+        this.poster = poster;
+        this.organizerID = organizerID;
+    }
 
+    // Method overload for when number of attendees is OPTIONALLY limited without promo
+    public Event(String eventName, String description, String start, String end, String Location, Integer attendeeCapacity, String qrCode, String poster, String organizerID){
+        this.name = eventName;
+        this.description = description;
+        this.startTime = start;
+        this.endTime = end;
+        this.Location = Location;
+        this.attendeeCapacity = attendeeCapacity;
+        this.qrCode = qrCode;
+        this.poster = poster;
+        this.organizerID = organizerID;
     }
 
     /**
@@ -94,19 +156,19 @@ public class Event {
         this.description = description;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
