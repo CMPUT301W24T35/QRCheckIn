@@ -1,8 +1,9 @@
 package com.example.qrcheckin;
+
 /**
-* This is a class that maintain the text content of an announcement
-* Responsible for adding or modifying the announcement
+* This is a class that is responsible for maintaining the text content of an announcement
 */ 
+
 public class Announcement {
     private String announcement;
 
