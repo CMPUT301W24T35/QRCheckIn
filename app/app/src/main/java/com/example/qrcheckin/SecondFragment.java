@@ -11,6 +11,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.qrcheckin.databinding.FragmentSecondBinding;
 
+/**
+* This is a class from the starter code
+* no specific responsibilities for this class
+*/
+
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
