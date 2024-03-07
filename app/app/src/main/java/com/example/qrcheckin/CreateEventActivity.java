@@ -248,6 +248,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
         intent.putExtras(bundle);
+        Log.d("DEBUG", "intent created: " + intent);
         startActivity(intent);
 
     }

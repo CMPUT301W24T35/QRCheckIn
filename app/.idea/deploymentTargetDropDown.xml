@@ -8,10 +8,19 @@
       <entry key="CreateProfileActivity">
         <State />
       </entry>
+      <entry key="HomepageActivity">
+        <State />
+      </entry>
       <entry key="HomepageOrganizer">
         <State />
       </entry>
       <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="QRGenerator">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
         <State />
       </entry>
       <entry key="app">
