@@ -2,26 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="EditProfileActivity">
-        <State />
-      </entry>
-      <entry key="EditProfileActivityTest">
-        <State />
-      </entry>
-      <entry key="Openingtest()">
-        <State />
-      </entry>
-      <entry key="ViewEventActivity">
-        <State />
-      </entry>
-      <entry key="ViewEventActivityTest">
-        <State />
-      </entry>
-      <entry key="app">
-
       <entry key="HomepageActivity">
-        
-      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="NotificationButtonTest()">
+        <State />
+      </entry>
+      <entry key="Openingtest() (1)">
+        <State />
+      </entry>
+      <entry key="ProfileButtonTest()">
+        <State />
+      </entry>
+      <entry key="SignedUpEventButtonTest()">
         <State />
       </entry>
     </value>

@@ -28,6 +28,10 @@ public class EditProfileActivityTest {
         onView(withId(R.id.edituserEmailText)).check(matches(isDisplayed()));
 
     }
-
+    @Test
+    public void Cancelbuttontest(){
+        onView(withId(R.id.contCancelProfileButton)).perform(click());
+        onView(withId(R.id.button_back)).check(matches(isDisplayed()));
+    }
 
 }
