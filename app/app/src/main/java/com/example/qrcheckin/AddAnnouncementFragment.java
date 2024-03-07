@@ -18,7 +18,6 @@ import android.widget.EditText;
 
 /**
 * This is a class that Display a dialog to allow the user to add an announcement
-* Responsible to communicate with the hosting Activity to add the announcement
 */ 
     
 public class AddAnnouncementFragment extends DialogFragment {
