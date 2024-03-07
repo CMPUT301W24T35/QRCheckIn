@@ -54,7 +54,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventEndTime = findViewById(R.id.eventEndText);
         eventLocation = findViewById(R.id.eventLocationText);
         eventName = findViewById(R.id.viewEventTitle);
-
+        qrCodeImage = findViewById(R.id.qrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
@@ -66,12 +66,25 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         String startTime = intent.getStringExtra("startTime");
         String endTime = intent.getStringExtra("endTime");
         String location = intent.getStringExtra("location");
+        String qr = intent.getStringExtra("qr");
+        String promoqr = intent.getStringExtra("promoqr");
+        String poster = intent.getStringExtra("poster");
 
         eventDescription.setText(eventDes);
         eventStartTime.setText(startTime);
         eventEndTime.setText(endTime);
         eventLocation.setText(location);
         eventName.setText(name);
+
+        if (poster!=null){
+            Bitmap posterBitmap = Helpers.base64ToBitmap(poster);
+            posterImage.setImageBitmap(posterBitmap);
+        }
+
+        if (qr!=null){
+            Bitmap qrBitmap = Helpers.base64ToBitmap(qr);
+            qrCodeImage.setImageBitmap(qrBitmap);
+        }
 
 
         if (isAttendee()) {
@@ -100,7 +113,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             }
         });
 
-        qrCodeImage = findViewById(R.id.qrCodeImageView);
+
         // Share QR code
         share.setOnClickListener(new View.OnClickListener() {
             @Override
