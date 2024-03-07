@@ -23,6 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+* This is a class that displays event details such as description, start time, end time, location, poster image, etc
+*/ 
+
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
     ImageView posterImage;
