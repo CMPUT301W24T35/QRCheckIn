@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+* This is a class that displays the user's profile information
+*/ 
+
 public class ProfileActivity extends AppCompatActivity {
 
     Button edit;
