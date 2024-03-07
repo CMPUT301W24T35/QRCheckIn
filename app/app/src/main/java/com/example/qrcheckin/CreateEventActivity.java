@@ -60,6 +60,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     Bundle bundle;
 
+    String docID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +137,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = newStartTime.getText().toString();
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
-        String docID = Helpers.createDocID(eventName, startTime, location);
+        docID = Helpers.createDocID(eventName, startTime, location);
         String attendeeCapacityString = newAttendeeCapacity.getText().toString();
         Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
 
@@ -290,7 +291,7 @@ public class CreateEventActivity extends AppCompatActivity {
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
             // CheckBox is checked
-            String inputValue = "tester";
+            String inputValue = Helpers.reverseString(docID);
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
