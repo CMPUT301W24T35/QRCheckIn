@@ -31,6 +31,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     TextView eventLocation;
     Button editEventBtn;
     Button viewMapBtn;
+    Button signInBtn;
     ImageButton share;
     ImageButton addAnnouncement;
     ImageView qrCodeImage;
@@ -55,6 +56,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventLocation = findViewById(R.id.eventLocationText);
         eventName = findViewById(R.id.viewEventTitle);
 
+        signInBtn = findViewById(R.id.signInButton);
+        qrCodeImage = findViewById(R.id.qrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
@@ -66,6 +69,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         String startTime = intent.getStringExtra("startTime");
         String endTime = intent.getStringExtra("endTime");
         String location = intent.getStringExtra("location");
+        String qr = intent.getStringExtra("qr");
+        String promoqr = intent.getStringExtra("promoqr");
+        String poster = intent.getStringExtra("poster");
 
         eventDescription.setText(eventDes);
         eventStartTime.setText(startTime);
@@ -73,15 +79,27 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventLocation.setText(location);
         eventName.setText(name);
 
+        if (poster!=null){
+            Bitmap posterBitmap = Helpers.base64ToBitmap(poster);
+            posterImage.setImageBitmap(posterBitmap);
+        }
+
+        if (qr!=null){
+            Bitmap qrBitmap = Helpers.base64ToBitmap(qr);
+            qrCodeImage.setImageBitmap(qrBitmap);
+        }
+
 
         if (isAttendee()) {
             // If it is an attendee, then hide unnecessary info
             ConstraintLayout eventButtons = findViewById(R.id.eventButtons);
             LinearLayout attendeeInfo = findViewById(R.id.attendeesInfo);
-            eventButtons.setVisibility(View.INVISIBLE);
-            attendeeInfo.setVisibility(View.INVISIBLE);
-            addAnnouncement.setVisibility(View.INVISIBLE);
-            share.setVisibility(View.INVISIBLE);
+            eventButtons.setVisibility(View.GONE);
+            attendeeInfo.setVisibility(View.GONE);
+            addAnnouncement.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
+            ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
+            signInBtnArea.setVisibility(View.VISIBLE);
         }
 
         // Edit event
@@ -96,11 +114,11 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         viewMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Create a map API to view map with attendees
+                // TODO Create a map API to view map with attendees - Project Part 4
             }
         });
 
-        qrCodeImage = findViewById(R.id.qrCodeImageView);
+
         // Share QR code
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +134,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
+            }
+        });
+        // Sign in to the event as an attendee
+        signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Add profileID to the Signed-in attendee list in the event collection in firestore.
             }
         });
 
@@ -140,11 +165,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
     @Override
     public void addAnnouncement(Announcement announcement) {
+        String message = announcement.getAnnouncement();
+        // TODO Get the eventID so that we can store announcements in the Event in firebase
         announcementDataList.add(0, announcement);
         announcementsAdapter.notifyDataSetChanged();
     }
     public boolean isAttendee() {
-        // TODO Check if it is an attendee
+        // Checks if the request for this page is coming from an attendee or an organizer
         /*
         Add the following wherever we create an intent to come to this page
         * Intent intent = new Intent(Activity1.this,Activity2.class);
