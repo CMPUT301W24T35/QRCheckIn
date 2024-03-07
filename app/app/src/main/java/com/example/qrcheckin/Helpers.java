@@ -9,9 +9,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Helper class to generate document IDs for Firebase
- * collections.
+ * Helper class to generate document IDs for Firebase and collections.
  */
+
 public class Helpers {
 
     public static String createDocID(String field1, String field2, String field3) {
