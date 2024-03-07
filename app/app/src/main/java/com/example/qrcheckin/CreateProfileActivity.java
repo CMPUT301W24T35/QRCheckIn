@@ -24,6 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* This is a class that manages the creation of user profiles in the application
+*/ 
+
 public class CreateProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
     boolean isDBConnected;
