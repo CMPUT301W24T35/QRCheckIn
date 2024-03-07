@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 /**
-* This is a class that Display a dialog to allow the user to add an announcement
+* This is a class that displays a dialog to allow the user to add an announcement
 */ 
     
 public class AddAnnouncementFragment extends DialogFragment {
