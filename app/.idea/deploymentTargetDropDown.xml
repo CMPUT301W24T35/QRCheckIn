@@ -2,8 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-
-      <entry key="HomepageActivity">
+      <entry key="MainActivity">
         <State />
       </entry>
     </value>
