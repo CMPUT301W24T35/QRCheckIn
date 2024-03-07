@@ -32,14 +32,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     String mainUserID;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Check if mainUserID is not null and then fetch details
-        if (mainUserID != null) {
-            fetchDetails(mainUserID);
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // Check if mainUserID is not null and then fetch details
+//        if (mainUserID != null) {
+//            fetchDetails(mainUserID);
+//        }
+//    }
 
 
     @SuppressLint("MissingInflatedId")
