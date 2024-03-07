@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 assert value != null;
                 for(QueryDocumentSnapshot doc: value){
                     String deviceID = doc.getString("androidID");
-                    Log.d("FIREBASE", "device ID"+deviceID);
-                    Log.d("FIREBASE", "android ID "+android_id);
                     if (deviceID == null){
                         // Do nothing
                     }
