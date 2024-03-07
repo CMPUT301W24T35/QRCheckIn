@@ -23,7 +23,7 @@ public class NotificationActivityTest {
 
 
     @Test
-    public void test(){
+    public void backbuttontest(){
         onView(withId(R.id.backArrow)).perform(click());
         onView(withId(R.id.button_organize_events)).check(matches(isDisplayed()));
 
