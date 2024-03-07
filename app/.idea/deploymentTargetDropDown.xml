@@ -2,10 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="CreateEventActivity">
+      <entry key="CreateProfileActivity">
         <State />
       </entry>
-      <entry key="CreateProfileActivity">
+      <entry key="MainActivityTest">
+        <State />
+      </entry>
+      <entry key="ProfileActivity">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
         <State />
       </entry>
       <entry key="app">
