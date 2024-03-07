@@ -19,7 +19,7 @@ import android.widget.EditText;
 
 public class AddAnnouncementFragment extends DialogFragment {
     interface AddAnnouncementDialogListener {
-        void addAnnouncement(Announcement announcement);
+        void addAnnouncement(Announcement announcement);//
     }
     private AddAnnouncementDialogListener listener;
 
