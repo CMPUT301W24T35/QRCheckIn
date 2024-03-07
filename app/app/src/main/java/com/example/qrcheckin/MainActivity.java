@@ -20,7 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+/**
+* This is the main activity of the project. Everything should be centered here.
+*/ 
 
 public class MainActivity extends AppCompatActivity {
 
