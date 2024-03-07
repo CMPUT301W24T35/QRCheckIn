@@ -31,7 +31,7 @@ public class EditProfileActivityTest {
     @Test
     public void Cancelbuttontest(){
         onView(withId(R.id.contCancelProfileButton)).perform(click());
-        onView(withId(R.id.button_back)).check(matches(isDisplayed()));
+        onView(withId(R.id.profile_image_button)).check(matches(isDisplayed()));
     }
 
 }
