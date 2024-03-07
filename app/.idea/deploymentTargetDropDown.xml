@@ -2,19 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CreateEventActivity">
+        <State />
+      </entry>
       <entry key="HomepageActivity">
         <State />
       </entry>
+      <entry key="HomepageOrganizer">
+        <State />
+      </entry>
       <entry key="NotificationButtonTest()">
-        <State />
-      </entry>
-      <entry key="Openingtest() (1)">
-        <State />
-      </entry>
-      <entry key="ProfileButtonTest()">
-        <State />
-      </entry>
-      <entry key="SignedUpEventButtonTest()">
         <State />
       </entry>
     </value>
