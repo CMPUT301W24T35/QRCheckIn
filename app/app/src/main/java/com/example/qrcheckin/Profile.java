@@ -1,5 +1,9 @@
 package com.example.qrcheckin;
 
+/**
+* This is a class that stores and manages user personal information
+*/ 
+
 public class Profile {
 
     private String userID; // Use for firebase reference
