@@ -31,6 +31,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     TextView eventLocation;
     Button editEventBtn;
     Button viewMapBtn;
+    Button signInBtn;
     ImageButton share;
     ImageButton addAnnouncement;
     ImageView qrCodeImage;
@@ -55,6 +56,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventLocation = findViewById(R.id.eventLocationText);
         eventName = findViewById(R.id.viewEventTitle);
 
+        signInBtn = findViewById(R.id.signInButton);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
@@ -82,6 +84,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             attendeeInfo.setVisibility(View.INVISIBLE);
             addAnnouncement.setVisibility(View.INVISIBLE);
             share.setVisibility(View.INVISIBLE);
+            ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
+            signInBtnArea.setVisibility(View.VISIBLE);
         }
 
         // Edit event
@@ -116,6 +120,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
+            }
+        });
+        // Sign in to the event as an attendee
+        signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Add profileID to the Signed-in attendee list in the event collection in firestore.
             }
         });
 
