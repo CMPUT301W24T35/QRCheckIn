@@ -71,7 +71,9 @@ public class HomepageActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userID = getIntent().getStringExtra("UserID");
                 Intent intent = new Intent(HomepageActivity.this, ProfileActivity.class);// go to event activity need to connect with other activity
+                intent.putExtra("UserID", userID);
                 startActivity(intent);
             }
         });

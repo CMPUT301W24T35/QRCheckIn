@@ -1,6 +1,5 @@
 package com.example.qrcheckin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -84,7 +83,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         );
 
         // Create intent to move to the homepage after creating the profile
-        Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
+        //Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
 
         // Set onclick listener for confirm button
         // Check if all input data are valid
@@ -109,10 +108,12 @@ public class CreateProfileActivity extends AppCompatActivity {
                         .add(userInfo)
                         .addOnSuccessListener(documentReference -> {
                             Log.d("Firestore","Added with ID: "+documentReference.getId());
-                            bundle.putString("name", userName);
-                            bundle.putString("phone", phone);
-                            bundle.putString("email", email);
-                            bundle.putString("UserID", documentReference.getId());
+//                            bundle.putString("name", userName);
+//                            bundle.putString("phone", phone);
+//                            bundle.putString("email", email);
+//                            bundle.putString("UserID", documentReference.getId());
+                            Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
+                            intent.putExtra("UserID",documentReference.getId());
                             if (!url.isEmpty()){
                                 bundle.putString("url", url);
                             }
