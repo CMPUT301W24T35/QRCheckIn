@@ -16,6 +16,7 @@ import java.util.List;
 /**
 * This is a class that is responsible for displaying a list of attendees
 */
+
 public class AttendeeAdapter extends ArrayAdapter<Profile> {
     private Context context;
     private ArrayList<Profile> attendees;
