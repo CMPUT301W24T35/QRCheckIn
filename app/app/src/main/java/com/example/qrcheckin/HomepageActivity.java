@@ -57,6 +57,7 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         //click the signedUp button
         signedUp = findViewById(R.id.button_signed_up_events);
         signedUp.setOnClickListener(new View.OnClickListener() {
@@ -66,17 +67,32 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Intent intent = getIntent();
+
+        String profileImage = intent.getStringExtra("profileImage");
+        String profName = intent.getStringExtra("name");
+        String profEmail = intent.getStringExtra("email");
+        String profPhone = intent.getStringExtra("phone");
+        String profUrl = intent.getStringExtra("url");
 
         profile = findViewById(R.id.profile_image_button);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = getIntent().getStringExtra("UserID");
-                Intent intent = new Intent(HomepageActivity.this, ProfileActivity.class);// go to event activity need to connect with other activity
-                intent.putExtra("UserID", userID);
-                startActivity(intent);
+                Intent profileIntent = new Intent(HomepageActivity.this, ProfileActivity.class);
+
+                // Put the profile details into the intent
+                profileIntent.putExtra("profileImage", profileImage);
+                profileIntent.putExtra("name", profName);
+                profileIntent.putExtra("email", profEmail);
+                profileIntent.putExtra("phone", profPhone);
+                profileIntent.putExtra("url", profUrl);
+
+                // Start ProfileActivity with the intent
+                startActivity(profileIntent);
             }
         });
+
 
 
         local = findViewById(R.id.button_location);
