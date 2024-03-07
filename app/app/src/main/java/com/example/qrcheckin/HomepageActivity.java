@@ -18,6 +18,10 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This is a class that initializes the homepage view elements
+*/
+
 public class HomepageActivity extends AppCompatActivity {
 
     Button organizeEvent;
