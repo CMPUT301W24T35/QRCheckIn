@@ -139,7 +139,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String location = newLocation.getText().toString();
         docID = Helpers.createDocID(eventName, startTime, location);
         String attendeeCapacityString = newAttendeeCapacity.getText().toString();
-        Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
+        Log.d("DEBUG", "attendeeCapacityString: " + attendeeCapacityString);
+
 
         try {
             FileInputStream fis = openFileInput("localStorage.txt");
@@ -168,14 +169,24 @@ public class CreateEventActivity extends AppCompatActivity {
         data.put("startTime", startTime);
         data.put("endTime", endTime);
         data.put("location", location);
-        data.put("attendeeCapacity", attendeeCapacity);
         data.put("poster", posterImageBase64);
 
+        // OPTIONAL FIELDS
         // If promo code was generated then add it to Firebase bundle
         if (promoCodeBase64 != null) {
             Log.d("DEBUG", "promocode: " + promoCodeBase64);
             data.put("promoQRCode", promoCodeBase64);
         }
+
+        if (!attendeeCapacityString.isEmpty()) {
+            // Convert to integer and package for database
+            Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
+            data.put("attendeeCapacity", attendeeCapacity);
+            Log.d("DEBUG", "AttendeeCapacity is Empty");
+
+        }
+
+
 
         // TODO - only pass relevant bundle info for QR Code
         bundle.putString("eventName", eventName);
