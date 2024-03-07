@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
@@ -18,10 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +34,6 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText newUserName;
     EditText newUserPhone;
     EditText newUserEmail;
-    EditText newUserHomepage;
     EditText newUserUrl;
     Button confirmButton;
     Button editProfileImageButton;
@@ -93,6 +95,12 @@ public class EditProfileActivity extends AppCompatActivity {
                                 .load(uri)
                                 .into(profileImage);
                         isImageSet = true; // Update the flag because user added an image
+                        try {
+                            profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            profileImageBase64 = Helpers.bitmapToBase64(profileImageBitmap);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
@@ -140,11 +148,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateProfile(String mainUserID) {
         Map<String, Object> info = new HashMap<>();
+
         if (isProfileInputValid()) {
             String userName = newUserName.getText().toString();
             String phone = newUserPhone.getText().toString();
             String email = newUserEmail.getText().toString();
-            String url = newUserHomepage.getText().toString();
+            String url = newUserUrl.getText().toString();
 
             info.put("name", userName);
             info.put("phone", phone);
@@ -161,91 +170,94 @@ public class EditProfileActivity extends AppCompatActivity {
                 initialsBase64 = Helpers.bitmapToBase64(initialsBitmap);
                 info.put("profileImage", initialsBase64);
             }
+            db.collection("user").document(mainUserID).update(info).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d("EditProfileActivity", "User profile updated successfully");
+                    // Navigate to ProfileActivity upon successful update
+                    Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                } else {
+                    Log.e("EditProfileActivity", "Error updating user profile", task.getException());
+                    // Optionally show an error message to the user
+                }
+            });
+        } else {
+            Log.d("Validation", "Input validation failed.");
         }
-
-        db.collection("user").document(mainUserID).update(info).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d("EditProfileActivity", "User profile updated successfully");
-                // Optionally navigate the user or show a success message
-            } else {
-                Log.e("EditProfileActivity", "Error updating user profile", task.getException());
-                // Optionally show an error message
-            }
-        });
     }
 
-        // TODO - Input validation for all fields
-        // Check the input validity
-        public boolean isProfileInputValid () {
-            //Name validation
-            if (String.valueOf(newUserName.getText()).isEmpty()) {
-                newUserName.setError("Name is required!");
+    // TODO - Input validation for all fields
+    // Check the input validity
+    public boolean isProfileInputValid () {
+        //Name validation
+        if (String.valueOf(newUserName.getText()).isEmpty()) {
+            newUserName.setError("Name is required!");
+            return false;
+        }
+        if (String.valueOf(newUserName.getText()).length() > 200) {
+            newUserName.setError("Name is too long!");
+            return false;
+        }
+        // Phone validation
+        if (String.valueOf(newUserPhone.getText()).isEmpty()) {
+            newUserPhone.setError("Enter Phone Number");
+            return false;
+        }
+        if (String.valueOf(newUserPhone.getText()).length() > 10) {
+            newUserPhone.setError("Enter a valid phone number!");
+            return false;
+        }
+        // Email validation
+        if (String.valueOf(newUserEmail.getText()).isEmpty()) {
+            newUserEmail.setError("Enter email address");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(String.valueOf(newUserEmail.getText())).matches()) {
+            newUserEmail.setError("Enter valid email address");
+            return false;
+        }
+        // Homepage validation
+        if (!String.valueOf(newUserUrl.getText()).isEmpty()) {
+            if (!Patterns.WEB_URL.matcher(String.valueOf(newUserUrl.getText())).matches()) {
+                newUserUrl.setError("Enter valid url!");
                 return false;
             }
-            if (String.valueOf(newUserName.getText()).length() > 200) {
-                newUserName.setError("Name is too long!");
-                return false;
-            }
-            // Phone validation
-            if (String.valueOf(newUserPhone.getText()).isEmpty()) {
-                newUserPhone.setError("Enter Phone Number");
-                return false;
-            }
-            if (String.valueOf(newUserPhone.getText()).length() > 10) {
-                newUserPhone.setError("Enter a valid phone number!");
-                return false;
-            }
-            // Email validation
-            if (String.valueOf(newUserEmail.getText()).isEmpty()) {
-                newUserEmail.setError("Enter email address");
-                return false;
-            }
-            if (!Patterns.EMAIL_ADDRESS.matcher(String.valueOf(newUserEmail.getText())).matches()) {
-                newUserEmail.setError("Enter valid email address");
-                return false;
-            }
-            // Homepage validation
-            if (!String.valueOf(newUserHomepage.getText()).isEmpty()) {
-                if (!Patterns.WEB_URL.matcher(String.valueOf(newUserHomepage.getText())).matches()) {
-                    newUserHomepage.setError("Enter valid url!");
-                    return false;
-                }
-            }
-
-            return true;
         }
 
-        // Deterministically generate profile picture
-        private Bitmap generateInitialsImage (String initials){
-            int width = 200; // Set the desired width for the image
-            int height = 200; // Set the desired height for the image
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
+        return true;
+    }
 
-            // Fill background with a color
-            canvas.drawColor(Color.parseColor("#FF5722")); // Example color, you can change it
+    // Deterministically generate profile picture
+    private Bitmap generateInitialsImage (String initials){
+        int width = 200; // Set the desired width for the image
+        int height = 200; // Set the desired height for the image
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
 
-            // Draw text (initials) in the center of the bitmap
-            Paint paint = new Paint();
-            paint.setColor(Color.WHITE); // Text color
-            paint.setTextSize(80); // Text size
-            paint.setTextAlign(Paint.Align.CENTER);
+        // Fill background with a color
+        canvas.drawColor(Color.parseColor("#FF5722")); // Example color, you can change it
 
-            // Calculate text position
-            float xPos = canvas.getWidth() / 2f;
-            float yPos = (canvas.getHeight() / 2f) - ((paint.descent() + paint.ascent()) / 2f);
+        // Draw text (initials) in the center of the bitmap
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE); // Text color
+        paint.setTextSize(80); // Text size
+        paint.setTextAlign(Paint.Align.CENTER);
 
-            // Draw text on the canvas
-            canvas.drawText(initials, xPos, yPos, paint);
+        // Calculate text position
+        float xPos = canvas.getWidth() / 2f;
+        float yPos = (canvas.getHeight() / 2f) - ((paint.descent() + paint.ascent()) / 2f);
 
-            return bitmap;
+        // Draw text on the canvas
+        canvas.drawText(initials, xPos, yPos, paint);
+
+        return bitmap;
+    }
+    private String getInitials (String name){
+        StringBuilder initials = new StringBuilder();
+        for (String s : name.split("\\s+")) {
+            initials.append(s.charAt(0));
         }
-        private String getInitials (String name){
-            StringBuilder initials = new StringBuilder();
-            for (String s : name.split("\\s+")) {
-                initials.append(s.charAt(0));
-            }
-            return initials.toString();
-        }
+        return initials.toString();
+    }
 }
 
