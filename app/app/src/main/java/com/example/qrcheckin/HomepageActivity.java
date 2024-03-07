@@ -119,7 +119,11 @@ public class HomepageActivity extends AppCompatActivity {
                 intent.putExtra("endTime", clickedEvent.getEndTime());
                 intent.putExtra("eventDes", clickedEvent.getDescription());
                 intent.putExtra("location", clickedEvent.getLocation());
+                intent.putExtra("poster",clickedEvent.getPoster());
+                intent.putExtra("qr",clickedEvent.getQrCode());
+                intent.putExtra("promoqr",clickedEvent.getPromoQR());
                 intent.putExtra("origin", "attendee");
+
                 // Add other event details as needed
 
                 // Start the
@@ -148,12 +152,22 @@ public class HomepageActivity extends AppCompatActivity {
                     String startTime = doc.getString("startTime");
                     String endTime = doc.getString("endTime");
                     String location = doc.getString("location");
+                    String poster = doc.getString("poster");
+                    String qr = doc.getString("checkinQRCode");
+                    String promoqr = doc.getString("promoQRCode");
                     Event event = new Event();
                     event.setName(eventName);
                     event.setDescription(eventDes);
                     event.setStartTime(startTime);
                     event.setEndTime(endTime);
                     event.setLocation(location);
+                    event.setPoster(poster);
+                    event.setQrCode(qr);
+                    if (promoqr!= null){
+                        event.setPromoQR(promoqr);
+                    }
+
+
                     dataList.add(event);
                 }
                 eventAdapter.notifyDataSetChanged();
