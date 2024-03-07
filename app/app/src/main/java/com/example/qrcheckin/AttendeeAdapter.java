@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+* This is a class that responsible for displaying a list of attendees in a ListView or Spinner
+*/
 public class AttendeeAdapter extends ArrayAdapter<Profile> {
     private Context context;
     private ArrayList<Profile> attendees;
