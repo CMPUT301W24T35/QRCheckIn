@@ -2,18 +2,26 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="CreateEventActivity">
+
+      <entry key="QRScannerActivity">
         <State />
       </entry>
-      <entry key="CreateProfileActivity">
+      <entry key="SignedUpEventActivity">
         <State />
       </entry>
+      <entry key="SignedUpEventActivityTest">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
+        <State />
+      </entry>
+      <entry key="ViewEventActivityTest">
+        <State />
+      </entry>
+      <entry key="app">
+
       <entry key="HomepageActivity">
-        <State />
-      </entry>
-      <entry key="HomepageOrganizer">
-        <State />
-      </entry>
+        
       <entry key="MainActivity">
         <State />
       </entry>
