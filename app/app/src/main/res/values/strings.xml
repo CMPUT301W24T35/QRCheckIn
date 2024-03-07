@@ -61,4 +61,6 @@
     <string name="edit_event">EDIT EVENT</string>
     <string name="view_map">VIEW MAP</string>
     <string name="sign_in">SIGN IN</string>
+    <string name="url">url</string>
+    <string name="u">URL</string>
 </resources>
