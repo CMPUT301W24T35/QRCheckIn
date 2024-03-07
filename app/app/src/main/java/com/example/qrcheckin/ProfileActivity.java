@@ -3,21 +3,31 @@ package com.example.qrcheckin;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    Button edit;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TextView userName;
+    TextView userEmail;
+    TextView userPhone;
+    TextView userUrl;
+    CircleImageView userImage;
     Button back;
+    Button edit;
+
+
+
 
 
     @SuppressLint("MissingInflatedId")
@@ -27,32 +37,20 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
 
+
         //Bundle extras = getIntent().getExtras();
-        TextView userName = findViewById(R.id.user_name_input);
-        TextView userEmail = findViewById(R.id.user_email_input);
-        TextView userPhone = findViewById(R.id.user_phoneNumber_input);
-        CircleImageView userImage = findViewById(R.id.profile_image_button);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String name = extras.getString("name", ""); // Default to empty if not found
-            String email = extras.getString("email", "");
-            String phone = extras.getString("phone", "");
-            String profileImageBase64 = extras.getString("profileImage", "");
+        userName = findViewById(R.id.user_name_view);
+        userEmail = findViewById(R.id.user_email_view);
+        userPhone = findViewById(R.id.user_phone_view);
+        userUrl = findViewById(R.id.user_url_view);
+        userImage = findViewById(R.id.profile_image);
+        //Bundle extras = getIntent().getExtras();
+        back = findViewById(R.id.button_back);
+        edit = findViewById(R.id.editEventButton);
 
-            // Set the extracted information to your views
-            userName.setText(name);
-            userEmail.setText(email);
-            userPhone.setText(phone);
-
-            // Check if there is a profile image provided and it's not empty
-            if (!profileImageBase64.isEmpty()) {
-                // Decode the Base64 encoded string to a Bitmap
-                byte[] decodedString = Base64.decode(profileImageBase64, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-                // Set the Bitmap to the ImageView
-                userImage.setImageBitmap(decodedByte);
-            }
+        String uID = getIntent().getStringExtra("UserID");
+        if (uID !=null){
+            fetchDetails(uID);
         }
 
         //TODO:Add name, email, and phone
@@ -75,14 +73,11 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);// go to event activity need to connect with other activity
-                String name = userName.getText().toString();
-                String email = userEmail.getText().toString();
-                String phone = userPhone.getText().toString();
-                String profile = getIntent().getStringExtra("profileImage");
+                intent.putExtra("UserID",uID);
                 startActivity(intent);
             }
         });
-        back = findViewById(R.id.button_back_events);
+        //back = findViewById(R.id.button_back_events);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,4 +87,30 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-}
+
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                String profileName = documentSnapshot.getString("name");
+                String profilePhone = documentSnapshot.getString("phone");
+                String profileEmail = documentSnapshot.getString("email");
+                String profileUrl = documentSnapshot.getString("url");
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                userImage.setImageBitmap(profileBitmap);
+                userName.setText(profileName);
+                userEmail.setText(profileEmail);
+                userPhone.setText(profilePhone);
+                userUrl.setText(profileUrl);
+
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
+    }
+
+    }
