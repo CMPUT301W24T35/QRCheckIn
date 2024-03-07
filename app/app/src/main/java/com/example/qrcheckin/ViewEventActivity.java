@@ -20,6 +20,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+/**
+* Allow user to view the event information
+*/
 
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
