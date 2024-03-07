@@ -11,6 +11,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
@@ -20,11 +25,16 @@ public class QRScannerActivity extends AppCompatActivity {
 
     String qrContent;
 
+    FirebaseFirestore db;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_scanner);
+
+        // Fetch db
+        db = FirebaseFirestore.getInstance();
 
         scan = findViewById(R.id.button_scan_qr);
         scan.setOnClickListener(v -> {
@@ -46,8 +56,37 @@ public class QRScannerActivity extends AppCompatActivity {
     private ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null) {
             qrContent = result.getContents();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(QRScannerActivity.this);
-            builder.setTitle("Result");
+
+            // TODO Query Database to find Event
+            // Specify the collection and document ID
+            DocumentReference docRef = db.collection("event").document(qrContent);
+
+            // Get the document
+            docRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    // If EventID exists in Database
+                    // Check in:
+                    //  Update Event field "CheckedinAttendees" with userID
+                    //  Increment number of times checked in
+                    //  Update Event checked in Status to TRUE
+
+                    Object data = documentSnapshot.getData();
+
+                    // Need
+                } else {
+
+                }
+            });
+
+
+
+            //  Find eventID == qrContent
+            //      Checkin to Event
+
+
+            builder.setTitle("Checked In");
             builder.setMessage(result.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override

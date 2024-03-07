@@ -17,7 +17,7 @@ public class Profile {
 
     // This keeps track of the checked in events and the number of times
     // the attendee has checked into that event.
-    private ArrayList<HashMap<Profile, Integer>> checkedInEventsAndCheckedInCount;
+    private ArrayList<HashMap<Event, Integer>> checkedInEventsAndCheckedInCount;
 
 
 
@@ -101,11 +101,11 @@ public class Profile {
         this.homepage = homepage;
     }
 
-    public ArrayList<HashMap<Profile, Integer>> getCheckedInEventsAndCheckedInCount() {
+    public ArrayList<HashMap<Event, Integer>> getCheckedInEventsAndCheckedInCount() {
         return checkedInEventsAndCheckedInCount;
     }
 
-    public void setCheckedInEventsAndCheckedInCount(ArrayList<HashMap<Profile, Integer>> checkedInEventsAndCheckedInCount) {
+    public void setCheckedInEventsAndCheckedInCount(ArrayList<HashMap<Event, Integer>> checkedInEventsAndCheckedInCount) {
         this.checkedInEventsAndCheckedInCount = checkedInEventsAndCheckedInCount;
     }
 
