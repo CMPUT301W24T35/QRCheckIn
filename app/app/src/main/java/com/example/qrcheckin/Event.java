@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+* This is a class that stores information about the event 
+* such as name, description, start time, end time, location, 
+* attendee capacity, organizer ID, signed-up attendees, 
+* and checked-in attendees
+*/
+
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
