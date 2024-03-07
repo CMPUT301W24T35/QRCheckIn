@@ -5,16 +5,16 @@
       <entry key="ConfirmButtonTest()">
         <State />
       </entry>
-      <entry key="CreateProfileActivityTest">
-        <State />
-      </entry>
       <entry key="EditEventActivity">
         <State />
       </entry>
       <entry key="EditEventActivityTest">
         <State />
       </entry>
-      <entry key="OpenTest()">
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="OpenTest() (1)">
         <State />
       </entry>
     </value>
