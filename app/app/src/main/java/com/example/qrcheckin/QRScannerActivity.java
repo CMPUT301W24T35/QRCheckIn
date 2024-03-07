@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,6 +19,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
 public class QRScannerActivity extends AppCompatActivity {
 
@@ -26,6 +32,7 @@ public class QRScannerActivity extends AppCompatActivity {
     String qrContent;
 
     FirebaseFirestore db;
+    String userID;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -62,6 +69,7 @@ public class QRScannerActivity extends AppCompatActivity {
             // TODO Query Database to find Event
             // Specify the collection and document ID
             DocumentReference docRef = db.collection("event").document(qrContent);
+
 
             // Get the document
             docRef.get().addOnSuccessListener(documentSnapshot -> {
