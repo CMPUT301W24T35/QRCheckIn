@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
-* This is a class that responsible for displaying a list of announcements in a ListView or Spinner
+* This is a class that is responsible for displaying a list of announcements
 */ 
 
 public class AnnouncementsAdapter extends ArrayAdapter<Announcement> {
