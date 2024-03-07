@@ -26,6 +26,10 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* This class is responsible for editing exist profile
+*/
+
 public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
     EditText newUserName;
