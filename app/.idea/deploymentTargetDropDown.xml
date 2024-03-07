@@ -2,26 +2,32 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+
+      <entry key="ConfirmButtonTest()">
+
       <entry key="QRScannerActivity">
+
         <State />
       </entry>
-      <entry key="SignedUpEventActivity">
+      <entry key="EditEventActivity">
         <State />
       </entry>
-      <entry key="SignedUpEventActivityTest">
+      <entry key="EditEventActivityTest">
+        <State />
+      </entry>
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="OpenTest() (1)">
+        <State />
+      </entry>
+      <entry key="QRGenerator">
         <State />
       </entry>
       <entry key="ViewEventActivity">
         <State />
       </entry>
-      <entry key="ViewEventActivityTest">
-        <State />
-      </entry>
       <entry key="app">
-
-      <entry key="HomepageActivity">
-        
-      <entry key="MainActivity">
         <State />
       </entry>
     </value>
