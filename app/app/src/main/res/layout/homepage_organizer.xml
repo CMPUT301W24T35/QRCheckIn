@@ -64,7 +64,7 @@
         tools:ignore="RtlSymmetry">
     </View>
     <ListView
-        android:paddingStart="16dp"
+        android:paddingStart="12dp"
         android:id="@+id/event_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"

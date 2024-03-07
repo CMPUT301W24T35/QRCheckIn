@@ -1,5 +1,9 @@
 package com.example.qrcheckin;
 
+
+import android.app.Activity;
+import android.content.Context;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -21,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +45,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     String initialsBase64;
     String profileImageBase64;
     Bundle bundle;
+    String mainUserID;
     boolean isImageSet;
 
     @Override
@@ -124,8 +130,33 @@ public class CreateProfileActivity extends AppCompatActivity {
                     userInfo.put("profileImage", initialsBase64);
                 }
 
-                db.collection("user").add(userInfo).addOnSuccessListener(documentReference -> {
-                    Log.d("Firestore", "Added with ID: " + documentReference.getId());
+
+                db.collection("user")
+                        .add(userInfo)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d("Firestore","Added with ID: "+documentReference.getId());
+                            // Adding userID of the user in the local file
+                            mainUserID = documentReference.getId();
+                            try {
+                                FileOutputStream fos = openFileOutput("localStorage.txt", Context.MODE_PRIVATE);
+                                fos.write(mainUserID.getBytes());
+                                fos.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+//                            bundle.putString("name", userName);
+//                            bundle.putString("phone", phone);
+//                            bundle.putString("email", email);
+//                            bundle.putString("UserID", documentReference.getId());
+//                            if (!url.isEmpty()){
+//                                bundle.putString("url", url);
+//                            }
+//                            if (isImageSet) {
+//                                bundle.putString("profileImage", profileImageBase64);
+//                            } else {
+//                                bundle.putString("profileImage", initialsBase64);
+//                            }
+//                            intent.putExtras(bundle);
 
 //                    Bundle bundle = new Bundle();
 //                    // Instead of just adding the document ID, add all the user information

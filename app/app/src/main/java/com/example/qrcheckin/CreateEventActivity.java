@@ -13,12 +13,24 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import androidmads.library.qrgenearator.QRGContents;
@@ -44,12 +56,11 @@ public class CreateEventActivity extends AppCompatActivity {
     String posterImageBase64;
     Bitmap promoCodeBitmap;
     String promoCodeBase64;
-
-
-
+    String mainUserID;
 
     Bundle bundle;
 
+    String docID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +120,7 @@ public class CreateEventActivity extends AppCompatActivity {
         );
 
         continueButton.setOnClickListener(v -> startNextActivity());
-
     }
-
 
     private void startNextActivity() {
         if (isTextEditInputEmpty()) {
@@ -128,9 +137,25 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = newStartTime.getText().toString();
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
-        String docID = Helpers.createDocID(eventName, startTime, location);
+        docID = Helpers.createDocID(eventName, startTime, location);
         String attendeeCapacityString = newAttendeeCapacity.getText().toString();
         Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
+
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         checkPromoCodeAndGenerate();
 
@@ -138,6 +163,7 @@ public class CreateEventActivity extends AppCompatActivity {
         // TODO profileID to organizerID
 
         data.put("eventName", eventName);
+        //data.put("OrganiserID", mainUserID);
         data.put("eventDescription", eventDescription);
         data.put("startTime", startTime);
         data.put("endTime", endTime);
@@ -158,6 +184,52 @@ public class CreateEventActivity extends AppCompatActivity {
         bundle.putString("endTime", endTime);
         bundle.putString("location", location);
         bundle.putString("eventID", docID);
+
+        DocumentReference userRef = db.collection("user").document(mainUserID);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Check if organizedEvent field exists
+                        if (document.contains("organizedEvent")) {
+                            // If it exists, update the array by adding docID
+                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "Document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        } else {
+                            // If it doesn't exist, create a new array with docID
+                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "New organizedEvent field created and document updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
 
         db.collection("event")
                 .document(docID)
@@ -219,7 +291,7 @@ public class CreateEventActivity extends AppCompatActivity {
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
             // CheckBox is checked
-            String inputValue = "tester";
+            String inputValue = Helpers.reverseString(docID);
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap

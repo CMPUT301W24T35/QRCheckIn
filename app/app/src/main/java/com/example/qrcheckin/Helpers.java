@@ -67,5 +67,23 @@ public class Helpers {
         byte[] imageAsBytes = Base64.decode(b64.getBytes(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
     }
+
+    /**
+     * Reverse string helper class. Used to invert the EventID (docID) string which will be used
+     * for the promo code. The regular EventID is used for the CheckinQR Code.
+     * @param str
+     * @return
+     */
+    public static String reverseString(String str){
+        StringBuilder builder = new StringBuilder();
+
+        // append a string into StringBuilder input1
+        builder.append(str);
+
+        // reverse StringBuilder input1
+        builder.reverse();
+
+        return builder.toString();
+    }
 }
 
