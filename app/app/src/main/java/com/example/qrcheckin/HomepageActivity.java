@@ -48,11 +48,11 @@ public class HomepageActivity extends AppCompatActivity {
 
         getEvent();
 
-        String uID = getIntent().getStringExtra("UserID");
+        /*String uID = getIntent().getStringExtra("UserID");
 
         if (uID !=null){
             fetchDetails(uID);
-        }
+        }*/
 
         //click the organizeEvent button
         organizeEvent = findViewById(R.id.button_organize_events);

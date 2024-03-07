@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
@@ -44,6 +45,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     String profileImageBase64;
     Bundle bundle;
     String mainUserID;
+    String android_id;
     boolean isImageSet;
 
     @Override
@@ -118,7 +120,9 @@ public class CreateProfileActivity extends AppCompatActivity {
                 if (!url.isEmpty()) {
                     userInfo.put("url", url);
                 }
+                android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+                userInfo.put("androidID", android_id);
                 if (isImageSet) {
                     userInfo.put("profileImage", profileImageBase64);
                 } else {
