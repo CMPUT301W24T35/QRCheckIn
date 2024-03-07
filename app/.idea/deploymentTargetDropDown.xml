@@ -20,7 +20,8 @@
       <entry key="app">
 
       <entry key="HomepageActivity">
-
+        
+      <entry key="MainActivity">
         <State />
       </entry>
     </value>
