@@ -11,6 +11,10 @@ import android.widget.ImageButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This is a class that initializes the organizer's homepage view elements
+*/ 
+
 public class HomepageOrganizer extends AppCompatActivity {
 
     CircleImageView profile;
