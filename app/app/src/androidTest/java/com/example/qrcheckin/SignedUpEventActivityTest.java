@@ -16,26 +16,31 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class NotificationActivityTest {
+public class SignedUpEventActivityTest {
     @Rule
-    public ActivityScenarioRule<NotificationActivity> scenario = new
-            ActivityScenarioRule<NotificationActivity>(NotificationActivity.class);
+    public ActivityScenarioRule<SignedUpEventActivity> scenario = new
+            ActivityScenarioRule<SignedUpEventActivity>(SignedUpEventActivity.class);
 
 
     @Test
     public void opentest() {
 
-        onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_home)).check(matches(isDisplayed()));
 
+    }
+@Test
+public void Homebuttontest(){
+    onView(withId(R.id.button_home)).perform(click());
+    onView(withId(R.id.button_organize_events)).check(matches(isDisplayed()));
     }
 
 
-    @Test
-    public void backbuttontest(){
-        onView(withId(R.id.backArrow)).perform(click());
-        onView(withId(R.id.button_organize_events)).check(matches(isDisplayed()));
+@Test
+public void CheckInbuttontest(){
+    onView(withId(R.id.button_check_in)).perform(click());
+    onView(withId(R.id.button_scan_qr)).check(matches(isDisplayed()));
+}
 
 
-    }
 
 }

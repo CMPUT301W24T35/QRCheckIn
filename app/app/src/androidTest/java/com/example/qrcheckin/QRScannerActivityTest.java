@@ -16,25 +16,16 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class NotificationActivityTest {
+public class QRScannerActivityTest {
     @Rule
-    public ActivityScenarioRule<NotificationActivity> scenario = new
-            ActivityScenarioRule<NotificationActivity>(NotificationActivity.class);
+    public ActivityScenarioRule<QRScannerActivity> scenario = new
+            ActivityScenarioRule<QRScannerActivity>(QRScannerActivity.class);
 
 
     @Test
-    public void opentest() {
+    public void Opentest() {
 
-        onView(withId(R.id.backArrow)).check(matches(isDisplayed()));
-
-    }
-
-
-    @Test
-    public void backbuttontest(){
-        onView(withId(R.id.backArrow)).perform(click());
-        onView(withId(R.id.button_organize_events)).check(matches(isDisplayed()));
-
+        onView(withId(R.id.button_scan_qr)).check(matches(isDisplayed()));
 
     }
 

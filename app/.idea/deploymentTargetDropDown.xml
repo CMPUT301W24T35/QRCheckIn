@@ -2,22 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="CreateProfileActivity">
+      <entry key="QRScannerActivity">
         <State />
       </entry>
-      <entry key="CreateProfileActivityTest">
+      <entry key="SignedUpEventActivity">
         <State />
       </entry>
-      <entry key="NotificationActivity">
+      <entry key="SignedUpEventActivityTest">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
+        <State />
+      </entry>
+      <entry key="ViewEventActivityTest">
         <State />
       </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="test()">
-        <State />
-      </entry>
-      <entry key="test() (1)">
         <State />
       </entry>
     </value>
