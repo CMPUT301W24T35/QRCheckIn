@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="deploymentTargetDropDown">
+    <value>
+
+      <entry key="ConfirmButtonTest()">
+        <State />
+      </entry>
+
+      <entry key="QRScannerActivity">
+
+        <State />
+      </entry>
+      <entry key="EditEventActivity">
+        <State />
+      </entry>
+      <entry key="EditEventActivityTest">
+        <State />
+      </entry>
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="OpenTest() (1)">
+        <State />
+      </entry>
+      <entry key="QRGenerator">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
+        <State />
+      </entry>
+      <entry key="app">
+        <State />
+      </entry>
+    </value>
+  </component>
+</project>
