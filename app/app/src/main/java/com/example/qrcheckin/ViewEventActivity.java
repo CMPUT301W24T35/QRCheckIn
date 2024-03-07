@@ -130,6 +130,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
 
         // TODO : Add attendee array item connect to firebase
+        // TODO: Check if capacity has been reached or if there is space
+        //  reject signup if capacity reached.
         attendeeDataList = new ArrayList<>();
         attendeeList = findViewById(R.id.attendees_list);
         attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);

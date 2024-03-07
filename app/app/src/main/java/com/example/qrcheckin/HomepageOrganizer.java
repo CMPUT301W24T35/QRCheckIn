@@ -36,8 +36,8 @@ public class HomepageOrganizer extends AppCompatActivity {
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(HomepageOrganizer.this, CreateEvent.class);// go to event activity need to connect with other activity
-                //startActivity(intent);
+                Intent intent = new Intent(HomepageOrganizer.this, CreateEventActivity.class);// go to event activity need to connect with other activity
+                startActivity(intent);
             }
         });
         back = findViewById(R.id.button_back_events);
