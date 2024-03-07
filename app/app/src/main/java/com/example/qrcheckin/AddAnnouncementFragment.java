@@ -16,10 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-
+/**
+* This is a class that Display a dialog to allow the user to add an announcement
+* Responsible to communicate with the hosting Activity to add the announcement
+*/ 
+    
 public class AddAnnouncementFragment extends DialogFragment {
     interface AddAnnouncementDialogListener {
-        void addAnnouncement(Announcement announcement);//
+        void addAnnouncement(Announcement announcement);
     }
     private AddAnnouncementDialogListener listener;
 
