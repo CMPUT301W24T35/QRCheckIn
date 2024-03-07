@@ -103,7 +103,6 @@ public class ProfileActivity extends AppCompatActivity {
                 userEmail.setText(profileEmail);
                 userPhone.setText(profilePhone);
                 userUrl.setText(profileUrl);
-
             }
             else{
                 Log.e("ProfileActivity", "No such document");

@@ -49,6 +49,7 @@ public class HomepageActivity extends AppCompatActivity {
         getEvent();
 
         String uID = getIntent().getStringExtra("UserID");
+
         if (uID !=null){
             fetchDetails(uID);
         }
@@ -153,7 +154,6 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
     }
 
