@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+/**
+* This class is responsible for notifying the user when there is updated activity
+*/
+
 public class NotificationActivity extends AppCompatActivity {
 
     ImageButton back;
