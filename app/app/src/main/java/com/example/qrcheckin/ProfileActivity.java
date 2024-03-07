@@ -13,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -26,8 +30,16 @@ public class ProfileActivity extends AppCompatActivity {
     Button back;
     Button edit;
 
+    String mainUserID;
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check if mainUserID is not null and then fetch details
+        if (mainUserID != null) {
+            fetchDetails(mainUserID);
+        }
+    }
 
 
     @SuppressLint("MissingInflatedId")
@@ -48,9 +60,29 @@ public class ProfileActivity extends AppCompatActivity {
         back = findViewById(R.id.button_back);
         edit = findViewById(R.id.editEventButton);
 
-        String uID = getIntent().getStringExtra("UserID");
-        if (uID !=null){
-            fetchDetails(uID);
+        //String uID = getIntent().getStringExtra("UserID");
+//        if (uID !=null){
+//            fetchDetails(uID);
+//        }
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (mainUserID !=null){
+            fetchDetails(mainUserID);
         }
 
         //TODO:Add name, email, and phone
@@ -73,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);// go to event activity need to connect with other activity
-                intent.putExtra("UserID",uID);
+                intent.putExtra("UserID",mainUserID);
                 startActivity(intent);
             }
         });
