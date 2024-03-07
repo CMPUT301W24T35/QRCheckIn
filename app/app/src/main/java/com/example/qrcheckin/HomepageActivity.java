@@ -20,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,6 +40,7 @@ public class HomepageActivity extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView eventList;
     private EventArrayAdapter eventAdapter;
+    String mainUserID;
 
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
@@ -48,10 +52,27 @@ public class HomepageActivity extends AppCompatActivity {
 
         getEvent();
 
-        String uID = getIntent().getStringExtra("UserID");
+        //String uID = getIntent().getStringExtra("UserID");
 
-        if (uID !=null){
-            fetchDetails(uID);
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (mainUserID !=null){
+            fetchDetails(mainUserID);
         }
 
         //click the organizeEvent button
@@ -94,7 +115,7 @@ public class HomepageActivity extends AppCompatActivity {
 //                profileIntent.putExtra("email", profEmail);
 //                profileIntent.putExtra("phone", profPhone);
 //                profileIntent.putExtra("url", profUrl);
-                profileIntent.putExtra("UserID",uID);
+                //profileIntent.putExtra("UserID",);
 
                 // Start ProfileActivity with the intent
                 startActivity(profileIntent);
