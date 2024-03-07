@@ -5,16 +5,19 @@
       <entry key="CreateProfileActivity">
         <State />
       </entry>
-      <entry key="MainActivityTest">
+      <entry key="CreateProfileActivityTest">
         <State />
       </entry>
-      <entry key="ProfileActivity">
-        <State />
-      </entry>
-      <entry key="ViewEventActivity">
+      <entry key="NotificationActivity">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="test()">
+        <State />
+      </entry>
+      <entry key="test() (1)">
         <State />
       </entry>
     </value>
