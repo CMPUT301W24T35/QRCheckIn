@@ -130,7 +130,6 @@ public class CreateEventActivity extends AppCompatActivity {
     private void addEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
-        HashMap<String, Object> userData = new HashMap<>();
 
         String eventName = newEventName.getText().toString();
         String eventDescription = newEventDescription.getText().toString();

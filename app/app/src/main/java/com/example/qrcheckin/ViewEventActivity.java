@@ -94,10 +94,10 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             // If it is an attendee, then hide unnecessary info
             ConstraintLayout eventButtons = findViewById(R.id.eventButtons);
             LinearLayout attendeeInfo = findViewById(R.id.attendeesInfo);
-            eventButtons.setVisibility(View.INVISIBLE);
-            attendeeInfo.setVisibility(View.INVISIBLE);
-            addAnnouncement.setVisibility(View.INVISIBLE);
-            share.setVisibility(View.INVISIBLE);
+            eventButtons.setVisibility(View.GONE);
+            attendeeInfo.setVisibility(View.GONE);
+            addAnnouncement.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
             ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
             signInBtnArea.setVisibility(View.VISIBLE);
         }
@@ -114,7 +114,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         viewMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Create a map API to view map with attendees
+                // TODO Create a map API to view map with attendees - Project Part 4
             }
         });
 
@@ -163,11 +163,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
     @Override
     public void addAnnouncement(Announcement announcement) {
+        String message = announcement.getAnnouncement();
+        // TODO Get the eventID so that we can store announcements in the Event in firebase
         announcementDataList.add(0, announcement);
         announcementsAdapter.notifyDataSetChanged();
     }
     public boolean isAttendee() {
-        // TODO Check if it is an attendee
+        // Checks if the request for this page is coming from an attendee or an organizer
         /*
         Add the following wherever we create an intent to come to this page
         * Intent intent = new Intent(Activity1.this,Activity2.class);
