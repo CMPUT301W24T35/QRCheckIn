@@ -1,21 +1,24 @@
 package com.example.qrcheckin;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -29,10 +32,10 @@ public class QRScannerActivity extends AppCompatActivity {
 
     Button scan;
 
+    String userID;
     String qrContent;
 
     FirebaseFirestore db;
-    String userID;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -70,8 +73,116 @@ public class QRScannerActivity extends AppCompatActivity {
             // Specify the collection and document ID
             DocumentReference docRef = db.collection("event").document(qrContent);
 
+            try {
+                FileInputStream fis = openFileInput("localStorage.txt");
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                userID = sb.toString();
+                Log.d("Main USER ID", userID);
+                fis.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            int checkInNum;      //record the number of check in
+
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            // Check if userIDCheckIn field exists
+                            if (document.contains("userIDCheckIn")) {
+                                // If it exists, update the array by adding docID
+                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("Firestore", "Document successfully updated!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Firestore", "Error updating document", e);
+                                            }
+                                        });
+                            }else {
+                                // If it doesn't exist, create a new array with docID
+                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("Firestore", "New organizedEvent field created and document updated!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Firestore", "Error updating document", e);
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d("Firestore", "No such document");
+                        }
+                    } else {
+                        Log.d("Firestore", "get failed with ", task.getException());
+                    }
+                }
+            });
+            DocumentReference checkEventdocRef = db.collection("user").document(userID);
+
+            checkEventdocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            // Check if checkedEvent field exists
+                            if (document.contains("checkedEvent")) {
+                                // If it exists, update the array by adding docID
+                                checkEventdocRef.update("checkedEvent", FieldValue.arrayUnion(qrContent))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("Firestore", "Document successfully updated!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Firestore", "Error updating document", e);
+                                            }
+                                        });
+                            }else {
+                                // If it doesn't exist, create a new array with docID
+                                checkEventdocRef.update("checkedEvent", FieldValue.arrayUnion(qrContent))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("Firestore", "New organizedEvent field created and document updated!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Firestore", "Error updating document", e);
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d("Firestore", "No such document");
+                        }
+                    } else {
+                        Log.d("Firestore", "get failed with ", task.getException());
+                    }
+                }
+            });
             // Get the document
+            /*
             docRef.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     // If EventID exists in Database
@@ -79,15 +190,28 @@ public class QRScannerActivity extends AppCompatActivity {
                     //  Update Event field "CheckedinAttendees" with userID
                     //  Increment number of times checked in
                     //  Update Event checked in Status to TRUE
+                    if(docRef.data().checkInUsers) {
 
+                    }
+                    int numCheckIn = 0;
+                    HashMap<String, HashMap<String,Object>> checkInUsers = new HashMap<>();
+                    HashMap<String, Object> userCheckIns = checkInUsers.get("checkInUsers");
+                    if(userCheckIns == null) {
+                        userCheckIns = new HashMap<>();
+                        checkInUsers.put("checkInUsers", userCheckIns);
+                    }
+                    numCheckIn+=1;
+                    userCheckIns.put(userID, numCheckIn);
+                    docRef.update(userCheckIns);
                     Object data = documentSnapshot.getData();
 
                     // Need
                 } else {
-
+                    Log.d("firebase", "wrong connection");
                 }
             });
 
+             */
 
 
             //  Find eventID == qrContent

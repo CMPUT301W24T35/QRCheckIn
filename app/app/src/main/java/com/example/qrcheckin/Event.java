@@ -2,6 +2,10 @@ package com.example.qrcheckin;
 
 import java.util.ArrayList;
 
+/**
+* This class is defined events
+*/
+
 public class Event {
     private String eventID; // Use for Firebase document reference
     private String name;
