@@ -36,6 +36,9 @@ import android.view.MenuItem;
 
 import java.io.FileOutputStream;
 
+/**
+* Main class to the project
+*/
 
 public class MainActivity extends AppCompatActivity {
 
