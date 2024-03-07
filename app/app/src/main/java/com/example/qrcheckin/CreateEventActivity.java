@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
-* This is a class that responsible for managing the creation of new events in the application
+* This is a class that is responsible for managing the creation of new events
 */ 
 
 public class CreateEventActivity extends AppCompatActivity {
