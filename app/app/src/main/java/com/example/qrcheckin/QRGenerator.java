@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+* This is a class that generate a QR code which allow user to use camera scan for
+*/ 
 
 public class QRGenerator extends AppCompatActivity {
 
