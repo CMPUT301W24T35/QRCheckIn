@@ -29,6 +29,10 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* Allow user to sign up event
+*/
+
 public class SignedUpEventActivity extends AppCompatActivity {
 
     Button home;
@@ -109,6 +113,7 @@ public class SignedUpEventActivity extends AppCompatActivity {
 
     }
 
+
     private void getSignedUpEvents() {
 
         try {
@@ -179,3 +184,4 @@ public class SignedUpEventActivity extends AppCompatActivity {
     }
 
 }
+

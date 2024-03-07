@@ -36,6 +36,9 @@ import java.util.HashMap;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+* This class is responsible for creating new events
+*/
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;

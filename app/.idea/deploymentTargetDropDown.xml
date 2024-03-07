@@ -6,6 +6,10 @@
         <State />
       </entry>
       <entry key="SignedUpEventActivity">
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="app">
         <State />
       </entry>
     </value>

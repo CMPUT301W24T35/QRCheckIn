@@ -16,6 +16,9 @@ import java.util.HashMap;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+* Create QR Code
+*/
 
 public class QRGenerator extends AppCompatActivity {
 

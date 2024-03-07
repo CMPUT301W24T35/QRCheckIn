@@ -29,6 +29,10 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* This class is responsible for editing exist profile
+*/
+
 public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
     EditText newUserName;
@@ -37,6 +41,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText newUserUrl;
     Button confirmButton;
     Button editProfileImageButton;
+    Button deleteProfileImageButton;
     ImageView profileImage;
     Bitmap initialsBitmap;
     String initialsBase64;
@@ -56,6 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
         newUserUrl = findViewById(R.id.edituserHomepageText);
         confirmButton = findViewById(R.id.contAddProfileButton);
         editProfileImageButton = findViewById(R.id.ProfileImageEditButton);
+        deleteProfileImageButton = findViewById(R.id.ProfileImageDeleteButton);
         profileImage = findViewById(R.id.ProfileImage);
         db = FirebaseFirestore.getInstance();
 
@@ -105,6 +111,15 @@ public class EditProfileActivity extends AppCompatActivity {
                         Log.d("PhotoPicker", "No media selected");
                     }
                 });
+
+        deleteProfileImageButton.setOnClickListener(v -> {
+            // Delete the existing profile picture
+            isImageSet = false;
+            String userName = newUserName.getText().toString();
+            String initials = getInitials(userName);
+            initialsBitmap = generateInitialsImage(initials);
+            profileImage.setImageBitmap(initialsBitmap);
+        });
 
         editProfileImageButton.setOnClickListener(v -> {
                     // Launch the photo picker and let the user choose only images.
