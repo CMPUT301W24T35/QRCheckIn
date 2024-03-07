@@ -19,6 +19,10 @@ import java.io.InputStreamReader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This class process profile working
+*/
+
 public class ProfileActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();

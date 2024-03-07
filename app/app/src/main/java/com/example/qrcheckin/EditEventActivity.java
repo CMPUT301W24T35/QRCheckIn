@@ -22,6 +22,10 @@ import java.util.HashMap;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+* This class is responsible for editing exist event
+*/
+
 public class EditEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;

@@ -30,6 +30,9 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This class initializes homepage for organizer
+*/
 public class HomepageOrganizer extends AppCompatActivity {
 
     CircleImageView profile;
