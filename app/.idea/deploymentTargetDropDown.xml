@@ -2,7 +2,11 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+<<<<<<< HEAD
       <entry key="HomepageOrganizer">
+=======
+      <entry key="HomepageActivity">
+>>>>>>> 256f0d5effc016563f0da2471800a4b01fb43f1d
         <State />
       </entry>
     </value>
