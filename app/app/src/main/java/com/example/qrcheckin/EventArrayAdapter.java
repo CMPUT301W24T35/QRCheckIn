@@ -12,6 +12,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+* This is a class that keeps a list of events information
+*/
+
 public class EventArrayAdapter extends ArrayAdapter<Event> {
     public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context, 0, events);
