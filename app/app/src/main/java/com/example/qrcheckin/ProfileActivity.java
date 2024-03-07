@@ -1,18 +1,34 @@
 package com.example.qrcheckin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileActivity extends AppCompatActivity {
 
-    Button edit;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TextView userName;
+    TextView userEmail;
+    TextView userPhone;
+    TextView userUrl;
+    CircleImageView userImage;
     Button back;
+    Button edit;
+
+
+
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -21,10 +37,24 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
 
+
+        //Bundle extras = getIntent().getExtras();
+        userName = findViewById(R.id.user_name_view);
+        userEmail = findViewById(R.id.user_email_view);
+        userPhone = findViewById(R.id.user_phone_view);
+        userUrl = findViewById(R.id.user_url_view);
+        userImage = findViewById(R.id.profile_image);
+        //Bundle extras = getIntent().getExtras();
+        back = findViewById(R.id.button_back);
+        edit = findViewById(R.id.editEventButton);
+
+        String uID = getIntent().getStringExtra("UserID");
+        if (uID !=null){
+            fetchDetails(uID);
+        }
+
         //TODO:Add name, email, and phone
-        TextView userName = findViewById(R.id.user_name_input);
-        TextView userEmail = findViewById(R.id.user_email_input);
-        TextView userPhone = findViewById(R.id.user_phoneNumber_input);
+
 
         //TODO: Integrate with firebase and get the data from firebase
         //String name =
@@ -42,11 +72,12 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
-                Intent intent = new Intent(ProfileActivity.this, CreateProfileActivity.class);// go to event activity need to connect with other activity
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);// go to event activity need to connect with other activity
+                intent.putExtra("UserID",uID);
                 startActivity(intent);
             }
         });
-        back = findViewById(R.id.button_back_events);
+        //back = findViewById(R.id.button_back_events);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,4 +87,29 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-}
+
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                String profileName = documentSnapshot.getString("name");
+                String profilePhone = documentSnapshot.getString("phone");
+                String profileEmail = documentSnapshot.getString("email");
+                String profileUrl = documentSnapshot.getString("url");
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                userImage.setImageBitmap(profileBitmap);
+                userName.setText(profileName);
+                userEmail.setText(profileEmail);
+                userPhone.setText(profilePhone);
+                userUrl.setText(profileUrl);
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
+    }
+
+    }

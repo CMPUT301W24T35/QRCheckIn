@@ -1,6 +1,6 @@
 package com.example.qrcheckin;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,14 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.rpc.Help;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.grpc.LoadBalancer;
 
 public class CreateProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -102,35 +99,35 @@ public class CreateProfileActivity extends AppCompatActivity {
         );
 
         // Create intent to move to the homepage after creating the profile
-        Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
+        //Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
 
         // Set onclick listener for confirm button
         // Check if all input data are valid
         // Write data to db
-        confirmButton.setOnClickListener(v-> {
-            Map<String, Object> userInfo = null;
+        confirmButton.setOnClickListener(v -> {
             if (isProfileInputValid()) {
                 String userName = newUserName.getText().toString();
                 String phone = newUserPhone.getText().toString();
                 String email = newUserEmail.getText().toString();
                 String url = newUserHomepage.getText().toString();
 
-                userInfo = new HashMap<>();
+                Map<String, Object> userInfo = new HashMap<>();
                 userInfo.put("name", userName);
                 userInfo.put("phone", phone);
                 userInfo.put("email", email);
-                if (!url.isEmpty()){
+                if (!url.isEmpty()) {
                     userInfo.put("url", url);
                 }
+
                 if (isImageSet) {
                     userInfo.put("profileImage", profileImageBase64);
                 } else {
                     String initials = getInitials(userName);
                     initialsBitmap = generateInitialsImage(initials);
-                    //profileImage.setImageBitmap(initialsBitmap);
                     initialsBase64 = Helpers.bitmapToBase64(initialsBitmap);
                     userInfo.put("profileImage", initialsBase64);
                 }
+
 
                 db.collection("user")
                         .add(userInfo)
@@ -159,44 +156,26 @@ public class CreateProfileActivity extends AppCompatActivity {
 //                            }
 //                            intent.putExtras(bundle);
 
-                            startActivity(intent);
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.w("Firestore", "Error adding document", e);
-                        });
-            }
-            else{
+//                    Bundle bundle = new Bundle();
+//                    // Instead of just adding the document ID, add all the user information
+//                    bundle.putString("UserID", documentReference.getId()); // keep this if you need the document ID later
+//                    bundle.putString("name", userName);
+//                    bundle.putString("phone", phone);
+//                    bundle.putString("email", email);
+//                    bundle.putString("url", url); // It's okay if this is empty, the receiving activity should handle it
+//                    // No need to check if the profile image is set or not here; just pass what you have
+//                    bundle.putString("profileImage", isImageSet ? profileImageBase64 : initialsBase64);
+
+                    Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
+                    intent.putExtra("UserID", documentReference.getId()); // Attach the bundle to the intent
+                    startActivity(intent);
+
+                }).addOnFailureListener(e -> {
+                    Log.w("Firestore", "Error adding document", e);
+                });
+            } else {
                 Log.d("Validation", "Input validation failed.");
             }
-
-
-//            if (isProfileInputValid()) {
-//                bundle.putString("userName", String.valueOf(newUserName.getText()));
-//                bundle.putString("phone", String.valueOf(newUserPhone.getText()));
-//                bundle.putString("email", String.valueOf(newUserEmail.getText()));
-//                if (!String.valueOf(newUserHomepage.getText()).isEmpty()) {
-//                    bundle.putString("homepage", String.valueOf(newUserHomepage.getText()));
-//                }
-//                intent.putExtras(bundle);
-//                if (!isImageSet) {
-//                    // Generate a unique default profile image based on the profile name
-//                    String initials = getInitials(String.valueOf(newUserName.getText()));
-//                    Bitmap initialsBitmap = generateInitialsImage(initials);
-//                    profileImage.setImageBitmap(initialsBitmap);
-//                }
-//                dbConnected();
-//            } else {
-//                return;
-//            }
-//            // TODO Check database connected and get unique profile ID - AYAN
-//            if (isDBConnected){
-//                // Get Unique Event ID / document ID
-//                // Go to QRGenerator
-//                startActivity(intent);
-//            } else {
-//                // Toast - need network connection to proceed
-//                return;
-//            }
         });
     }
 
