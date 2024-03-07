@@ -2,6 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+
       <entry key="QRScannerActivity">
         <State />
       </entry>
@@ -22,6 +23,15 @@
       <entry key="HomepageActivity">
         
       <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="QRGenerator">
+        <State />
+      </entry>
+      <entry key="ViewEventActivity">
+        <State />
+      </entry>
+      <entry key="app">
         <State />
       </entry>
     </value>
