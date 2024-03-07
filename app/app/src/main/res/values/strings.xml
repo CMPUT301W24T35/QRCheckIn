@@ -43,7 +43,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-<<<<<<< HEAD
     <string name="title_activity_organizer_home">OrganizerHomeActivity</string>
     <string name="add_profile">Add Profile</string>
     <string name="profileimage">profileImage</string>
@@ -61,6 +60,4 @@
     <string name="attendees">Attendees</string>
     <string name="edit_event">EDIT EVENT</string>
     <string name="view_map">VIEW MAP</string>
-=======
->>>>>>> 7044ab24b655fd5348f453537fe799830ec8bda8
 </resources>
