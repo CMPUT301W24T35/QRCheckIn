@@ -2,6 +2,7 @@ package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -36,6 +40,7 @@ public class HomepageActivity extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView eventList;
     private EventArrayAdapter eventAdapter;
+    String mainUserID;
 
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
@@ -47,6 +52,29 @@ public class HomepageActivity extends AppCompatActivity {
 
         getEvent();
 
+        //String uID = getIntent().getStringExtra("UserID");
+
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (mainUserID !=null){
+            fetchDetails(mainUserID);
+        }
+
         //click the organizeEvent button
         organizeEvent = findViewById(R.id.button_organize_events);
         organizeEvent.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +85,7 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         //click the signedUp button
         signedUp = findViewById(R.id.button_signed_up_events);
         signedUp.setOnClickListener(new View.OnClickListener() {
@@ -66,16 +95,32 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Intent intent = getIntent();
+
+        String profileImage = intent.getStringExtra("profileImage");
+        String profName = intent.getStringExtra("name");
+        String profEmail = intent.getStringExtra("email");
+        String profPhone = intent.getStringExtra("phone");
+        String profUrl = intent.getStringExtra("url");
 
         profile = findViewById(R.id.profile_image_button);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomepageActivity.this, ProfileActivity.class);// go to event activity need to connect with other activity
-                startActivity(intent);
+                Intent profileIntent = new Intent(HomepageActivity.this, ProfileActivity.class);
+
+                // Put the profile details into the intent
+//                profileIntent.putExtra("profileImage", profileImage);
+//                profileIntent.putExtra("name", profName);
+//                profileIntent.putExtra("email", profEmail);
+//                profileIntent.putExtra("phone", profPhone);
+//                profileIntent.putExtra("url", profUrl);
+                //profileIntent.putExtra("UserID",);
+
+                // Start ProfileActivity with the intent
+                startActivity(profileIntent);
             }
         });
-
 
         local = findViewById(R.id.button_location);
         local.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +176,22 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                profile.setImageBitmap(profileBitmap);
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
     }
 
     private void getEvent() {

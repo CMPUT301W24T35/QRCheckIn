@@ -47,7 +47,7 @@
     <string name="add_profile">Add Profile</string>
     <string name="profileimage">profileImage</string>
     <string name="add_picture">ADD PICTURE</string>
-    <string name="phone">Phone</string>
+    <string name="phone">Phone (Must be 10-digit number)</string>
     <string name="email">Email</string>
     <string name="confirm">CONFIRM</string>
     <string name="homepage">Homepage</string>
@@ -61,5 +61,6 @@
     <string name="edit_event">EDIT EVENT</string>
     <string name="view_map">VIEW MAP</string>
     <string name="sign_in">SIGN IN</string>
-
+    <string name="url">url</string>
+    <string name="u">URL</string>
 </resources>
