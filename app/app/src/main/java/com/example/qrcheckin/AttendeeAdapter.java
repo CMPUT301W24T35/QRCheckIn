@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* This is a class that responsible for displaying a list of attendees in a ListView or Spinner
+* This is a class that is responsible for displaying a list of attendees
 */
 public class AttendeeAdapter extends ArrayAdapter<Profile> {
     private Context context;
