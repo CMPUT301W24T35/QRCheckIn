@@ -6,9 +6,7 @@ import java.util.Date;
 
 /**
 * This is a class that stores information about the event 
-* such as name, description, start time, end time, location, 
-* attendee capacity, organizer ID, signed-up attendees, 
-* and checked-in attendees
+* such as name, description, start time, end time, location, attendee capacity, organizer ID, signed-up attendees, and checked-in attendees
 */
 
 public class Event {
