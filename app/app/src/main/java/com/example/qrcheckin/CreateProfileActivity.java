@@ -127,18 +127,18 @@ public class CreateProfileActivity extends AppCompatActivity {
                 db.collection("user").add(userInfo).addOnSuccessListener(documentReference -> {
                     Log.d("Firestore", "Added with ID: " + documentReference.getId());
 
-                    Bundle bundle = new Bundle();
-                    // Instead of just adding the document ID, add all the user information
-                    bundle.putString("UserID", documentReference.getId()); // keep this if you need the document ID later
-                    bundle.putString("name", userName);
-                    bundle.putString("phone", phone);
-                    bundle.putString("email", email);
-                    bundle.putString("url", url); // It's okay if this is empty, the receiving activity should handle it
-                    // No need to check if the profile image is set or not here; just pass what you have
-                    bundle.putString("profileImage", isImageSet ? profileImageBase64 : initialsBase64);
+//                    Bundle bundle = new Bundle();
+//                    // Instead of just adding the document ID, add all the user information
+//                    bundle.putString("UserID", documentReference.getId()); // keep this if you need the document ID later
+//                    bundle.putString("name", userName);
+//                    bundle.putString("phone", phone);
+//                    bundle.putString("email", email);
+//                    bundle.putString("url", url); // It's okay if this is empty, the receiving activity should handle it
+//                    // No need to check if the profile image is set or not here; just pass what you have
+//                    bundle.putString("profileImage", isImageSet ? profileImageBase64 : initialsBase64);
 
                     Intent intent = new Intent(CreateProfileActivity.this, HomepageActivity.class);
-                    intent.putExtras(bundle); // Attach the bundle to the intent
+                    intent.putExtra("UserID", documentReference.getId()); // Attach the bundle to the intent
                     startActivity(intent);
 
                 }).addOnFailureListener(e -> {

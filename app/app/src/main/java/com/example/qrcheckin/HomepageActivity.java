@@ -2,6 +2,7 @@ package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +48,11 @@ public class HomepageActivity extends AppCompatActivity {
 
         getEvent();
 
+        String uID = getIntent().getStringExtra("UserID");
+        if (uID !=null){
+            fetchDetails(uID);
+        }
+
         //click the organizeEvent button
         organizeEvent = findViewById(R.id.button_organize_events);
         organizeEvent.setOnClickListener(new View.OnClickListener() {
@@ -82,18 +88,17 @@ public class HomepageActivity extends AppCompatActivity {
                 Intent profileIntent = new Intent(HomepageActivity.this, ProfileActivity.class);
 
                 // Put the profile details into the intent
-                profileIntent.putExtra("profileImage", profileImage);
-                profileIntent.putExtra("name", profName);
-                profileIntent.putExtra("email", profEmail);
-                profileIntent.putExtra("phone", profPhone);
-                profileIntent.putExtra("url", profUrl);
+//                profileIntent.putExtra("profileImage", profileImage);
+//                profileIntent.putExtra("name", profName);
+//                profileIntent.putExtra("email", profEmail);
+//                profileIntent.putExtra("phone", profPhone);
+//                profileIntent.putExtra("url", profUrl);
+                profileIntent.putExtra("UserID",uID);
 
                 // Start ProfileActivity with the intent
                 startActivity(profileIntent);
             }
         });
-
-
 
         local = findViewById(R.id.button_location);
         local.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +155,22 @@ public class HomepageActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                profile.setImageBitmap(profileBitmap);
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
     }
 
     private void getEvent() {

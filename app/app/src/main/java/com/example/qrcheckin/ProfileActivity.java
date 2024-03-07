@@ -75,6 +75,10 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);// go to event activity need to connect with other activity
+                String name = userName.getText().toString();
+                String email = userEmail.getText().toString();
+                String phone = userPhone.getText().toString();
+                String profile = getIntent().getStringExtra("profileImage");
                 startActivity(intent);
             }
         });
