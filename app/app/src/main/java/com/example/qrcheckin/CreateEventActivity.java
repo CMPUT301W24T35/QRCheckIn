@@ -32,6 +32,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+* This is a class that responsible for managing the creation of new events in the application
+*/ 
+
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
