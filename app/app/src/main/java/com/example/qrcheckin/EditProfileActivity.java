@@ -20,12 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
-    boolean isDBConnected;
     EditText newUserName;
     EditText newUserPhone;
     EditText newUserEmail;
@@ -34,12 +36,12 @@ public class EditProfileActivity extends AppCompatActivity {
     Button confirmButton;
     Button editProfileImageButton;
     ImageView profileImage;
-    Bundle bundle;
     Bitmap initialsBitmap;
     String initialsBase64;
     String profileImageBase64;
     boolean isImageSet;
     Bitmap profileImageBitmap;
+    String mainUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class EditProfileActivity extends AppCompatActivity {
         newUserName = findViewById(R.id.editUserNameText);
         newUserEmail = findViewById(R.id.edituserEmailText);
         newUserPhone = findViewById(R.id.edituserPhoneText);
-        newUserHomepage = findViewById(R.id.edituserHomepageText);
+        newUserUrl = findViewById(R.id.edituserHomepageText);
         confirmButton = findViewById(R.id.contAddProfileButton);
         editProfileImageButton = findViewById(R.id.ProfileImageEditButton);
         profileImage = findViewById(R.id.ProfileImage);
@@ -57,9 +59,25 @@ public class EditProfileActivity extends AppCompatActivity {
 
         isImageSet = false; // Set flag to not true by default
 
-        String uID = getIntent().getStringExtra("UserID");
-        if (uID != null) {
-            fetchUserProfile(uID);
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //String uID = getIntent().getStringExtra("UserID");
+        if (mainUserID != null) {
+            fetchUserProfile(mainUserID);
         }
 
         // Registers a photo picker activity launcher in single-select mode.
@@ -85,27 +103,21 @@ public class EditProfileActivity extends AppCompatActivity {
                     pickMedia.launch(new PickVisualMediaRequest.Builder()
                             .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                             .build());
-            /*
-            String initials = getInitials(String.valueOf(newUserName.getText()));
-            Bitmap initialsBitmap = generateInitialsImage(initials);
-            profileImage.setImageBitmap(initialsBitmap);*/
                 }
         );
 
         // Create intent to move to the homepage after creating the profile
         Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
 
-        // Set onclick listener for confirm button
-        // Check if all input data are valid
-        // Write data to db
+
         confirmButton.setOnClickListener(v -> {
-            updateProfile(uID);
+            updateProfile(mainUserID);
         });
     }
 
-    private void fetchUserProfile(String uID) {
+    private void fetchUserProfile(String mainUserID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+        db.collection("user").document(mainUserID).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 String profileName = documentSnapshot.getString("name");
                 String profilePhone = documentSnapshot.getString("phone");
@@ -126,32 +138,32 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void updateProfile(String uID) {
-        Map<String, Object> userInfo = null;
+    private void updateProfile(String mainUserID) {
+        Map<String, Object> info = new HashMap<>();
         if (isProfileInputValid()) {
             String userName = newUserName.getText().toString();
             String phone = newUserPhone.getText().toString();
             String email = newUserEmail.getText().toString();
             String url = newUserHomepage.getText().toString();
 
-            userInfo = new HashMap<>();
-            userInfo.put("name", userName);
-            userInfo.put("phone", phone);
-            userInfo.put("email", email);
+            info.put("name", userName);
+            info.put("phone", phone);
+            info.put("email", email);
             if (!url.isEmpty()) {
-                userInfo.put("url", url);
+                info.put("url", url);
             }
 
             if (isImageSet) {
-                userInfo.put("profileImage", profileImageBase64);
+                info.put("profileImage", profileImageBase64);
             } else {
                 String initials = getInitials(userName);
                 initialsBitmap = generateInitialsImage(initials);
                 initialsBase64 = Helpers.bitmapToBase64(initialsBitmap);
-                userInfo.put("profileImage", initialsBase64);
+                info.put("profileImage", initialsBase64);
             }
         }
-        db.collection("users").document(uID).update(userInfo).addOnCompleteListener(task -> {
+
+        db.collection("user").document(mainUserID).update(info).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d("EditProfileActivity", "User profile updated successfully");
                 // Optionally navigate the user or show a success message
@@ -201,22 +213,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             return true;
-        }
-        public void dbConnected () {
-            FirebaseFirestore.getInstance()
-                    .enableNetwork()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Firestore is connected
-                            Log.d("Firestore", "Connected to Firestore");
-                            isDBConnected = true;
-                        } else {
-                            // Firestore connection failed
-                            Log.d("Firestore", "Disconnected from Firestore");
-                            isDBConnected = false;
-                        }
-                    });
-
         }
 
         // Deterministically generate profile picture
