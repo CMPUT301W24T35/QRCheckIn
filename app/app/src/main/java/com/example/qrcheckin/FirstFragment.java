@@ -1,4 +1,4 @@
-package com.example.qrcheckin;
+ilitypackage com.example.qrcheckin;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import com.example.qrcheckin.databinding.FragmentFirstBinding;
 
 /**
 * This is a class that from the starter code
-* no specific responsible for this class
+* no specific responsibilities for this class
 */
 
 public class FirstFragment extends Fragment {
