@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This is a class that allows user to sign up events
+*/ 
+
 public class SignedUpEventActivity extends AppCompatActivity {
 
     Button home;
