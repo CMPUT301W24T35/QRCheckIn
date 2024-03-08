@@ -29,9 +29,9 @@ import androidmads.library.qrgenearator.QRGEncoder;
 public class EditEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
-    EditText editEventName;
+    public EditText editEventName;
     EditText editEventDescription;
-    EditText editStartTime;
+    public EditText editStartTime;
     EditText editEndTime;
     EditText editLocation;
     Button confirmButton;
