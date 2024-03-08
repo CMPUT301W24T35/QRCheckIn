@@ -46,10 +46,10 @@ public class Helpers {
     }
 
     /** Converts bitmap to Base64 string for saving as Firebase field
-     * Source: https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
-     * @param bitmap
-     * @return
+     * @param bitmap Bitmap to convert to Base64
+     * @return String
      */
+    //https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -59,10 +59,11 @@ public class Helpers {
 
     /**
      * Converts Base64 to bitmap string for saving as Firebase field
-     * Source: https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
-     * @param b64
-     * @return
+     * Source:
+     * @param b64 String of ASCII Values
+     * @return Bitmap
      */
+    //https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
     public static Bitmap base64ToBitmap(String b64) {
         byte[] imageAsBytes = Base64.decode(b64.getBytes(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
@@ -71,8 +72,8 @@ public class Helpers {
     /**
      * Reverse string helper class. Used to invert the EventID (docID) string which will be used
      * for the promo code. The regular EventID is used for the CheckinQR Code.
-     * @param str
-     * @return
+     * @param str String to reverse
+     * @return String
      */
     public static String reverseString(String str){
         StringBuilder builder = new StringBuilder();
