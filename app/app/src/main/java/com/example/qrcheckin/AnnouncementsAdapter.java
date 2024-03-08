@@ -13,15 +13,29 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
-* This class is responsible for holding information of annoucement
-*/
+ * An ArrayAdapter designed for displaying  Announcement objects in a ListView.
+ * This adapter is responsible for creating list item views that contain the announcements
+ */
 public class AnnouncementsAdapter extends ArrayAdapter<Announcement> {
-    //private Context context;
-    //private ArrayList<Announcement> announcements;
+    /**
+     * Constructs a new {@link AnnouncementsAdapter}.
+     *
+     * @param context The current context.
+     * @param announcements An ArrayList of {@link Announcement}
+     */
     public AnnouncementsAdapter(Context context, ArrayList<Announcement> announcements) {
         super(context, 0, announcements);
     }
 
+    /**
+     * This method inflates a layout from XML and populates it with data for the
+     * {@link Announcement} object.
+     *
+     * @param position The position of the item within the adapter's data set of the item whose view we want.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A View corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

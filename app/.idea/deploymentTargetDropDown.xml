@@ -2,12 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="EditProfileActivity">
-        <State />
-      </entry>
-      <entry key="Openingtest()">
-        <State />
-      </entry>
       <entry key="Tests in 'com.example.qrcheckin'">
         <State />
       </entry>
