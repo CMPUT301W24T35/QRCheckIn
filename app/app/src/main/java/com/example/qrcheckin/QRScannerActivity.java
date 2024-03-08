@@ -271,7 +271,8 @@ public class QRScannerActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         // Navigate to EventPage
-                        Log.d("Firestore", "Found document with EventID: " + reverseQRString);
+                        Log.d("Firestore", "PromoCode Scanend and found document with EventID: " + reverseQRString);
+
                     } else { // QR Code could be a Promo code
                         Log.d("Firestore", "No such document");
                         Toast.makeText(QRScannerActivity.this, "QR Code Not Found", Toast.LENGTH_SHORT).show();
