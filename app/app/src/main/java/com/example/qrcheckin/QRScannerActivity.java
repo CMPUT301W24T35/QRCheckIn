@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -126,7 +127,8 @@ public class QRScannerActivity extends AppCompatActivity {
                                             }
                                         });
                             }
-                        } else {
+                        } else { // QR Code could be a Promo code
+                            checkPromoCode();
                             Log.d("Firestore", "No such document");
                         }
                     } else {
@@ -228,4 +230,29 @@ public class QRScannerActivity extends AppCompatActivity {
             }).show();
         }
     });
+
+    public void checkPromoCode(){
+        String reverseQRString = Helpers.reverseString(qrContent);
+        DocumentReference docRef = db.collection("event").document(reverseQRString);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Navigate to EventPage
+                        Log.d("Firestore", "Found document with EventID: " + reverseQRString);
+                    } else { // QR Code could be a Promo code
+                        Log.d("Firestore", "No such document");
+                        Toast.makeText(QRScannerActivity.this, "QR Code Not Found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
 }
