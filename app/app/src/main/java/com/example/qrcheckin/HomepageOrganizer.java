@@ -1,8 +1,5 @@
 package com.example.qrcheckin;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,8 +18,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -31,8 +28,9 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
-* This class initializes homepage for organizer
-*/
+ * HomepageOrganizer activity is the homepage for event organizers. It allows organizers to view
+ * their events, create new events, and go back to the main homepage where all events are can be viewed.
+ */
 public class HomepageOrganizer extends AppCompatActivity {
 
     CircleImageView profile;
@@ -116,6 +114,12 @@ public class HomepageOrganizer extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches and displays the events organized by the current user.
+     * Events are retrieved from Firestore and displayed in a ListView.
+     * Each item in the listview can be clicked to obtain complete detail
+     * of the event like start time, end time
+     */
     private void getEvent() {
 
         try {

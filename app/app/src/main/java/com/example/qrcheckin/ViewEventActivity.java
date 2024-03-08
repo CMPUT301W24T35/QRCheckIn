@@ -1,5 +1,6 @@
 package com.example.qrcheckin;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -70,6 +71,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     private String mainUserID;
     private String eventID;
 
+    ImageButton back;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventName = findViewById(R.id.viewEventTitle);
 
         signUpButton = findViewById(R.id.signUpButton);
+        back = findViewById(R.id.button_back);
         qrCodeImage = findViewById(R.id.qrCodeImageView);
         promoQRCodeImage = findViewById(R.id.promoqrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
@@ -199,6 +204,14 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
 
                 Log.d("DEBUG", "intent created: " + intent);
+                startActivity(intent);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewEventActivity.this, HomepageActivity.class);
                 startActivity(intent);
             }
         });
