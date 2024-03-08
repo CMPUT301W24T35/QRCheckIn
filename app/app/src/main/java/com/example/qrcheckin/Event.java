@@ -123,13 +123,14 @@ public class Event {
         }
 
     }
-
+/*
     /**
      * Signs up attendee to Signed Up Attendee list, as long as there is space.
      * If there is no space it throws an exception
      * @param attendee the attendee
      * @throws Exception Capacity reached
      */
+    /*
     public void signUpAttendee(Profile attendee) throws Exception {
         if(reachedCapacity()){
             throw new Exception("Event has reached capacity");
@@ -137,7 +138,7 @@ public class Event {
         else {
             SignedUpAttendees.add(attendee);
         }
-    }
+    }*/
 
 
     // Getters & Setters

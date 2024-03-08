@@ -159,6 +159,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private void addEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
+        String attendeeCapacityString;
 
         String eventName = newEventName.getText().toString();
         String eventDescription = newEventDescription.getText().toString();
@@ -166,7 +167,10 @@ public class CreateEventActivity extends AppCompatActivity {
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
         docID = Helpers.createDocID(eventName, startTime, location);
-        String attendeeCapacityString = newAttendeeCapacity.getText().toString();
+        if (newAttendeeCapacity.getText() == null) {
+            attendeeCapacityString = "";
+        }
+        attendeeCapacityString = newAttendeeCapacity.getText().toString();
         Log.d("DEBUG", "attendeeCapacityString: " + attendeeCapacityString);
 
 
@@ -212,22 +216,21 @@ public class CreateEventActivity extends AppCompatActivity {
             data.put("promoQRCode", promoCodeBase64);
         }
 
-        if (!attendeeCapacityString.isEmpty()) {
+        if (!attendeeCapacityString.equals("")) {
             // Convert to integer and package for database
             Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
             data.put("attendeeCapacity", attendeeCapacity);
             Log.d("DEBUG", "AttendeeCapacity: " + attendeeCapacityString);
-
         }
 
 
 
         // TODO - only pass relevant bundle info for QR Code
-        bundle.putString("eventName", eventName);
-        bundle.putString("eventDescription", eventDescription);
-        bundle.putString("startTime", startTime);
-        bundle.putString("endTime", endTime);
-        bundle.putString("location", location);
+        //bundle.putString("eventName", eventName);
+        //bundle.putString("eventDescription", eventDescription);
+        //bundle.putString("startTime", startTime);
+        //bundle.putString("endTime", endTime);
+        //bundle.putString("location", location);
         bundle.putString("eventID", docID);
 
         DocumentReference userRef = db.collection("user").document(mainUserID);

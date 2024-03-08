@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.qrcheckin.databinding.ActivityMainBinding;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    //private ActivityMainBinding binding;
     String android_id;
     String mainUserID;
     boolean doesExist;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
      * Move to the relevant activity depending on the result
      */
     private void checkIsUserProfile() {
+        // Stackoverflow, 2024, Source: https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         android_id = Settings.Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         db.collection("user").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
