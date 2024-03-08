@@ -12,12 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import androidx.test.core.app.ActivityScenario;
 
 
 public class HelpersTest {

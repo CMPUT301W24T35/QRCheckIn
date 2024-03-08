@@ -100,6 +100,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_3_API_24_-_Nougat_SDK" value="120" />
                   <entry key="Pixel_7_API_28" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -140,6 +141,19 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_7_API_28" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-269506043">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_3_API_24_-_Nougat_SDK" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -308,6 +322,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_3_API_24_-_Nougat_SDK" value="120" />
                   <entry key="Pixel_7_API_28" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
