@@ -73,17 +73,13 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.QRCheckin">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".QRGenerator"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.QRCheckin" />
+            android:theme="@style/Theme.QRCheckin" >
+        </activity>
     </application>
 
 </manifest>

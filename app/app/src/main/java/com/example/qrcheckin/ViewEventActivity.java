@@ -37,9 +37,11 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 /**
-* Allow user to view the event information
-*/
-
+ * ViewEventActivity allows users to view detailed information about an event.
+ * Users can view event details, sign up for events, and view announcements related to the event.
+ * This activity interacts with Firebase Firestore to retrieve and update event and user information.
+ * @see AddAnnouncementFragment creates a fragment for the announcement
+ */
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
     ImageView posterImage;
@@ -148,10 +150,15 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         }
 
         // Edit event
+        // TODO Temporary turn this button into back button
+        editEventBtn.setText("BACK");
         editEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO Create intent to switch to EditEvent Activity.
+                //  Temporary serves as back button to homepage
+                Intent intent = new Intent(ViewEventActivity.this, HomepageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -336,6 +343,11 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
     }
 
+
+    /**
+     * Checks if the current user is an attendee of the event.
+     * @return true if the user is an attendee, false otherwise.
+     */
     public boolean isAttendee() {
         // Checks if the request for this page is coming from an attendee or an organizer
         /*
@@ -360,6 +372,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         return false;
     }
 
+    /**
+     * Signs up the current user as an attendee for the event.
+     */
     public void signUpAttendee(){
 
         getUserID();
@@ -417,6 +432,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
     }
 
+    /**
+     * Retrieves the user ID of the current user from local storage.
+     */
     public void getUserID(){
         try {
             FileInputStream fis = openFileInput("localStorage.txt");
@@ -435,6 +453,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         }
     }
 
+    /**
+     * Adds the current event to the user's list of signed-up events in their profile.
+     */
     public void addToSignedUpEventsInProfile(){
         // Update user's document with signed up events
         DocumentReference userRef = db.collection("user").document(mainUserID);
