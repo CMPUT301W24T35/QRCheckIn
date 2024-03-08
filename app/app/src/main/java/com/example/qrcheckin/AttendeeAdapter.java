@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+* This class is responisble for holding information of attendees
+*/
 public class AttendeeAdapter extends ArrayAdapter<Profile> {
     private Context context;
     private ArrayList<Profile> attendees;

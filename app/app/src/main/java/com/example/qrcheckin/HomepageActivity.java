@@ -28,6 +28,10 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+* This class initializes the homepage
+*/
+
 public class HomepageActivity extends AppCompatActivity {
 
     Button organizeEvent;

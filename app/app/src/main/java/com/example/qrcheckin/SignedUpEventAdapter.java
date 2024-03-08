@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+/**
+* Keep user sign-up events
+*/
 
 public class SignedUpEventAdapter extends ArrayAdapter<Event> {
     public SignedUpEventAdapter(Context context, ArrayList<Event> events) {
