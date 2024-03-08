@@ -149,10 +149,15 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         }
 
         // Edit event
+        // TODO Temporary turn this button into back button
+        editEventBtn.setText("BACK");
         editEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO Create intent to switch to EditEvent Activity.
+                //  Temporary serves as back button to homepage
+                Intent intent = new Intent(ViewEventActivity.this, HomepageActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -25,7 +25,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -64,6 +63,11 @@ public class CreateEventActivity extends AppCompatActivity {
     Bundle bundle;
 
     String docID;
+
+    // TODO For now QR Code generated here
+    //  Decide whether to delete this workaround later
+
+    String checkinQRCodeBase64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,7 @@ public class CreateEventActivity extends AppCompatActivity {
                             posterImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             posterImageBase64 = Helpers.bitmapToBase64(posterImageBitmap);
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            Log.d("PhotoPicker", "Unable to convert to base64");
                         }
 
                     } else {
@@ -163,6 +167,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         checkPromoCodeAndGenerate();
 
+        // TODO Temporary workaround solution
+        //     Decide if we want to keep this workflow later
+        generateQRCodeAndSetString();
+
         Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
         // TODO profileID to organizerID
 
@@ -173,6 +181,8 @@ public class CreateEventActivity extends AppCompatActivity {
         data.put("endTime", endTime);
         data.put("location", location);
         data.put("poster", posterImageBase64);
+        data.put("checkinQRCode", checkinQRCodeBase64);
+
 
         // OPTIONAL FIELDS
         // If promo code was generated then add it to Firebase bundle
@@ -185,7 +195,7 @@ public class CreateEventActivity extends AppCompatActivity {
             // Convert to integer and package for database
             Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
             data.put("attendeeCapacity", attendeeCapacity);
-            Log.d("DEBUG", "AttendeeCapacity is Empty");
+            Log.d("DEBUG", "AttendeeCapacity: " + attendeeCapacityString);
 
         }
 
@@ -249,10 +259,18 @@ public class CreateEventActivity extends AppCompatActivity {
                 .document(docID)
                 .set(data);
 
+        Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
+        //intent.putExtras(bundle);
+        //Log.d("DEBUG", "intent created: " + intent);
+        startActivity(intent);
+
+        /* CHANGED WORKFLOW TO NAVIGATE TO ORGANIZED EVENTS
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
         intent.putExtras(bundle);
-        Log.d("DEBUG", "intent created: " + intent);
+        //Log.d("DEBUG", "intent created: " + intent);
         startActivity(intent);
+
+         */
 
     }
 
@@ -317,6 +335,16 @@ public class CreateEventActivity extends AppCompatActivity {
             // CheckBox is not checked
             Log.d("Checkbox", "Checkbox is not checked");
         }
+    }
+
+    public void generateQRCodeAndSetString(){
+        QRGEncoder qrgEncoder = new QRGEncoder(docID, null, QRGContents.Type.TEXT, 800);
+
+        // Getting QR-Code as Bitmap
+        Bitmap bitmap = qrgEncoder.getBitmap(0);
+
+        // Convert bitmap to Base64 for Firebase
+        checkinQRCodeBase64 = Helpers.bitmapToBase64(bitmap);
     }
 
 }
