@@ -3,7 +3,8 @@ package com.example.qrcheckin;
 import java.util.ArrayList;
 
 /**
-* This class is defined events
+* Represents an event class with attributes like name, description
+ * timing of the event and other useful details. Also includes the getter and setter methods.
 */
 
 public class Event {
@@ -50,6 +51,9 @@ public class Event {
 
     private boolean CheckInStatus = false;
 
+    /**
+     *Constructors defined to create an instance of the class
+     */
     public Event(){
 
     }
@@ -123,8 +127,8 @@ public class Event {
     /**
      * Signs up attendee to Signed Up Attendee list, as long as there is space.
      * If there is no space it throws an exception - remember to handle this!
-     * @param attendee
-     *
+     * @param attendee The profile of attendee to sign up
+     * @throws Exception if the capacity is already reached
      */
     public void signUpAttendee(Profile attendee) throws Exception {
         if(reachedCapacity()){
@@ -135,50 +139,111 @@ public class Event {
         }
     }
 
+    /**
+     * Retrieves the ID for the event.
+     *
+     * @return A string representing the event ID.
+     */
     // Getters & Setters
     public String getEventID() {
         return eventID;
     }
 
+    /**
+     * Sets the ID for the event.
+     *
+     * @param eventID A string containing the event ID.
+     */
     public void setEventID(String eventID) {
         this.eventID = eventID;
     }
 
+    /**
+     * Retrieves the name for the event.
+     *
+     * @return A string representing the event name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name for the event.
+     *
+     * @param name A string containing the event name.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Retrieves the description for the event.
+     *
+     * @return A string representing the event description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description for the event.
+     *
+     * @param description A string containing the event description.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Retrieves the start time for the event.
+     *
+     * @return A string representing the event start time.
+     */
     public String getStartTime() {
         return startTime;
     }
 
+    /**
+     * Sets the start time for the event.
+     *
+     * @param startTime A string containing the event start time.
+     */
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * Retrieves the end time for the event.
+     *
+     * @return A string representing the event end time.
+     */
     public String getEndTime() {
         return endTime;
     }
 
+    /**
+     * Sets the end time for the event.
+     *
+     * @param endTime A string containing the event end time.
+     */
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
+    /**
+     * Retrieves the location for the event.
+     *
+     * @return A string representing the event location.
+     */
     public String getLocation() {
         return Location;
     }
+
+    /**
+     * Sets the location for the event.
+     *
+     * @param location A string containing the event location.
+     */
 
     public void setLocation(String location) {
         Location = location;

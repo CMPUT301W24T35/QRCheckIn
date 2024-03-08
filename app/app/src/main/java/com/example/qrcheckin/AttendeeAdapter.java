@@ -11,20 +11,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
-* This class is responisble for holding information of attendees
-*/
+ * An ArrayAdapter designed for displaying Profile objects in a ListView.
+ */
 public class AttendeeAdapter extends ArrayAdapter<Profile> {
     private Context context;
     private ArrayList<Profile> attendees;
 
+    /**
+     * Constructs a new AttendeeAdapter.
+     *
+     * @param context The current context. Used to inflate the layout file.
+     * @param attendees A list of Profile objects.
+     */
     public AttendeeAdapter(@NonNull Context context, ArrayList<Profile> attendees) {
         super(context,0, attendees);
         this.attendees = attendees;
         this.context = context;
     }
+
+    /**
+     * Provides a view for an AdapterView
+     * This method inflates a layout from XML and populates it with the data for the Profile object
+     * @param position The position of the item.
+     * @param convertView The old view to reuse.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A new View
+     */
 
     @NonNull
     @Override

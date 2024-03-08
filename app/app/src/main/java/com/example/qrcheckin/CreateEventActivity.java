@@ -25,7 +25,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -250,7 +249,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 .set(data);
 
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-        intent.putExtras(bundle);
+        intent.putExtra("eventID", docID);
         Log.d("DEBUG", "intent created: " + intent);
         startActivity(intent);
 
@@ -310,7 +309,7 @@ public class CreateEventActivity extends AppCompatActivity {
             QRGEncoder qrgEncoder = new QRGEncoder(inputValue, null, QRGContents.Type.TEXT, 800);
 
             // Getting QR-Code as Bitmap
-            promoCodeBitmap = qrgEncoder.getBitmap(0);
+            promoCodeBitmap = qrgEncoder.getBitmap();
             promoCodeBase64 = Helpers.bitmapToBase64(promoCodeBitmap);
             Log.d("Checkbox", "Checkbox is checked");
         } else {
