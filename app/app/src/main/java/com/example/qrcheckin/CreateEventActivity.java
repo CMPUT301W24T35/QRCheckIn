@@ -181,7 +181,7 @@ public class CreateEventActivity extends AppCompatActivity {
             data.put("promoQRCode", promoCodeBase64);
         }
 
-        if (!attendeeCapacityString.isEmpty()) {
+        if (attendeeCapacityString != null) {
             // Convert to integer and package for database
             Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
             data.put("attendeeCapacity", attendeeCapacity);
@@ -192,12 +192,12 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
         // TODO - only pass relevant bundle info for QR Code
-        bundle.putString("eventName", eventName);
-        bundle.putString("eventDescription", eventDescription);
-        bundle.putString("startTime", startTime);
-        bundle.putString("endTime", endTime);
-        bundle.putString("location", location);
-        bundle.putString("eventID", docID);
+        //bundle.putString("eventName", eventName);
+        //bundle.putString("eventDescription", eventDescription);
+        //bundle.putString("startTime", startTime);
+        //bundle.putString("endTime", endTime);
+        //bundle.putString("location", location);
+        //bundle.putString("eventID", docID);
 
         DocumentReference userRef = db.collection("user").document(mainUserID);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -25,8 +26,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -177,6 +180,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         announcementsAdapter = new AnnouncementsAdapter(this, announcementDataList);
         announcementList.setAdapter(announcementsAdapter);
 
+        showAnnouncement();
+
         // Add announcement
         addAnnouncement.setOnClickListener(v -> {
             new AddAnnouncementFragment().show(getSupportFragmentManager(), "Add an announcement");
@@ -189,6 +194,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         attendeeList = findViewById(R.id.attendees_list);
         attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);
         attendeeList.setAdapter(attendeeAdapter);
+
+        showAttendee();
     }
 
 
@@ -197,9 +204,115 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     public void addAnnouncement(Announcement announcement) {
         String message = announcement.getAnnouncement();
         // TODO Get the eventID so that we can store announcements in the Event in firebase
-        announcementDataList.add(0, announcement);
-        announcementsAdapter.notifyDataSetChanged();
+        DocumentReference userRef = db.collection("event").document(eventID);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Check if signedUpAttendees field exists
+                        if (document.contains("announcements")) {
+                            // If it exists, update the array by adding docID
+                            userRef.update("announcements", FieldValue.arrayUnion(message))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "Document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        } else {
+                            // If it doesn't exist, create a new array with docID
+                            userRef.update("announcements", FieldValue.arrayUnion(message))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "New signedUpAttendees field created and document updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        showAnnouncement();
     }
+
+    /**
+     *
+     */
+    public void showAnnouncement(){
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                announcementDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> announcements = (ArrayList<String>) value.get("announcements");
+                    if (announcements != null && !announcements.isEmpty()){
+                        for (String announcementMsg : announcements){
+                            Announcement announcement = new Announcement(announcementMsg);
+                            announcementDataList.add(0, announcement);
+                            announcementsAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void showAttendee() {
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                attendeeDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> attendees = (ArrayList<String>) value.get("userIDCheckIn");
+                    if (attendees != null && !attendees.isEmpty()){
+                        for (String attendeeID : attendees){
+                            DocumentReference attendeeRef = db.collection("user").document(attendeeID);
+                            attendeeRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot doc) {
+                                    if (doc.exists()) {
+                                        String attendeeName = doc.getString("name");
+                                        Profile attendee = new Profile(attendeeName);
+                                        attendeeDataList.add(attendee);
+                                    }
+                                    attendeeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     public boolean isAttendee() {
         // Checks if the request for this page is coming from an attendee or an organizer
         /*
@@ -238,7 +351,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                         // Check if signedUpAttendees field exists
                         if (document.contains("signedUpAttendees")) {
                             // If it exists, update the array by adding docID
-                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -252,7 +365,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                     });
                         } else {
                             // If it doesn't exist, create a new array with docID
-                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {

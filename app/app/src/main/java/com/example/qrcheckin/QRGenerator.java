@@ -37,6 +37,7 @@ public class QRGenerator extends AppCompatActivity {
         setContentView(R.layout.qr_generator);
         Bundle bundle = getIntent().getExtras();
 
+        assert bundle != null;
         String eventID = bundle.getString("eventID");
         Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
