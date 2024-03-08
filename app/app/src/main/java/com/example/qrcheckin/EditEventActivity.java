@@ -110,6 +110,7 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     /**
+     * Function to get all the text input, and push the changes to Firebase.
      *
      */
     private void editEvent() {
@@ -157,7 +158,12 @@ public class EditEventActivity extends AppCompatActivity {
 
     }
 
-    // CHECK IF INPUTS EMPTY
+    /**
+     * This function validates whether the TextEdit input fields are empty and
+     * also displays errors if they are empty.
+     * @return true if no errors, false if errors
+     */
+
     public boolean isEventInputValid(){ // TODO rename
         if (String.valueOf(editEventName.getText()).isEmpty()){
             editEventName.setError("Enter Event Name");
