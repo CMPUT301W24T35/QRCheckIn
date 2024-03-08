@@ -3,8 +3,9 @@ package com.example.qrcheckin;
 import java.util.ArrayList;
 
 /**
-* This class is defined events
-*/
+ * Represents an event in the application. This class has event details
+ * such name, description, timings, etc.
+ */
 
 public class Event {
     private String eventID; // Use for Firebase document reference
@@ -50,6 +51,9 @@ public class Event {
 
     private boolean CheckInStatus = false;
 
+    /**
+     * The constructor for the Event Class
+     */
     public Event(){
 
     }
@@ -108,7 +112,7 @@ public class Event {
 
     /**
      * Helper method that checks if the event has reached capacity
-     * @return true / false
+     * @return boolean
      */
     public boolean reachedCapacity(){
         if(attendeeCapacity - SignedUpAttendees.size() == 0 ){
