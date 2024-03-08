@@ -1,38 +1,22 @@
 package com.example.qrcheckin;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.util.Log;
-import android.view.View;
 
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import com.example.qrcheckin.databinding.ActivityMainBinding;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentSnapshot;
+//import com.example.qrcheckin.databinding.ActivityMainBinding;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.io.FileOutputStream;
 
@@ -45,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    //private ActivityMainBinding binding;
     String android_id;
     String mainUserID;
     boolean doesExist;

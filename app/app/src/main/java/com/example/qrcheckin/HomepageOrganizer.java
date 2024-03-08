@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +54,26 @@ public class HomepageOrganizer extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         getEvent();
+
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (mainUserID !=null){
+            fetchDetails(mainUserID);
+        }
 
         profile = findViewById(R.id.profile_image_button);
         profile.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +137,21 @@ public class HomepageOrganizer extends AppCompatActivity {
         });
     }
 
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                profile.setImageBitmap(profileBitmap);
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
+    }
     private void getEvent() {
 
         try {

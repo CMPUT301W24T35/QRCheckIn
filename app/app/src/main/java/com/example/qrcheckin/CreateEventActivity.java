@@ -197,7 +197,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //bundle.putString("startTime", startTime);
         //bundle.putString("endTime", endTime);
         //bundle.putString("location", location);
-        //bundle.putString("eventID", docID);
+        bundle.putString("eventID", docID);
 
         DocumentReference userRef = db.collection("user").document(mainUserID);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

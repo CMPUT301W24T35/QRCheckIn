@@ -35,17 +35,20 @@ public class QRGenerator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_generator);
-        Bundle bundle = getIntent().getExtras();
+        //Bundle bundle = getIntent().getExtras();
+        Intent newIntent = getIntent();
 
-        assert bundle != null;
-        String eventID = bundle.getString("eventID");
-        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        //assert bundle != null;
+        String eventID = newIntent.getStringExtra("eventID");
+        //Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
         QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
         createEventButton = findViewById(R.id.confirmEventCreationButton);
         db = FirebaseFirestore.getInstance();
+
+        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{
@@ -84,6 +87,7 @@ public class QRGenerator extends AppCompatActivity {
             Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
             startActivity(intent);
         });
+        Log.d("BUNDLE23", "EventID passed into QR-Scanner: " + eventID);
     }
 
 }
