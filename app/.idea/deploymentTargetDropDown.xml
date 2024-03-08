@@ -23,7 +23,6 @@
       <entry key="HomepageOrganizer">
         <State />
       </entry>
-      <entry key="SignedUpEventActivity">
       <entry key="MainActivity">
         <State>
           <runningDeviceTargetSelectedWithDropDown>
@@ -41,6 +40,7 @@
         </State>
       </entry>
       <entry key="app">
+      <entry key="SignedUpEventActivity">
         <State />
       </entry>
     </value>
