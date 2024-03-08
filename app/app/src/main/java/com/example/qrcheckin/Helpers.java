@@ -49,8 +49,8 @@ public class Helpers {
      * @param bitmap Bitmap to convert to Base64
      * @return String
      */
-    //https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
     public static String bitmapToBase64(Bitmap bitmap) {
+        // Source: https://www.thepolyglotdeveloper.com/2015/06/from-bitmap-to-base64-and-back-with-native-android/
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
@@ -75,7 +75,9 @@ public class Helpers {
      * @param str String to reverse
      * @return String
      */
+
     public static String reverseString(String str){
+        // OpenAI, 2024, ChatGPT, "Reverse String function in java"
         StringBuilder builder = new StringBuilder();
 
         // append a string into StringBuilder input1
