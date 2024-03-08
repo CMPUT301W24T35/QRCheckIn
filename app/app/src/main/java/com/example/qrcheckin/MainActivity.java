@@ -1,44 +1,29 @@
 package com.example.qrcheckin;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.util.Log;
-import android.view.View;
 
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.qrcheckin.databinding.ActivityMainBinding;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import android.view.Menu;
-import android.view.MenuItem;
-
 import java.io.FileOutputStream;
 
 /**
-* Main class to the project
-*/
+ * MainActivity is the starting point of the application. It is responsible for initializing
+ * the Firestore database instance, checking if the user profile exists based on the Android device ID.
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         checkIsUserProfile();
     }
 
+    /**
+     * Checks if the user profile exists in the Firestore database based on the device's unique ID.
+     * Move to the relevant activity depending on the result
+     */
     private void checkIsUserProfile() {
         android_id = Settings.Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         db.collection("user").addSnapshotListener(new EventListener<QuerySnapshot>() {
