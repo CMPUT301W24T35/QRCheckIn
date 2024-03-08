@@ -40,6 +40,7 @@ import java.util.ArrayList;
 * Allow user to view the event information
 */
 
+
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
     ImageView posterImage;
@@ -200,7 +201,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);
         attendeeList.setAdapter(attendeeAdapter);
 
-        showAttendee();
+        //showAttendee();
     }
 
 
@@ -284,7 +285,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             }
         });
     }
-
+    /*
     public void showAttendee() {
         db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -316,7 +317,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 }
             }
         });
-    }
+    }*/
 
     public boolean isAttendee() {
         // Checks if the request for this page is coming from an attendee or an organizer
