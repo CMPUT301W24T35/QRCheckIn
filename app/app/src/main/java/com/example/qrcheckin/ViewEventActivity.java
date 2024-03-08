@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -167,8 +168,12 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Add profileID to the Signed up attendee list in the event collection in firestore
                 signUpAttendee();
+
+                Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
+
+                Log.d("DEBUG", "intent created: " + intent);
+                startActivity(intent);
             }
         });
 
@@ -228,8 +233,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
         getUserID();
 
-        DocumentReference userRef = db.collection("event").document(eventID);
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference eventRef = db.collection("event").document(eventID);
+        eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -238,11 +243,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                         // Check if signedUpAttendees field exists
                         if (document.contains("signedUpAttendees")) {
                             // If it exists, update the array by adding docID
-                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Firestore", "Document successfully updated!");
+                                            addToSignedUpEventsInProfile();
+                                            Toast.makeText(ViewEventActivity.this, "You signed up!", Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -252,11 +259,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                     });
                         } else {
                             // If it doesn't exist, create a new array with docID
-                            userRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Firestore", "New signedUpAttendees field created and document updated!");
+                                            addToSignedUpEventsInProfile();
+                                            Toast.makeText(ViewEventActivity.this, "You signed up!", Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -294,5 +303,53 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             e.printStackTrace();
         }
     }
-}
 
+    public void addToSignedUpEventsInProfile(){
+        // Update user's document with signed up events
+        DocumentReference userRef = db.collection("user").document(mainUserID);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Check if signedUpAttendees field exists
+                        if (document.contains("signedUpEvents")) {
+                            // If it exists, update the array by adding docID
+                            userRef.update("signedUpEvents", FieldValue.arrayUnion(eventID))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "User document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating User document", e);
+                                        }
+                                    });
+                        } else {
+                            // If it doesn't exist, create a new array with docID
+                            userRef.update("signedUpEvents", FieldValue.arrayUnion(eventID))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "New signedUpEvents field created and document updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating user document", e);
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+}
