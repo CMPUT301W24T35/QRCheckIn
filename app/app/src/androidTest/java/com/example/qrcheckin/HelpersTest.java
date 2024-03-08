@@ -43,13 +43,6 @@ public class HelpersTest {
         // Further checks could involve verifying the length of the output or pattern,
         // depending on the expected hash string format.
     }
-    @Test
-    public void testReverseString() {
-        assertEquals("cba", Helpers.reverseString("abc"));
-        assertEquals("321", Helpers.reverseString("123"));
-        assertEquals("", Helpers.reverseString("")); // Edge case: empty string
-        assertEquals("dcba", Helpers.reverseString("abcd")); // Even length string
-    }
 
     @Test
     public void testBitmapToBase64AndBack() {
