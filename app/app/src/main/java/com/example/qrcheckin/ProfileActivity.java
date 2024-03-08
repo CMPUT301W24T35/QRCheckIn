@@ -20,9 +20,9 @@ import java.io.InputStreamReader;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
-* This class process profile working
-*/
-
+ * Represents an activity for displaying and editing a user's profile.
+ * It fetches the user's profile details from Firebase Firestore and displays them.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -124,6 +124,12 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches and displays the user's profile details from Firestore based on the provided user ID.
+     * If the user's details exist in Firestore, it updates the UI with the fetched information.
+     *
+     * @param uID The user ID whose profile details are to be fetched.
+     */
     private void fetchDetails(String uID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
