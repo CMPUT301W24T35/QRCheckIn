@@ -1,21 +1,18 @@
 package com.example.qrcheckin;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -30,9 +27,9 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
-* Allow user to sign up event
-*/
-
+ * This activity provides functionality for users to view events they have signed up for.
+ * It fetches event data from Firebase Firestore, displaying each event in a list.
+ */
 public class SignedUpEventActivity extends AppCompatActivity {
 
     Button home;
@@ -109,10 +106,13 @@ public class SignedUpEventActivity extends AppCompatActivity {
         eventList.setAdapter(eventAdapter);
 
 
-
-
     }
 
+    /**
+     * Fetches and displays the events the user has signed up for.
+     * Reads the user's ID from a local file,and updates the UI accordingly by fetching from
+     * Firestore
+     */
     private void getSignedUpEvents() {
 
         try {
