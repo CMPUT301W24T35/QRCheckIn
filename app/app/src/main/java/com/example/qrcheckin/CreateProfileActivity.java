@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* This class is responsible for creating new profile
+* This class is responsible for creating new profile.
 */
 
 public class CreateProfileActivity extends AppCompatActivity {

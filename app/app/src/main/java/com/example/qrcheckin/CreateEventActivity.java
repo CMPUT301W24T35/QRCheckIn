@@ -36,8 +36,14 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 /**
-* This class is responsible for creating new events
-*/
+ * This class is responsible for creating new events.
+ * Users can enter the details of the event including Name, Start Time,
+ * End Time, Location and choose a poster image. They can optionally
+ * limit the number of attendees and optionally generate a promo QR code.
+ *
+ * On the creation of the event the HomepageOrganizer will populate with their
+ * event.
+ */
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
@@ -274,7 +280,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
     }
 
-    // CHECK IF INPUTS EMPTY
+    /**
+     * This function validates whether the TextEdit input fields are empty and
+     * also displays errors if they are empty.
+     * @return true if no errors, false if errors
+     */
     public boolean isTextEditInputEmpty(){
         if (String.valueOf(newEventName.getText()).isEmpty()){
             newEventName.setError("Enter Event Name");
@@ -303,7 +313,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
 
-
+    /**
+     * Checks whether Firebase Firestore is connected
+     * Alters the isDBConnected variable to true or false.
+     */
     public void dbConnected(){
         db.getInstance()
                 .enableNetwork()
@@ -320,6 +333,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks whether promo code checkbox was checked.
+     * If it is checked it generates a bitmap qr code based on the docID.
+     * Then converts it to a Base64 string for upload to Firebase Firestore.
+     * It assigns this string to the variable promoCodeBase64.
+     */
     public void checkPromoCodeAndGenerate(){
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
@@ -337,6 +356,11 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function generates a bitmap for the checkin QR code based on the docID.
+     * It converts this bitmap to a base64 string to upload to firebase.
+     * This is assigned to checkinQRCodeBase64.
+     */
     public void generateQRCodeAndSetString(){
         QRGEncoder qrgEncoder = new QRGEncoder(docID, null, QRGContents.Type.TEXT, 800);
 
