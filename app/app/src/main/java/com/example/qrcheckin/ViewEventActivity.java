@@ -64,6 +64,10 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     private ListView announcementList;
     private AnnouncementsAdapter announcementsAdapter;
 
+    private ArrayList<Profile> signedAttendeeDataList;
+    private ListView signedAttendeeList;
+    private SignedAttendeeAdapter signedAttendeeAdapter;
+
     private ArrayList<Profile> attendeeDataList;
     private ListView attendeeList;
     private AttendeeAdapter attendeeAdapter;
@@ -138,16 +142,16 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             // If it is an attendee, then hide unnecessary info
             ConstraintLayout eventButtons = findViewById(R.id.eventButtons);
             LinearLayout attendeeInfo = findViewById(R.id.attendeesInfo);
+            LinearLayout signedAttendeeInfo = findViewById(R.id.signedAttendeesInfo);
             eventButtons.setVisibility(View.GONE);
             attendeeInfo.setVisibility(View.GONE);
+            signedAttendeeInfo.setVisibility(View.GONE);
             addAnnouncement.setVisibility(View.GONE);
             share.setVisibility(View.GONE);
             ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
             signInBtnArea.setVisibility(View.VISIBLE);
             promoQRCodeTextViewTitle.setVisibility(View.GONE);
             promoQRCodeImage.setVisibility(View.GONE);
-
-
         }
 
         // Edit event
@@ -225,6 +229,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         attendeeList.setAdapter(attendeeAdapter);
 
         showAttendee();
+
+        signedAttendeeDataList = new ArrayList<>();
+        signedAttendeeList = findViewById(R.id.signedAttendees_list);
+        signedAttendeeAdapter = new SignedAttendeeAdapter(this, signedAttendeeDataList);
+        signedAttendeeList.setAdapter(signedAttendeeAdapter);
+
+        showSignedAttendees();
     }
 
 
@@ -336,6 +347,42 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                         attendeeDataList.add(attendee);
                                     }
                                     attendeeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void showSignedAttendees() {
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                signedAttendeeDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> attendees = (ArrayList<String>) value.get("signedUpAttendees");
+                    if (attendees != null && !attendees.isEmpty()){
+                        for (String attendeeID : attendees){
+                            DocumentReference attendeeRef = db.collection("user").document(attendeeID);
+                            attendeeRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot doc) {
+                                    if (doc.exists()) {
+                                        String attendeeName = doc.getString("name");
+                                        String attendeePhone = doc.getString("phone");
+                                        String attendeeEmail = doc.getString("email");
+                                        String attendeeHomepage = doc.getString("homepage");
+                                        Profile attendee = new Profile(attendeeName, attendeePhone, attendeeEmail, attendeeHomepage);
+                                        signedAttendeeDataList.add(attendee);
+                                    }
+                                    signedAttendeeAdapter.notifyDataSetChanged();
                                 }
                             });
                         }
