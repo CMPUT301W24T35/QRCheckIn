@@ -36,6 +36,7 @@ public class HomepageActivity extends AppCompatActivity {
 
     Button organizeEvent;
     Button signedUp;
+    Button checkIn;
     ImageButton notification;
     ImageButton local;
     CircleImageView profile;
@@ -86,6 +87,15 @@ public class HomepageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //feel free to use the code below to connect to the activity
                 Intent intent = new Intent(HomepageActivity.this, HomepageOrganizer.class);// go to event activity need to connect with other activity
+                startActivity(intent);
+            }
+        });
+
+        checkIn = findViewById(R.id.button_check_in);
+        checkIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomepageActivity.this, QRScannerActivity.class);
                 startActivity(intent);
             }
         });

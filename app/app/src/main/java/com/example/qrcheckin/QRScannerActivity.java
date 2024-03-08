@@ -5,12 +5,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,12 +35,13 @@ public class QRScannerActivity extends AppCompatActivity {
 
     Button scan;
 
+    ImageButton back;
     String userID;
     String qrContent;
 
     FirebaseFirestore db;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,14 @@ public class QRScannerActivity extends AppCompatActivity {
 
         // Fetch db
         db = FirebaseFirestore.getInstance();
+
+        back = findViewById(R.id.button_backArrow);
+        back.setOnClickListener(v -> {
+
+            Intent intent = new Intent(QRScannerActivity.this, HomepageActivity.class);
+
+            startActivity(intent);
+        });
 
         scan = findViewById(R.id.button_scan_qr);
         scan.setOnClickListener(v -> {
@@ -222,9 +234,9 @@ public class QRScannerActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    //Intent intent = new Intent(QRScannerActivity.this, CreateEventActivity.class);
-                    //intent.putExtra("QR_content", qrContent);
-                    //startActivity(intent);
+                    Intent intent = new Intent(QRScannerActivity.this, HomepageActivity.class);
+                    intent.putExtra("QR_content", qrContent);
+                    startActivity(intent);
                 }
             }).show();
         }
