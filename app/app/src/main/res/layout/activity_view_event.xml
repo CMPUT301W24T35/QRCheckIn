@@ -25,8 +25,7 @@
             android:id="@+id/posterImageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/default_event_bg" />
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:layout_width="match_parent"

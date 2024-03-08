@@ -165,7 +165,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
 
 
-        // Share QR code
+        // OPEN AI, 2024, ChatGPT, Share Images in Android Studio
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,7 +217,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);
         attendeeList.setAdapter(attendeeAdapter);
 
-        //showAttendee();
+        showAttendee();
     }
 
 
@@ -301,7 +301,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             }
         });
     }
-    /*
+
     public void showAttendee() {
         db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -322,7 +322,10 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                 public void onSuccess(DocumentSnapshot doc) {
                                     if (doc.exists()) {
                                         String attendeeName = doc.getString("name");
-                                        Profile attendee = new Profile(attendeeName);
+                                        String attendeePhone = doc.getString("phone");
+                                        String attendeeEmail = doc.getString("email");
+                                        String attendeeHomepage = doc.getString("homepage");
+                                        Profile attendee = new Profile(attendeeName, attendeePhone, attendeeEmail, attendeeHomepage);
                                         attendeeDataList.add(attendee);
                                     }
                                     attendeeAdapter.notifyDataSetChanged();
@@ -333,7 +336,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 }
             }
         });
-    }*/
+    }
 
     public boolean isAttendee() {
         // Checks if the request for this page is coming from an attendee or an organizer
