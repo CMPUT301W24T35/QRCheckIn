@@ -53,6 +53,7 @@ public class HomepageOrganizer extends AppCompatActivity {
 
         getEvent();
 
+        // OpenAI, 2024, ChatGPT, How to get data from localStorage in Android Studio
         try {
             FileInputStream fis = openFileInput("localStorage.txt");
             InputStreamReader isr = new InputStreamReader(fis);
@@ -139,6 +140,7 @@ public class HomepageOrganizer extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()){
+                // OpenAI, 2024, ChatGPT, Convert string to Bitmap
                 String profileImage = documentSnapshot.getString("profileImage");
                 Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
                 profile.setImageBitmap(profileBitmap);

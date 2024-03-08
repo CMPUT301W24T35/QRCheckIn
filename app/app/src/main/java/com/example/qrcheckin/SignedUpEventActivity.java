@@ -168,6 +168,7 @@ public class SignedUpEventActivity extends AppCompatActivity {
                 Log.d("FirestoreSuccess", "Successfully fetched events.");
                 dataList.clear();
 
+                // OpenAI, 2024, ChatGPT, Store a list of strings in a field in Firebase
                 if(value.exists()) {
                     ArrayList<String> eventIds = (ArrayList<String>) value.get("signedUpEvents");
                     if (eventIds != null && !eventIds.isEmpty()){

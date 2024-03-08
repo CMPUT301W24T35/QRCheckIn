@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
      * Move to the relevant activity depending on the result
      */
     private void checkIsUserProfile() {
+        // Stackoverflow, 2024, Source: https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         android_id = Settings.Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         db.collection("user").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
