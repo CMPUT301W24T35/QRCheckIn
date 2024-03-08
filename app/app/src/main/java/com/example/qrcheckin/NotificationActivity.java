@@ -1,16 +1,16 @@
 package com.example.qrcheckin;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 /**
-* This class responsible to send notice
+* This class responsible to send notifications to the users
 */
 public class NotificationActivity extends AppCompatActivity {
 
