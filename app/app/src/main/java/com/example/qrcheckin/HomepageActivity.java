@@ -216,7 +216,7 @@ public class HomepageActivity extends AppCompatActivity {
                     Log.e("FirestoreError", "Error getting event details",error);
                     return;
                 }
-                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                Log.d("FirestoreSuccess", "HomepageActivity Successfully fetched events.");
                 dataList.clear();
 
                 assert value != null;
@@ -248,4 +248,6 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
