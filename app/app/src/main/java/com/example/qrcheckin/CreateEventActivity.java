@@ -156,6 +156,7 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    // OpenAI, 2024, ChatGPT,
     private void addEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();

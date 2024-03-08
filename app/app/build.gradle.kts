@@ -38,6 +38,7 @@ android {
 dependencies {
     // Circular profile view
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation(files("/Users/ayaan/Library/Android/sdk/platforms/android-34/android.jar"))
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.activity:activity:1.7.0")
