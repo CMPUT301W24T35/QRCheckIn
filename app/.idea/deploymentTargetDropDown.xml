@@ -2,13 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="CreateProfileActivityTest">
-        <State />
-      </entry>
       <entry key="EditProfileActivity">
-        <State />
-      </entry>
-      <entry key="MainActivity">
         <State />
       </entry>
       <entry key="Openingtest()">
