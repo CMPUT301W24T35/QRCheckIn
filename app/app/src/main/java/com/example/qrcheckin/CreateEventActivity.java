@@ -1,13 +1,16 @@
 package com.example.qrcheckin;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,11 +67,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
     String docID;
 
+    ImageButton goBack;
+
     // TODO For now QR Code generated here
     //  Decide whether to delete this workaround later
 
     String checkinQRCodeBase64;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +131,15 @@ public class CreateEventActivity extends AppCompatActivity {
                     .build());
             }
         );
+
+        goBack = findViewById(R.id.button_go_back);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
+                startActivity(intent);
+            }
+        });
 
         continueButton.setOnClickListener(v -> startNextActivity());
     }
