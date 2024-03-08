@@ -135,6 +135,7 @@ public class QRScannerActivity extends AppCompatActivity {
                     }
                 }
             });
+
             DocumentReference checkEventdocRef = db.collection("user").document(userID);
 
             checkEventdocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
@@ -213,9 +214,6 @@ public class QRScannerActivity extends AppCompatActivity {
 
              */
 
-
-            //  Find eventID == qrContent
-            //      Checkin to Event
 
 
             builder.setTitle("Checked In");
