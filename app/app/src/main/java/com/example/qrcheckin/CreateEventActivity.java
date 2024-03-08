@@ -41,7 +41,7 @@ import androidmads.library.qrgenearator.QRGEncoder;
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
-    EditText newEventName;
+    public EditText newEventName;
     EditText newEventDescription;
     EditText newStartTime;
     EditText newEndTime;

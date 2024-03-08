@@ -57,9 +57,16 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.6.1")
+    testImplementation("org.mockito:mockito-core:3.3.3")
+    testImplementation("org.robolectric:robolectric:4.6.1")
+    testImplementation("org.mockito:mockito-inline:3.3.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("com.google.firebase:firebase-firestore:24.10.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
 }
