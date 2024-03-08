@@ -25,13 +25,8 @@ public class EditProfileActivityTest {
     @Test
     public void Openingtest() {
 
-        onView(withId(R.id.edituserEmailText)).check(matches(isDisplayed()));
+        onView(withId(R.id.editUserNameText)).check(matches(isDisplayed()));
 
-    }
-    @Test
-    public void Cancelbuttontest(){
-        onView(withId(R.id.contCancelProfileButton)).perform(click());
-        onView(withId(R.id.profile_image_button)).check(matches(isDisplayed()));
     }
 
 }

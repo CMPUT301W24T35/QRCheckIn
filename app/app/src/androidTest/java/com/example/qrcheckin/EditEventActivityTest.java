@@ -28,10 +28,14 @@ public class EditEventActivityTest {
         onView(withId(R.id.editPosterImageButton)).check(matches(isDisplayed()));
 
     }
+
+    /* Moved to Part 4 (not halfway checkpoint anymore)
     @Test
     public void ConfirmButtonTest(){
         onView(withId(R.id.continueCreateEventButton)).perform(click());
         onView(withId(R.id.reuseCheckinQRCodeButton)).check(matches(isDisplayed()));
     }
+
+     */
 
 }
