@@ -31,8 +31,7 @@
             android:id="@+id/posterImageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_gravity="center"
-            />
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -185,7 +184,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="230dp"
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100">
@@ -247,7 +246,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100"
@@ -269,6 +268,36 @@
             </View>
             <ListView
                 android:id="@+id/attendees_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1">
+            </ListView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:weightSum="100"
+            android:id="@+id/signedAttendeesInfo">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"
+                android:textSize="20sp"
+                android:text="Signed-up Attendees" />
+            <View
+                android:layout_width="70dp"
+                android:layout_height="2dp"
+                android:background="#0073C0"
+                android:paddingStart="16dp"
+                tools:ignore="RtlSymmetry"
+                android:layout_marginBottom="20dp">
+            </View>
+            <ListView
+                android:id="@+id/signedAttendees_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

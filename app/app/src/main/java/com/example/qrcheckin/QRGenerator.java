@@ -37,10 +37,14 @@ public class QRGenerator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_generator);
+
+        //Bundle bundle = getIntent().getExtras();
+        Intent newIntent = getIntent();
         bundle = getIntent().getExtras();
 
-        String eventID = bundle.getString("eventID");
-        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        //assert bundle != null;
+        String eventID = newIntent.getStringExtra("eventID");
+        //Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
@@ -49,6 +53,8 @@ public class QRGenerator extends AppCompatActivity {
 
 
         checkIfNullPointers();
+
+        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{
@@ -89,7 +95,6 @@ public class QRGenerator extends AppCompatActivity {
             Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
             startActivity(intent);
         });
-        Log.d("DEBUG", "all listeners active");
 
     }
 
@@ -107,7 +112,6 @@ public class QRGenerator extends AppCompatActivity {
         if (createEventButton == null) {
             Log.e("ERROR", "createEventButton is null");
         }
-
     }
 
 }

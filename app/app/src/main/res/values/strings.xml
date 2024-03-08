@@ -57,7 +57,7 @@
     <string name="event_details">Event Details</string>
     <string name="share_qr_code">share qr code</string>
     <string name="announcements">Announcements</string>
-    <string name="attendees">Attendees</string>
+    <string name="attendees">Checked-in Attendees</string>
     <string name="edit_event">EDIT EVENT</string>
     <string name="view_map">VIEW MAP</string>
     <string name="sign_in">SIGN IN</string>
