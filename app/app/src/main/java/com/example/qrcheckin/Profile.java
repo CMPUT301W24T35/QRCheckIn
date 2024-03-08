@@ -29,6 +29,9 @@ public class Profile {
         this.email = email;
         this.homepage = homepage;
     }
+    /*public Profile(String userName) {
+        this.userName = userName;
+    }*/
 
     // Getters and Setters
 

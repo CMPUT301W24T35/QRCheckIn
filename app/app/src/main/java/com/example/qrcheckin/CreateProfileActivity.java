@@ -151,6 +151,8 @@ public class CreateProfileActivity extends AppCompatActivity {
                             Log.d("Firestore","Added with ID: "+documentReference.getId());
                             // Adding userID of the user in the local file
                             mainUserID = documentReference.getId();
+
+                            // OpenAI, 2024, ChatGPT, How to store data in localStorage in Android Studio
                             try {
                                 FileOutputStream fos = openFileOutput("localStorage.txt", Context.MODE_PRIVATE);
                                 fos.write(mainUserID.getBytes());
@@ -257,7 +259,7 @@ public class CreateProfileActivity extends AppCompatActivity {
      * @return Bitmap, based on users initials
      * @param initials
      */
-
+    // OpenAI, 2024, ChatGPT, Convert string to bitmap in Android Studio
     private Bitmap generateInitialsImage(String initials) {
         int width = 200; // Set the desired width for the image
         int height = 200; // Set the desired height for the image
