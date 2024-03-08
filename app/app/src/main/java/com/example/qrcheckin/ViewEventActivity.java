@@ -243,7 +243,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                         // Check if signedUpAttendees field exists
                         if (document.contains("signedUpAttendees")) {
                             // If it exists, update the array by adding docID
-                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -259,7 +259,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                     });
                         } else {
                             // If it doesn't exist, create a new array with docID
-                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(eventID))
+                            eventRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
