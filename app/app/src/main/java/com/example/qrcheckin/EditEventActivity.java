@@ -23,7 +23,9 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 /**
-* This class is responsible for editing exist event
+* This class is responsible for editing exist event.
+ * The user can edit all the details associated with the event.
+ * Updates are then made in the Firebase on the relevant event document.
 */
 
 public class EditEventActivity extends AppCompatActivity {
@@ -107,6 +109,9 @@ public class EditEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     private void editEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();

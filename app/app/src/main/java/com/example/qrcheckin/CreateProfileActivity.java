@@ -30,6 +30,15 @@ import java.util.Map;
 
 /**
 * This class is responsible for creating new profile.
+ * The user sees this page if they have not created a profile yet.
+ * They can enter their details and their profile is uploaded to Firebase.
+ *
+ * On creation of the profile, all entered details are uploaded to Firebase
+ * including the device's unique ID.
+ *
+ * For user persistence across different app instances, the userID is saved
+ * to a local file cache that can be accessed across activities and app instances.
+ *
 */
 
 public class CreateProfileActivity extends AppCompatActivity {
@@ -243,7 +252,12 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     }
 
-    // Deterministically generate profile picture
+    /**
+     * Function to deterministically generate profile picture.
+     * @return Bitmap, based on users initials
+     * @param initials
+     */
+
     private Bitmap generateInitialsImage(String initials) {
         int width = 200; // Set the desired width for the image
         int height = 200; // Set the desired height for the image
@@ -268,6 +282,13 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         return bitmap;
     }
+
+    /**
+     * Helper function to parse the initials from the users entered name.
+     *
+     * @param name, e.g John Smith
+     * @return String, users initials eg JS
+     */
     private String getInitials(String name) {
         StringBuilder initials = new StringBuilder();
         for (String s : name.split("\\s+")) {
