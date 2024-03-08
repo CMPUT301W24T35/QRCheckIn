@@ -124,6 +124,14 @@
                     android:textColor="@color/White"/>
             </LinearLayout>
         </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Checkin QR Code"
+            android:textColor="@color/MainTextTitle"
+            android:layout_gravity="left"
+            android:padding="20dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,6 +153,27 @@
                 android:paddingEnd="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/share_qr_code"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/promoQRCodeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Promo QR Code"
+            android:textColor="@color/MainTextTitle"
+            android:layout_gravity="left"
+            android:padding="20dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="20dp">
+            <ImageView
+                android:id="@+id/promoqrCodeImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/qr_code_placeholder" />
         </LinearLayout>
 
 

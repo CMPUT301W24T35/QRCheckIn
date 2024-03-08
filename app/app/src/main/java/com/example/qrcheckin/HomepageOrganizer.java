@@ -189,6 +189,7 @@ public class HomepageOrganizer extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentSnapshot doc) {
                                     if (doc.exists()) {
+                                        Log.d("Firestore", "Successful fetch EventID: " + eventId);
                                         String eventName = doc.getString("eventName");
                                         String eventDes = doc.getString("eventDescription");
                                         String startTime = doc.getString("startTime");

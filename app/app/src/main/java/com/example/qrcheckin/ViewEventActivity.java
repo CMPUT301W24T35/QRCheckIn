@@ -55,6 +55,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     ImageButton share;
     ImageButton addAnnouncement;
     ImageView qrCodeImage;
+    TextView promoQRCodeTextViewTitle;
+    ImageView promoQRCodeImage;
     private FirebaseFirestore db;
     private ArrayList<Announcement> announcementDataList;
     private ListView announcementList;
@@ -81,10 +83,12 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
         signUpButton = findViewById(R.id.signUpButton);
         qrCodeImage = findViewById(R.id.qrCodeImageView);
+        promoQRCodeImage = findViewById(R.id.promoqrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
         share = findViewById(R.id.button_share);
+        promoQRCodeTextViewTitle = findViewById(R.id.promoQRCodeTitle);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("eventName");
@@ -119,6 +123,14 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             qrCodeImage.setImageBitmap(qrBitmap);
         }
 
+        if (promoqr!=null){
+            Bitmap promoqrBitmap = Helpers.base64ToBitmap(promoqr);
+            promoQRCodeImage.setImageBitmap(promoqrBitmap);
+        } else {
+            promoQRCodeTextViewTitle.setText("No Promo QR Code");
+
+        }
+
 
         if (isAttendee()) {
             // If it is an attendee, then hide unnecessary info
@@ -130,6 +142,10 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             share.setVisibility(View.GONE);
             ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
             signInBtnArea.setVisibility(View.VISIBLE);
+            promoQRCodeTextViewTitle.setVisibility(View.GONE);
+            promoQRCodeImage.setVisibility(View.GONE);
+
+
         }
 
         // Edit event
