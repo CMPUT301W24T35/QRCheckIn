@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-
+/**
+* This class is responsible for adding annoucement
+*/
 public class AddAnnouncementFragment extends DialogFragment {
     interface AddAnnouncementDialogListener {
         void addAnnouncement(Announcement announcement);

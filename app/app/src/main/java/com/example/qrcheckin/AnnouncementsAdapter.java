@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+* This class is responsible for holding information of annoucement
+*/
 public class AnnouncementsAdapter extends ArrayAdapter<Announcement> {
     //private Context context;
     //private ArrayList<Announcement> announcements;

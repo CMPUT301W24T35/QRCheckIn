@@ -2,7 +2,18 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="HomepageActivity">
+<<<<<<< HEAD
+      <entry key="SignedUpEventActivity">
+=======
+      <entry key="HomepageOrganizer">
+        <State />
+      </entry>
+      <entry key="SignedUpEventActivity">
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="app">
+>>>>>>> 68473d2e2504e2ea47c0ba406de7297248a5b2c1
         <State />
       </entry>
     </value>
