@@ -126,9 +126,9 @@ public class Event {
 
     /**
      * Signs up attendee to Signed Up Attendee list, as long as there is space.
-     * If there is no space it throws an exception - remember to handle this!
-     * @param attendee
-     *
+     * If there is no space it throws an exception
+     * @param attendee the attendee
+     * @throws Exception Capacity reached
      */
     public void signUpAttendee(Profile attendee) throws Exception {
         if(reachedCapacity()){
@@ -138,6 +138,7 @@ public class Event {
             SignedUpAttendees.add(attendee);
         }
     }
+
 
     // Getters & Setters
     public String getEventID() {
