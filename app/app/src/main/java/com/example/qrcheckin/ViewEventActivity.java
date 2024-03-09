@@ -545,6 +545,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                         }
                                     });
                         } else {
+                            //// OpenAI, 2024, ChatGPT, update an entry in firestore
                             // If it doesn't exist, create a new array with docID
                             userRef.update("signedUpEvents", FieldValue.arrayUnion(eventID))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

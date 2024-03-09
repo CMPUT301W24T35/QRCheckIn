@@ -234,6 +234,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //bundle.putString("location", location);
         bundle.putString("eventID", docID);
 
+        // OpenAI, 2024, ChatGPT, how to add organized event
         DocumentReference userRef = db.collection("user").document(mainUserID);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

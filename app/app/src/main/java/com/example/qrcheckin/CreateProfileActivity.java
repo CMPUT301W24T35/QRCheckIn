@@ -118,6 +118,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         // Set onclick listener for confirm button
         // Check if all input data are valid
         // Write data to db
+        // OpenAI, 2024, ChatGPT, store profile details in firestore
         confirmButton.setOnClickListener(v -> {
             if (isProfileInputValid()) {
                 String userName = newUserName.getText().toString();
