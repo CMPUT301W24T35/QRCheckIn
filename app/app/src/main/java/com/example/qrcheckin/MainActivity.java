@@ -11,7 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 
-//import com.example.qrcheckin.databinding.ActivityMainBinding;
+import com.example.qrcheckin.databinding.ActivityMainBinding;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -21,8 +22,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.FileOutputStream;
 
 /**
-* Main class to the project
-*/
+ * MainActivity is the starting point of the application. It is responsible for initializing
+ * the Firestore database instance, checking if the user profile exists based on the Android device ID.
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +44,12 @@ public class MainActivity extends AppCompatActivity {
         checkIsUserProfile();
     }
 
+    /**
+     * Checks if the user profile exists in the Firestore database based on the device's unique ID.
+     * Move to the relevant activity depending on the result
+     */
     private void checkIsUserProfile() {
+        // Stackoverflow, 2024, Source: https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         android_id = Settings.Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         db.collection("user").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

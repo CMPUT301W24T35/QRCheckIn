@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This class defines Profile
+ * The Profile class represents a user profile within the application,
+ * containing information such as user identification, name, phone number,etc.
  */
 
 public class Profile {
@@ -35,70 +36,84 @@ public class Profile {
     // Getters and Setters
 
     /**
-     * @return The user ID for this user
+     * Returns the Firebase reference user ID.
+     *
+     * @return the user ID.
      */
     public String getUserID() {
         return userID;
     }
 
     /**
-     * @param userID The string to be set as user ID
+     * Sets the user's Firebase reference ID.
+     *
+     * @param userID the new user ID to set.
      */
     public void setUserID(String userID) {
         this.userID = userID;
     }
 
     /**
-     * @return The user name for this user
+     * Returns the name of the user.
+     *
+     * @return the user name.
      */
     public String getUserName() {
         return userName;
     }
 
     /**
-     * @param userName the String to be set as username
+     * Sets the name of the user.
+     * @param userName the new name to set.
      */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
     /**
-     * @return The phone number for this user
+     * Returns the phone number of the user.
+     * @return the phone number.
      */
     public String getPhone() {
         return phone;
     }
 
     /**
-     * @param phone the string to be set as phone number
+     * Sets the phone number of the user.
+     * @param phone the new phone number to set.
      */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
     /**
-     * @return The email address for this user
+     * Returns the email address of the user.
+     * @return email
      */
+
     public String getEmail() {
         return email;
     }
 
     /**
-     * @param email the string to be set as user email
+     * Returns the email address of the user.
      */
+
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * @return the homepage url for this user
+     * Returns the homepage URL of the user.
+     * @return the homepage URL.
      */
     public String getHomepage() {
         return homepage;
     }
 
     /**
-     * @param homepage the string to be set as the homepage url
+     * Sets the homepage URL of the user.
+     * @param homepage the new homepage URL to set.
      */
     public void setHomepage(String homepage) {
         this.homepage = homepage;

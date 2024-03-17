@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -105,6 +106,33 @@ public class SignedUpEventActivity extends AppCompatActivity {
         eventAdapter = new SignedUpEventAdapter(this, dataList);
         eventList.setAdapter(eventAdapter);
 
+        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the clicked event
+                Event clickedEvent = dataList.get(position);
+
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(SignedUpEventActivity.this, ViewEventActivity.class);
+
+                // Pass data to the eventDetail activity
+                intent.putExtra("eventName", clickedEvent.getName()); // get name
+                //intent.putExtra("organizerName", clickedEvent.getOrganizerID()); // And a getOrganizerName method
+                intent.putExtra("startTime", clickedEvent.getStartTime());
+                intent.putExtra("endTime", clickedEvent.getEndTime());
+                intent.putExtra("eventDes", clickedEvent.getDescription());
+                intent.putExtra("location", clickedEvent.getLocation());
+                intent.putExtra("poster",clickedEvent.getPoster());
+                intent.putExtra("qr",clickedEvent.getQrCode());
+                intent.putExtra("promoqr",clickedEvent.getPromoQR());
+                intent.putExtra("origin", "attendee");
+
+                // Add other event details as needed
+
+                // Start the
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -140,6 +168,7 @@ public class SignedUpEventActivity extends AppCompatActivity {
                 Log.d("FirestoreSuccess", "Successfully fetched events.");
                 dataList.clear();
 
+                // OpenAI, 2024, ChatGPT, Store a list of strings in a field in Firebase
                 if(value.exists()) {
                     ArrayList<String> eventIds = (ArrayList<String>) value.get("signedUpEvents");
                     if (eventIds != null && !eventIds.isEmpty()){

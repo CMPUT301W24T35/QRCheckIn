@@ -33,8 +33,10 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
-* This class initializes the homepage
-*/
+ * The HomepageActivity class initializes the main homepage application,
+ * providing users with the option to organize events, sign up for events,
+ * check in,and access their profile.
+ */
 
 public class HomepageActivity extends AppCompatActivity {
 
@@ -200,6 +202,7 @@ public class HomepageActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()){
+                // OpenAI, 2024, ChatGPT, Convert string to Bitmap
                 String profileImage = documentSnapshot.getString("profileImage");
                 Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
                 profile.setImageBitmap(profileBitmap);
@@ -212,6 +215,10 @@ public class HomepageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Retrieves the list of events from the Firestore database
+     * and updates the lists accordingly.
+     */
     private void getEvent() {
         db.collection("event").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
