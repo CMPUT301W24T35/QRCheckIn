@@ -2,8 +2,13 @@ package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,6 +19,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
+
 /**
  * Activity for scanning QR codes related to events. It provides functionality
  * for users to scan QR codes to check in to events  with Firestore integration
@@ -72,6 +79,7 @@ public class QRScannerActivity extends AppCompatActivity {
             //startActivity(intent);
         });
     }
+
     /**
      * Sets up and launches the QR code scanner..
      */
@@ -90,7 +98,7 @@ public class QRScannerActivity extends AppCompatActivity {
      * updates the database accordingly.
      */
     private ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if(result.getContents() != null) {
+        if (result.getContents() != null) {
             qrContent = result.getContents();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(QRScannerActivity.this);
@@ -117,7 +125,7 @@ public class QRScannerActivity extends AppCompatActivity {
 
             int checkInNum;      //record the number of check in
 
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
@@ -138,7 +146,7 @@ public class QRScannerActivity extends AppCompatActivity {
                                                 Log.w("Firestore", "Error updating document", e);
                                             }
                                         });
-                            }else {
+                            } else {
                                 // If it doesn't exist, create a new array with docID
                                 docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -165,7 +173,7 @@ public class QRScannerActivity extends AppCompatActivity {
 
             DocumentReference checkEventdocRef = db.collection("user").document(userID);
 
-            checkEventdocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            checkEventdocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
@@ -186,7 +194,7 @@ public class QRScannerActivity extends AppCompatActivity {
                                                 Log.w("Firestore", "Error updating document", e);
                                             }
                                         });
-                            }else {
+                            } else {
                                 // If it doesn't exist, create a new array with docID
                                 checkEventdocRef.update("checkedEvent", FieldValue.arrayUnion(qrContent))
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -241,6 +249,116 @@ public class QRScannerActivity extends AppCompatActivity {
 
              */
 
+
+            // Get location of the user
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            LocationListener locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+
+                    DocumentReference locationDocRef = db.collection("user").document(userID);
+
+                    // Update latitude for the user
+                    locationDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    // Check if checkedEvent field exists
+                                    if (document.contains("latitude")) {
+                                        // If it exists, update the array by adding docID
+                                        locationDocRef.update("latitude", latitude)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d("Firestore", "Document successfully updated!");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Firestore", "Error updating document", e);
+                                                    }
+                                                });
+                                    } else {
+                                        // If it doesn't exist, create a new array with docID
+                                        locationDocRef.update("latitude", latitude)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d("Firestore", "New organizedEvent field created and document updated!");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Firestore", "Error updating document", e);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Log.d("Firestore", "No such document");
+                                }
+                            } else {
+                                Log.d("Firestore", "get failed with ", task.getException());
+                            }
+                        }
+                    });
+
+                    // Update longitude for the user
+                    locationDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    // Check if checkedEvent field exists
+                                    if (document.contains("longitude")) {
+                                        // If it exists, update the array by adding docID
+                                        locationDocRef.update("longitude", longitude)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d("Firestore", "Document successfully updated!");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Firestore", "Error updating document", e);
+                                                    }
+                                                });
+                                    } else {
+                                        // If it doesn't exist, create a new array with docID
+                                        locationDocRef.update("longitude", longitude)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d("Firestore", "New organizedEvent field created and document updated!");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Firestore", "Error updating document", e);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Log.d("Firestore", "No such document");
+                                }
+                            } else {
+                                Log.d("Firestore", "get failed with ", task.getException());
+                            }
+                        }
+                    });
+
+                }
+            };
+
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
             builder.setTitle("Checked In");

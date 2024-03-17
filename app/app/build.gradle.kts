@@ -50,6 +50,9 @@ dependencies {
     // QR Generator: https://github.com/androidmads/QRGenerator
     implementation("com.github.androidmads:QRGenerator:1.0.1")
 
+    // OpenStreetMap
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
+
 
     // Glide library for image processing
     implementation("com.github.bumptech.glide:glide:4.12.0")
