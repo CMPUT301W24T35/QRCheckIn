@@ -1,18 +1,25 @@
 package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -144,6 +151,7 @@ public class HomepageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Intent intent = new Intent(HomePageActivity.this, localActivity.class);// go to event activity need to connect with other activity
                 //startActivity(intent);
+                checkLocationSettings();
             }
         });
         notification = findViewById(R.id.button_notification);
@@ -193,6 +201,28 @@ public class HomepageActivity extends AppCompatActivity {
         });
 
     }
+
+    //Enable / Disable Location
+    private void checkLocationSettings() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(HomepageActivity.this, "Geolocation is on!", Toast.LENGTH_SHORT).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    /*
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(HomepageActivity.this, "Location services are enabled now", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(HomepageActivity.this, "Location services are still disabled", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }*/
 
     private void fetchDetails(String uID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
