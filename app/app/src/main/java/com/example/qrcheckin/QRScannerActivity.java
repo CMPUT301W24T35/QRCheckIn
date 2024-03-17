@@ -35,6 +35,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
 
@@ -249,7 +250,6 @@ public class QRScannerActivity extends AppCompatActivity {
 
              */
 
-
             // Get location of the user
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
@@ -261,6 +261,10 @@ public class QRScannerActivity extends AppCompatActivity {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
 
+                    HashMap<String, Object> userLocation = new HashMap<>();
+                    userLocation.put("latitude", latitude);
+                    userLocation.put("longitude", longitude);
+
                     DocumentReference locationDocRef = db.collection("user").document(userID);
 
                     // Update latitude for the user
@@ -271,9 +275,9 @@ public class QRScannerActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     // Check if checkedEvent field exists
-                                    if (document.contains("latitude")) {
+                                    if (document.contains("location")) {
                                         // If it exists, update the array by adding docID
-                                        locationDocRef.update("latitude", latitude)
+                                        locationDocRef.update("location", userLocation)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
@@ -287,7 +291,7 @@ public class QRScannerActivity extends AppCompatActivity {
                                                 });
                                     } else {
                                         // If it doesn't exist, create a new array with docID
-                                        locationDocRef.update("latitude", latitude)
+                                        locationDocRef.update("location", userLocation)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
@@ -308,53 +312,6 @@ public class QRScannerActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-                    // Update longitude for the user
-                    locationDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    // Check if checkedEvent field exists
-                                    if (document.contains("longitude")) {
-                                        // If it exists, update the array by adding docID
-                                        locationDocRef.update("longitude", longitude)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Log.d("Firestore", "Document successfully updated!");
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("Firestore", "Error updating document", e);
-                                                    }
-                                                });
-                                    } else {
-                                        // If it doesn't exist, create a new array with docID
-                                        locationDocRef.update("longitude", longitude)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Log.d("Firestore", "New organizedEvent field created and document updated!");
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("Firestore", "Error updating document", e);
-                                                    }
-                                                });
-                                    }
-                                } else {
-                                    Log.d("Firestore", "No such document");
-                                }
-                            } else {
-                                Log.d("Firestore", "get failed with ", task.getException());
-                            }
-                        }
-                    });
-
                 }
             };
 
