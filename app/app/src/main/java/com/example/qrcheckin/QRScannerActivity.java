@@ -1,15 +1,19 @@
 package com.example.qrcheckin;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,16 +31,22 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
+/**
+ * Activity for scanning QR codes related to events. It provides functionality
+ * for users to scan QR codes to check in to events  with Firestore integration
+ * for verifying and updating event attendance.
+ */
 public class QRScannerActivity extends AppCompatActivity {
 
     Button scan;
 
+    ImageButton back;
     String userID;
     String qrContent;
 
     FirebaseFirestore db;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +54,14 @@ public class QRScannerActivity extends AppCompatActivity {
 
         // Fetch db
         db = FirebaseFirestore.getInstance();
+
+        back = findViewById(R.id.button_backArrow);
+        back.setOnClickListener(v -> {
+
+            Intent intent = new Intent(QRScannerActivity.this, HomepageActivity.class);
+
+            startActivity(intent);
+        });
 
         scan = findViewById(R.id.button_scan_qr);
         scan.setOnClickListener(v -> {
@@ -54,6 +72,9 @@ public class QRScannerActivity extends AppCompatActivity {
             //startActivity(intent);
         });
     }
+    /**
+     * Sets up and launches the QR code scanner..
+     */
     private void scanCode() {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");
@@ -62,6 +83,12 @@ public class QRScannerActivity extends AppCompatActivity {
         options.setCaptureActivity(CaptureAct.class);
         barLauncher.launch(options);
     }
+
+    /**
+     * Handles the result from scanning a QR code. If a QR code is successfully
+     * scanned, it checks the Firestore database for event attendance, and
+     * updates the database accordingly.
+     */
     private ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null) {
             qrContent = result.getContents();
@@ -126,7 +153,8 @@ public class QRScannerActivity extends AppCompatActivity {
                                             }
                                         });
                             }
-                        } else {
+                        } else { // QR Code could be a Promo code
+                            checkPromoCode();
                             Log.d("Firestore", "No such document");
                         }
                     } else {
@@ -221,11 +249,41 @@ public class QRScannerActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    //Intent intent = new Intent(QRScannerActivity.this, CreateEventActivity.class);
-                    //intent.putExtra("QR_content", qrContent);
-                    //startActivity(intent);
+                    Intent intent = new Intent(QRScannerActivity.this, HomepageActivity.class);
+                    intent.putExtra("QR_content", qrContent);
+                    startActivity(intent);
                 }
             }).show();
         }
     });
+
+    /**
+     * Verifies and handles promo codes and querying the Firestore
+     * database for a matching event document.
+     */
+    public void checkPromoCode(){
+        String reverseQRString = Helpers.reverseString(qrContent);
+        DocumentReference docRef = db.collection("event").document(reverseQRString);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Navigate to EventPage
+                        Log.d("Firestore", "PromoCode Scanend and found document with EventID: " + reverseQRString);
+
+                    } else { // QR Code could be a Promo code
+                        Log.d("Firestore", "No such document");
+                        Toast.makeText(QRScannerActivity.this, "QR Code Not Found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
 }

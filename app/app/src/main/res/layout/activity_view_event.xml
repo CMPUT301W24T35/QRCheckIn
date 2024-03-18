@@ -10,6 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="35dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back" />
         <TextView
             android:id="@+id/viewEventTitle"
             android:layout_width="match_parent"
@@ -25,8 +31,7 @@
             android:id="@+id/posterImageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/default_event_bg" />
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,6 +129,14 @@
                     android:textColor="@color/White"/>
             </LinearLayout>
         </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Checkin QR Code"
+            android:textColor="@color/MainTextTitle"
+            android:layout_gravity="left"
+            android:padding="20dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,8 +145,8 @@
             android:layout_marginBottom="20dp">
             <ImageView
                 android:id="@+id/qrCodeImageView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:src="@drawable/qr_code_placeholder" />
             <ImageButton
@@ -146,11 +159,32 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/share_qr_code"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/promoQRCodeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Promo QR Code"
+            android:textColor="@color/MainTextTitle"
+            android:layout_gravity="left"
+            android:padding="20dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="20dp">
+            <ImageView
+                android:id="@+id/promoqrCodeImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/qr_code_placeholder" />
+        </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="230dp"
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100">
@@ -212,7 +246,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:orientation="vertical"
             android:padding="20dp"
             android:weightSum="100"
@@ -234,6 +268,36 @@
             </View>
             <ListView
                 android:id="@+id/attendees_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1">
+            </ListView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:weightSum="100"
+            android:id="@+id/signedAttendeesInfo">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"
+                android:textSize="20sp"
+                android:text="Signed-up Attendees" />
+            <View
+                android:layout_width="70dp"
+                android:layout_height="2dp"
+                android:background="#0073C0"
+                android:paddingStart="16dp"
+                tools:ignore="RtlSymmetry"
+                android:layout_marginBottom="20dp">
+            </View>
+            <ListView
+                android:id="@+id/signedAttendees_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

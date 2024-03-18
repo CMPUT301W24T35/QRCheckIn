@@ -1,5 +1,6 @@
 package com.example.qrcheckin;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -26,16 +28,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-/**
-* Allow user to view the event information
-*/
+
+/** ViewEventActivity allows users to view detailed information about an event.
+ * Users can view event details, sign up for events, and view announcements related to the event.
+ * This activity interacts with Firebase Firestore to retrieve and update event and user information.
+ * @see AddAnnouncementFragment creates a fragment for the announcement
+ */
 
 public class ViewEventActivity extends AppCompatActivity implements AddAnnouncementFragment.AddAnnouncementDialogListener {
 
@@ -51,10 +58,16 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     ImageButton share;
     ImageButton addAnnouncement;
     ImageView qrCodeImage;
+    TextView promoQRCodeTextViewTitle;
+    ImageView promoQRCodeImage;
     private FirebaseFirestore db;
     private ArrayList<Announcement> announcementDataList;
     private ListView announcementList;
     private AnnouncementsAdapter announcementsAdapter;
+
+    private ArrayList<Profile> signedAttendeeDataList;
+    private ListView signedAttendeeList;
+    private SignedAttendeeAdapter signedAttendeeAdapter;
 
     private ArrayList<Profile> attendeeDataList;
     private ListView attendeeList;
@@ -63,6 +76,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     private String mainUserID;
     private String eventID;
 
+    ImageButton back;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +92,14 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         eventName = findViewById(R.id.viewEventTitle);
 
         signUpButton = findViewById(R.id.signUpButton);
+        back = findViewById(R.id.button_back);
         qrCodeImage = findViewById(R.id.qrCodeImageView);
+        promoQRCodeImage = findViewById(R.id.promoqrCodeImageView);
         editEventBtn = findViewById(R.id.editEventButton);
         viewMapBtn = findViewById(R.id.viewMapButton);
         addAnnouncement = findViewById(R.id.button_add_announcement);
         share = findViewById(R.id.button_share);
+        promoQRCodeTextViewTitle = findViewById(R.id.promoQRCodeTitle);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("eventName");
@@ -115,24 +134,41 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             qrCodeImage.setImageBitmap(qrBitmap);
         }
 
+        if (promoqr!=null){
+            Bitmap promoqrBitmap = Helpers.base64ToBitmap(promoqr);
+            promoQRCodeImage.setImageBitmap(promoqrBitmap);
+        } else {
+            promoQRCodeTextViewTitle.setText("No Promo QR Code");
+
+        }
+
 
         if (isAttendee()) {
             // If it is an attendee, then hide unnecessary info
             ConstraintLayout eventButtons = findViewById(R.id.eventButtons);
             LinearLayout attendeeInfo = findViewById(R.id.attendeesInfo);
+            LinearLayout signedAttendeeInfo = findViewById(R.id.signedAttendeesInfo);
             eventButtons.setVisibility(View.GONE);
             attendeeInfo.setVisibility(View.GONE);
+            signedAttendeeInfo.setVisibility(View.GONE);
             addAnnouncement.setVisibility(View.GONE);
             share.setVisibility(View.GONE);
             ConstraintLayout signInBtnArea = findViewById(R.id.signInButtonArea);
             signInBtnArea.setVisibility(View.VISIBLE);
+            promoQRCodeTextViewTitle.setVisibility(View.GONE);
+            promoQRCodeImage.setVisibility(View.GONE);
         }
 
         // Edit event
+        // TODO Temporary turn this button into back button
+        editEventBtn.setText("BACK");
         editEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO Create intent to switch to EditEvent Activity.
+                //  Temporary serves as back button to homepage
+                Intent intent = new Intent(ViewEventActivity.this, HomepageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -145,7 +181,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
 
 
-        // Share QR code
+        // OPEN AI, 2024, ChatGPT, Share Images in Android Studio
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,10 +213,20 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewEventActivity.this, HomepageActivity.class);
+                startActivity(intent);
+            }
+        });
+
         announcementDataList = new ArrayList<>();
         announcementList = findViewById(R.id.announcement_list);
         announcementsAdapter = new AnnouncementsAdapter(this, announcementDataList);
         announcementList.setAdapter(announcementsAdapter);
+
+        showAnnouncement();
 
         // Add announcement
         addAnnouncement.setOnClickListener(v -> {
@@ -194,6 +240,15 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         attendeeList = findViewById(R.id.attendees_list);
         attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);
         attendeeList.setAdapter(attendeeAdapter);
+
+        showAttendee();
+
+        signedAttendeeDataList = new ArrayList<>();
+        signedAttendeeList = findViewById(R.id.signedAttendees_list);
+        signedAttendeeAdapter = new SignedAttendeeAdapter(this, signedAttendeeDataList);
+        signedAttendeeList.setAdapter(signedAttendeeAdapter);
+
+        showSignedAttendees();
     }
 
 
@@ -202,9 +257,159 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
     public void addAnnouncement(Announcement announcement) {
         String message = announcement.getAnnouncement();
         // TODO Get the eventID so that we can store announcements in the Event in firebase
-        announcementDataList.add(0, announcement);
-        announcementsAdapter.notifyDataSetChanged();
+        DocumentReference userRef = db.collection("event").document(eventID);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Check if signedUpAttendees field exists
+                        if (document.contains("announcements")) {
+                            // If it exists, update the array by adding docID
+                            userRef.update("announcements", FieldValue.arrayUnion(message))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "Document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        } else {
+                            // If it doesn't exist, create a new array with docID
+                            userRef.update("announcements", FieldValue.arrayUnion(message))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "New signedUpAttendees field created and document updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        showAnnouncement();
     }
+
+    /**
+     *
+     */
+    public void showAnnouncement(){
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                announcementDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> announcements = (ArrayList<String>) value.get("announcements");
+                    if (announcements != null && !announcements.isEmpty()){
+                        for (String announcementMsg : announcements){
+                            Announcement announcement = new Announcement(announcementMsg);
+                            announcementDataList.add(0, announcement);
+                            announcementsAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void showAttendee() {
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                attendeeDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> attendees = (ArrayList<String>) value.get("userIDCheckIn");
+                    if (attendees != null && !attendees.isEmpty()){
+                        for (String attendeeID : attendees){
+                            DocumentReference attendeeRef = db.collection("user").document(attendeeID);
+                            attendeeRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot doc) {
+                                    if (doc.exists()) {
+                                        String attendeeName = doc.getString("name");
+                                        String attendeePhone = doc.getString("phone");
+                                        String attendeeEmail = doc.getString("email");
+                                        String attendeeHomepage = doc.getString("homepage");
+                                        Profile attendee = new Profile(attendeeName, attendeePhone, attendeeEmail, attendeeHomepage);
+                                        attendeeDataList.add(attendee);
+                                    }
+                                    attendeeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void showSignedAttendees() {
+        db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    Log.e("FirestoreError", "Error getting event details",error);
+                    return;
+                }
+                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                signedAttendeeDataList.clear();
+                if(value.exists()) {
+                    ArrayList<String> attendees = (ArrayList<String>) value.get("signedUpAttendees");
+                    if (attendees != null && !attendees.isEmpty()){
+                        for (String attendeeID : attendees){
+                            DocumentReference attendeeRef = db.collection("user").document(attendeeID);
+                            attendeeRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot doc) {
+                                    if (doc.exists()) {
+                                        String attendeeName = doc.getString("name");
+                                        String attendeePhone = doc.getString("phone");
+                                        String attendeeEmail = doc.getString("email");
+                                        String attendeeHomepage = doc.getString("homepage");
+                                        Profile attendee = new Profile(attendeeName, attendeePhone, attendeeEmail, attendeeHomepage);
+                                        signedAttendeeDataList.add(attendee);
+                                    }
+                                    signedAttendeeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Checks if the current user is an attendee of the event.
+     * @return true if the user is an attendee, false otherwise.
+     */
+
     public boolean isAttendee() {
         // Checks if the request for this page is coming from an attendee or an organizer
         /*
@@ -229,6 +434,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         return false;
     }
 
+    /**
+     * Signs up the current user as an attendee for the event.
+     */
     public void signUpAttendee(){
 
         getUserID();
@@ -259,7 +467,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                     });
                         } else {
                             // If it doesn't exist, create a new array with docID
+
                             eventRef.update("signedUpAttendees", FieldValue.arrayUnion(mainUserID))
+
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -286,6 +496,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
 
     }
 
+    /**
+     * Retrieves the user ID of the current user from local storage.
+     */
     public void getUserID(){
         try {
             FileInputStream fis = openFileInput("localStorage.txt");
@@ -304,6 +517,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         }
     }
 
+    /**
+     * Adds the current event to the user's list of signed-up events in their profile.
+     */
     public void addToSignedUpEventsInProfile(){
         // Update user's document with signed up events
         DocumentReference userRef = db.collection("user").document(mainUserID);

@@ -1,30 +1,39 @@
 package com.example.qrcheckin;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 
 /**
-* This class is responsible for adding annoucement
-*/
+ * A DialogFragment subclass used to add an announcement. This class provides a dialog
+ * where users can enter text for a new announcement.
+ */
 public class AddAnnouncementFragment extends DialogFragment {
     interface AddAnnouncementDialogListener {
+        /**
+         * Interface definition to be invoked when an announcement is added.
+         */
+
+        /**
+         * Called when an announcement is added.
+         * @param announcement The new announcement that was added.
+         */
         void addAnnouncement(Announcement announcement);
     }
     private AddAnnouncementDialogListener listener;
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * @throws RuntimeException If the context has not implemented the interface.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -35,6 +44,10 @@ public class AddAnnouncementFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * @throws RuntimeException If the context has not implemented the interface.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

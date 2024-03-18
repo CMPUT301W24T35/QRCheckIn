@@ -87,6 +87,22 @@
 
         android:layout_weight="1">
     </ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_check_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CHECK IN "
+            android:gravity="center"
+            app:backgroundTint="#3D5AF1"
+            android:textColor="@android:color/white"
+            android:autofillHints="Events"
+            android:contentDescription="Events information" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

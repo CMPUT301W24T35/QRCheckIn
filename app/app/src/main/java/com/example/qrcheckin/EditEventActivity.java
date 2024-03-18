@@ -23,15 +23,17 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 /**
-* This class is responsible for editing exist event
+* This class is responsible for editing exist event.
+ * The user can edit all the details associated with the event.
+ * Updates are then made in the Firebase on the relevant event document.
 */
 
 public class EditEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
-    EditText editEventName;
+    public EditText editEventName;
     EditText editEventDescription;
-    EditText editStartTime;
+    public EditText editStartTime;
     EditText editEndTime;
     EditText editLocation;
     Button confirmButton;
@@ -107,6 +109,10 @@ public class EditEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Function to get all the text input, and push the changes to Firebase.
+     *
+     */
     private void editEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
@@ -152,7 +158,12 @@ public class EditEventActivity extends AppCompatActivity {
 
     }
 
-    // CHECK IF INPUTS EMPTY
+    /**
+     * This function validates whether the TextEdit input fields are empty and
+     * also displays errors if they are empty.
+     * @return true if no errors, false if errors
+     */
+
     public boolean isEventInputValid(){ // TODO rename
         if (String.valueOf(editEventName.getText()).isEmpty()){
             editEventName.setError("Enter Event Name");

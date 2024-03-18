@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#111834"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textColor ="@color/White"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="start|center_vertical"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Events"
+        android:textColor="@color/White"
+        android:paddingStart="16dp"
+        android:textStyle="bold"
+        android:paddingTop = "16dp"
+        android:paddingBottom="16dp"
+        android:textSize="18dp">
+    </TextView>
+    <View
+        android:layout_width="100dp"
+        android:layout_height="4dp"
+        android:background="#0073C0"
+        android:paddingStart="16dp"
+        tools:ignore="RtlSymmetry">
+    </View>
+    <ListView
+        android:paddingStart="12dp"
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </ListView>
+
+</LinearLayout>
