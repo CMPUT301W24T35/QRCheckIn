@@ -28,7 +28,6 @@ public class QRGenerator extends AppCompatActivity {
     ImageView QRCodeImage;
     String QRCodeBase64;
     Bitmap bitmap;
-    Bundle bundle;
 
 
     private FirebaseFirestore db;
@@ -38,13 +37,9 @@ public class QRGenerator extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_generator);
 
-        //Bundle bundle = getIntent().getExtras();
-        Intent newIntent = getIntent();
-        bundle = getIntent().getExtras();
-
         //assert bundle != null;
-        String eventID = newIntent.getStringExtra("eventID");
-        //Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        String eventID = getIntent().getExtras().getString("eventID");
+        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
@@ -52,9 +47,7 @@ public class QRGenerator extends AppCompatActivity {
         createEventButton = findViewById(R.id.confirmEventCreationButton);
 
 
-        checkIfNullPointers();
-
-        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        //checkIfNullPointers();
 
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{

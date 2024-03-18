@@ -101,6 +101,7 @@ public class CreateEventActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         getUserID();
 
+
         // TODO
         //  1. Display poster
         //  2. Assign poster to variable
@@ -158,7 +159,6 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-        Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
         String attendeeCapacityString;
 
@@ -205,6 +205,11 @@ public class CreateEventActivity extends AppCompatActivity {
             Log.d("DEBUG", "AttendeeCapacity: " + attendeeCapacityString);
         }
 
+        // Only pass eventID to bundle for QR Code generation
+        Bundle bundle = new Bundle();
+        bundle.putString("eventID", docID);
+        Log.d("DEBUG", "eventID: " + docID);
+
         db.collection("event")
                 .document(docID)
                 .set(data)
@@ -212,15 +217,19 @@ public class CreateEventActivity extends AppCompatActivity {
                     // On Success add eventID to user's organized events list
                                 db.collection("user")
                                         .document(mainUserID)
-                                        .update("organizedEvent", FieldValue.arrayUnion(docID));
-
+                                        .update("organizedEvent", FieldValue.arrayUnion(docID))
+                                        .addOnSuccessListener(w->{
+                                            // On success of above, navigate to QR Generator activity
+                                            Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
+                                            intent.putExtras(bundle);
+                                            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            //Log.d("DEBUG", "intent created: " + intent);
+                                            startActivity(intent);
+                                            finish();
+                                        });
                         }
 
                 );
-
-
-        // TODO - only pass relevant bundle info for QR Code
-        bundle.putString("eventID", docID);
 
 
         /*
@@ -254,10 +263,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
 
-        Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
-        //intent.putExtras(bundle);
-        //Log.d("DEBUG", "intent created: " + intent);
-        startActivity(intent);
+
 
         /* CHANGED WORKFLOW TO NAVIGATE TO ORGANIZED EVENTS
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
