@@ -13,13 +13,21 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
-* This class is responisible for holding all events
-*/
-
+ * An ArrayAdapter customized to display Event objects within a ListView.
+ * This adapter takes an ArrayList of Event objects and creates a new view
+ * of each event objects.
+ */
 public class EventArrayAdapter extends ArrayAdapter<Event> {
     public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context, 0, events);
     }
+    /**
+     * Provides a view for the listview
+     * @param position The position of the data item we want to view.
+     * @param convertView The old view to reuse.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return View
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

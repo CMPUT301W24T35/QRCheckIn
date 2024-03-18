@@ -1,13 +1,16 @@
 package com.example.qrcheckin;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,7 +28,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -37,12 +39,18 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 /**
-* This class is responsible for creating new events
-*/
+ * This class is responsible for creating new events.
+ * Users can enter the details of the event including Name, Start Time,
+ * End Time, Location and choose a poster image. They can optionally
+ * limit the number of attendees and optionally generate a promo QR code.
+ *
+ * On the creation of the event the HomepageOrganizer will populate with their
+ * event.
+ */
 public class CreateEventActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     boolean isDBConnected;
-    EditText newEventName;
+    public EditText newEventName;
     EditText newEventDescription;
     EditText newStartTime;
     EditText newEndTime;
@@ -65,6 +73,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
     String docID;
 
+    ImageButton goBack;
+
+    // TODO For now QR Code generated here
+    //  Decide whether to delete this workaround later
+
+    String checkinQRCodeBase64;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +121,7 @@ public class CreateEventActivity extends AppCompatActivity {
                             posterImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             posterImageBase64 = Helpers.bitmapToBase64(posterImageBitmap);
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            Log.d("PhotoPicker", "Unable to convert to base64");
                         }
 
                     } else {
@@ -122,6 +138,15 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         );
 
+        goBack = findViewById(R.id.button_go_back);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
+                startActivity(intent);
+            }
+        });
+
         continueButton.setOnClickListener(v -> startNextActivity());
     }
 
@@ -134,6 +159,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private void addEvent() {
         Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
+        String attendeeCapacityString;
 
         String eventName = newEventName.getText().toString();
         String eventDescription = newEventDescription.getText().toString();
@@ -141,7 +167,10 @@ public class CreateEventActivity extends AppCompatActivity {
         String endTime = newEndTime.getText().toString();
         String location = newLocation.getText().toString();
         docID = Helpers.createDocID(eventName, startTime, location);
-        String attendeeCapacityString = newAttendeeCapacity.getText().toString();
+        if (newAttendeeCapacity.getText() == null) {
+            attendeeCapacityString = "";
+        }
+        attendeeCapacityString = newAttendeeCapacity.getText().toString();
         Log.d("DEBUG", "attendeeCapacityString: " + attendeeCapacityString);
 
 
@@ -163,6 +192,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         checkPromoCodeAndGenerate();
 
+        // TODO Temporary workaround solution
+        //     Decide if we want to keep this workflow later
+        generateQRCodeAndSetString();
+
         Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
         // TODO profileID to organizerID
 
@@ -173,6 +206,8 @@ public class CreateEventActivity extends AppCompatActivity {
         data.put("endTime", endTime);
         data.put("location", location);
         data.put("poster", posterImageBase64);
+        data.put("checkinQRCode", checkinQRCodeBase64);
+
 
         // OPTIONAL FIELDS
         // If promo code was generated then add it to Firebase bundle
@@ -181,22 +216,21 @@ public class CreateEventActivity extends AppCompatActivity {
             data.put("promoQRCode", promoCodeBase64);
         }
 
-        if (!attendeeCapacityString.isEmpty()) {
+        if (!attendeeCapacityString.equals("")) {
             // Convert to integer and package for database
             Integer attendeeCapacity = Integer.parseInt(attendeeCapacityString);
             data.put("attendeeCapacity", attendeeCapacity);
-            Log.d("DEBUG", "AttendeeCapacity is Empty");
-
+            Log.d("DEBUG", "AttendeeCapacity: " + attendeeCapacityString);
         }
 
 
 
         // TODO - only pass relevant bundle info for QR Code
-        bundle.putString("eventName", eventName);
-        bundle.putString("eventDescription", eventDescription);
-        bundle.putString("startTime", startTime);
-        bundle.putString("endTime", endTime);
-        bundle.putString("location", location);
+        //bundle.putString("eventName", eventName);
+        //bundle.putString("eventDescription", eventDescription);
+        //bundle.putString("startTime", startTime);
+        //bundle.putString("endTime", endTime);
+        //bundle.putString("location", location);
         bundle.putString("eventID", docID);
 
         DocumentReference userRef = db.collection("user").document(mainUserID);
@@ -249,14 +283,26 @@ public class CreateEventActivity extends AppCompatActivity {
                 .document(docID)
                 .set(data);
 
+        Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
+        //intent.putExtras(bundle);
+        //Log.d("DEBUG", "intent created: " + intent);
+        startActivity(intent);
+
+        /* CHANGED WORKFLOW TO NAVIGATE TO ORGANIZED EVENTS
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
         intent.putExtras(bundle);
-        Log.d("DEBUG", "intent created: " + intent);
+        //Log.d("DEBUG", "intent created: " + intent);
         startActivity(intent);
+
+         */
 
     }
 
-    // CHECK IF INPUTS EMPTY
+    /**
+     * This function validates whether the TextEdit input fields are empty and
+     * also displays errors if they are empty.
+     * @return true if no errors, false if errors
+     */
     public boolean isTextEditInputEmpty(){
         if (String.valueOf(newEventName.getText()).isEmpty()){
             newEventName.setError("Enter Event Name");
@@ -285,7 +331,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // TODO: CHECK INPUTS ARE VALID - ANN
 
-
+    /**
+     * Checks whether Firebase Firestore is connected
+     * Alters the isDBConnected variable to true or false.
+     */
     public void dbConnected(){
         db.getInstance()
                 .enableNetwork()
@@ -302,6 +351,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks whether promo code checkbox was checked.
+     * If it is checked it generates a bitmap qr code based on the docID.
+     * Then converts it to a Base64 string for upload to Firebase Firestore.
+     * It assigns this string to the variable promoCodeBase64.
+     */
     public void checkPromoCodeAndGenerate(){
         if (generatePromoQRCodeCheckbox.isChecked()) {
 
@@ -317,6 +372,21 @@ public class CreateEventActivity extends AppCompatActivity {
             // CheckBox is not checked
             Log.d("Checkbox", "Checkbox is not checked");
         }
+    }
+
+    /**
+     * This function generates a bitmap for the checkin QR code based on the docID.
+     * It converts this bitmap to a base64 string to upload to firebase.
+     * This is assigned to checkinQRCodeBase64.
+     */
+    public void generateQRCodeAndSetString(){
+        QRGEncoder qrgEncoder = new QRGEncoder(docID, null, QRGContents.Type.TEXT, 800);
+
+        // Getting QR-Code as Bitmap
+        Bitmap bitmap = qrgEncoder.getBitmap(0);
+
+        // Convert bitmap to Base64 for Firebase
+        checkinQRCodeBase64 = Helpers.bitmapToBase64(bitmap);
     }
 
 }

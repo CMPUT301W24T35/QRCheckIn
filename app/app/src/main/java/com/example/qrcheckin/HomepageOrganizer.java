@@ -1,17 +1,17 @@
 package com.example.qrcheckin;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,8 +19,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -31,8 +29,9 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
-* This class initializes homepage for organizer
-*/
+ * HomepageOrganizer activity is the homepage for event organizers. It allows organizers to view
+ * their events, create new events, and go back to the main homepage where all events are can be viewed.
+ */
 public class HomepageOrganizer extends AppCompatActivity {
 
     CircleImageView profile;
@@ -53,6 +52,27 @@ public class HomepageOrganizer extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         getEvent();
+
+        // OpenAI, 2024, ChatGPT, How to get data from localStorage in Android Studio
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (mainUserID !=null){
+            fetchDetails(mainUserID);
+        }
 
         profile = findViewById(R.id.profile_image_button);
         profile.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +136,29 @@ public class HomepageOrganizer extends AppCompatActivity {
         });
     }
 
+    private void fetchDetails(String uID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(uID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                // OpenAI, 2024, ChatGPT, Convert string to Bitmap
+                String profileImage = documentSnapshot.getString("profileImage");
+                Bitmap profileBitmap = Helpers.base64ToBitmap(profileImage);
+                profile.setImageBitmap(profileBitmap);
+            }
+            else{
+                Log.e("ProfileActivity", "No such document");
+            }
+        }).addOnFailureListener(error->{
+            Log.e("ProfileActivity", "Error fetching document", error);
+        });
+    }
+
+    /**
+     * Fetches and displays the events organized by the current user.
+     * Events are retrieved from Firestore and displayed in a ListView.
+     * Each item in the listview can be clicked to obtain complete detail
+     * of the event like start time, end time
+     */
     private void getEvent() {
 
         try {
@@ -153,6 +196,7 @@ public class HomepageOrganizer extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentSnapshot doc) {
                                     if (doc.exists()) {
+                                        Log.d("Firestore", "Successful fetch EventID: " + eventId);
                                         String eventName = doc.getString("eventName");
                                         String eventDes = doc.getString("eventDescription");
                                         String startTime = doc.getString("startTime");

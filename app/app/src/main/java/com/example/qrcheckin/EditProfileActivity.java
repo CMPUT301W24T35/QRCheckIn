@@ -30,8 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* This class is responsible for editing exist profile
-*/
+ * This class is responsible for editing existing profile.
+ * The user can edit all the details associated with their profile.
+ * Updates are then made in the Firebase on the relevant event document.
+ */
 
 public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -41,6 +43,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText newUserUrl;
     Button confirmButton;
     Button editProfileImageButton;
+    Button deleteProfileImageButton;
     ImageView profileImage;
     Bitmap initialsBitmap;
     String initialsBase64;
@@ -60,6 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
         newUserUrl = findViewById(R.id.edituserHomepageText);
         confirmButton = findViewById(R.id.contAddProfileButton);
         editProfileImageButton = findViewById(R.id.ProfileImageEditButton);
+        deleteProfileImageButton = findViewById(R.id.ProfileImageDeleteButton);
         profileImage = findViewById(R.id.ProfileImage);
         db = FirebaseFirestore.getInstance();
 
@@ -110,6 +114,15 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        deleteProfileImageButton.setOnClickListener(v -> {
+            // Delete the existing profile picture
+            isImageSet = false;
+            String userName = newUserName.getText().toString();
+            String initials = getInitials(userName);
+            initialsBitmap = generateInitialsImage(initials);
+            profileImage.setImageBitmap(initialsBitmap);
+        });
+
         editProfileImageButton.setOnClickListener(v -> {
                     // Launch the photo picker and let the user choose only images.
                     pickMedia.launch(new PickVisualMediaRequest.Builder()
@@ -127,6 +140,10 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function to read the
+     * @param mainUserID
+     */
     private void fetchUserProfile(String mainUserID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").document(mainUserID).get().addOnSuccessListener(documentSnapshot -> {
@@ -190,8 +207,11 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    // TODO - Input validation for all fields
-    // Check the input validity
+    /**
+     * This function validates whether the TextEdit input fields are empty and
+     * also displays errors if they are empty.
+     * @return true if no errors, false if errors
+     */
     public boolean isProfileInputValid () {
         //Name validation
         if (String.valueOf(newUserName.getText()).isEmpty()) {
@@ -231,7 +251,12 @@ public class EditProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    // Deterministically generate profile picture
+    /**
+     * Function to deterministically generate profile picture.
+     * @return Bitmap, based on users initials
+     * @param initials
+     */
+
     private Bitmap generateInitialsImage (String initials){
         int width = 200; // Set the desired width for the image
         int height = 200; // Set the desired height for the image
@@ -256,6 +281,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
         return bitmap;
     }
+
+    /**
+     * Helper function to parse the initials from the users entered name.
+     *
+     * @param name, e.g John Smith
+     * @return String, users initials eg JS
+     */
     private String getInitials (String name){
         StringBuilder initials = new StringBuilder();
         for (String s : name.split("\\s+")) {
