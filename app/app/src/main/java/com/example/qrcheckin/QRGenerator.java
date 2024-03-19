@@ -46,6 +46,9 @@ public class QRGenerator extends AppCompatActivity {
         QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
         createEventButton = findViewById(R.id.confirmEventCreationButton);
 
+        db = FirebaseFirestore.getInstance();
+        Log.d("DEBUG", "fetch db:" + db);
+
 
         //checkIfNullPointers();
 
@@ -73,8 +76,6 @@ public class QRGenerator extends AppCompatActivity {
         });
 
         createEventButton.setOnClickListener(v->{
-            db = FirebaseFirestore.getInstance();
-            Log.d("DEBUG", "fetch db:" + db);
 
             // Write checkinQRCode to database
             HashMap<String, Object> data = new HashMap<>();
@@ -82,11 +83,13 @@ public class QRGenerator extends AppCompatActivity {
 
             db.collection("event")
                     .document(eventID)
-                    .update(data);
+                    .update(data)
+                    .addOnSuccessListener(w->{
+                        // Navigate to Organizer Homepage
+                        Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
+                        startActivity(intent);
+                    });
 
-            // Navigate to Organizer Homepage
-            Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
-            startActivity(intent);
         });
 
     }

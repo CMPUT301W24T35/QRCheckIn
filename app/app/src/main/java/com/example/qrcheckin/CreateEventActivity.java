@@ -220,11 +220,11 @@ public class CreateEventActivity extends AppCompatActivity {
                                         .update("organizedEvent", FieldValue.arrayUnion(docID))
                                         .addOnSuccessListener(w->{
                                             // On success of above, navigate to QR Generator activity
-                                            Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-                                            intent.putExtras(bundle);
+                                            Intent QRGeneratorIntent = new Intent(CreateEventActivity.this, QRGenerator.class);
+                                            QRGeneratorIntent.putExtras(bundle);
                                             //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             //Log.d("DEBUG", "intent created: " + intent);
-                                            startActivity(intent);
+                                            startActivity(QRGeneratorIntent);
                                             finish();
                                         });
                         }
