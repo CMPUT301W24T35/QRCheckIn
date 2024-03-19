@@ -29,6 +29,8 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
 /**
@@ -117,45 +119,46 @@ public class QRScannerActivity extends AppCompatActivity {
 
             int checkInNum;      //record the number of check in
 
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            // Check if userIDCheckIn field exists
-                            if (document.contains("userIDCheckIn")) {
-                                // If it exists, update the array by adding docID
-                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.d("Firestore", "Document successfully updated!");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("Firestore", "Error updating document", e);
-                                            }
-                                        });
-                            }else {
-                                // If it doesn't exist, create a new array with docID
-                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.d("Firestore", "New organizedEvent field created and document updated!");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("Firestore", "Error updating document", e);
-                                            }
-                                        });
+                            Map<String, Object> userIDCheckIn = (Map<String, Object>) document.get("userIDCheckIn");
+                            if (userIDCheckIn != null) {
+                                // The map exists, increment the user's check-in count
+                                Integer currentCount = (Integer) userIDCheckIn.get(userID);
+                                if (currentCount == null) {
+                                    // User not in map, add with count 1
+                                    userIDCheckIn.put(userID, 1);
+                                } else {
+                                    // User exists, increment count
+                                    userIDCheckIn.put(userID, currentCount + 1);
+                                }
+                            } else {
+                                // Map doesn't exist, create new map with userID and count 1
+                                userIDCheckIn = new HashMap<>();
+                                userIDCheckIn.put(userID, 1);
                             }
-                        } else { // QR Code could be a Promo code
-                            checkPromoCode();
+                            // Update document with the new or updated map
+                            docRef.update("userIDCheckIn", userIDCheckIn)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Firestore", "Document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        } else {
+                            // Handle the case where the document doesn't exist
                             Log.d("Firestore", "No such document");
+                            // Perhaps check a promo code or handle differently
+                            checkPromoCode();
                         }
                     } else {
                         Log.d("Firestore", "get failed with ", task.getException());
