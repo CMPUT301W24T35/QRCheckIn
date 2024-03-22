@@ -158,6 +158,10 @@ public class QRGenerator extends AppCompatActivity {
                             HashMap<String, Object> data = new HashMap<>();
                             data.put("reused QR Code", qrContent);
                             db.collection("event").document(eventID).update(data);
+                            Intent intent = new Intent(this, HomepageOrganizer.class);
+                            startActivity(intent);
+                            finish();
+
                         }
                     });
             //   if it has already been used
