@@ -1,5 +1,7 @@
 package com.example.qrcheckin;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,10 +9,24 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import androidmads.library.qrgenearator.QRGContents;
@@ -29,6 +45,8 @@ public class QRGenerator extends AppCompatActivity {
     String QRCodeBase64;
     Bitmap bitmap;
 
+    String eventID;
+
 
     private FirebaseFirestore db;
 
@@ -38,7 +56,7 @@ public class QRGenerator extends AppCompatActivity {
         setContentView(R.layout.qr_generator);
 
         //assert bundle != null;
-        String eventID = getIntent().getExtras().getString("eventID");
+        eventID = getIntent().getExtras().getString("eventID");
         Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
@@ -71,8 +89,7 @@ public class QRGenerator extends AppCompatActivity {
             //  Add once implemented by person assigned to QR Scanner
             //  How do we link the QRScanner back to this event and activity once we
             //  take a picture of the Qr Code?
-            Intent intent = new Intent(QRGenerator.this, QRScannerActivity.class);
-            startActivity(intent);
+            scanCode();
         });
 
         createEventButton.setOnClickListener(v->{
@@ -80,6 +97,7 @@ public class QRGenerator extends AppCompatActivity {
             // Write checkinQRCode to database
             HashMap<String, Object> data = new HashMap<>();
             data.put("checkinQRCode", QRCodeBase64);
+
 
             db.collection("event")
                     .document(eventID)
@@ -110,4 +128,45 @@ public class QRGenerator extends AppCompatActivity {
         }
     }
 
+    private void scanCode() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        barLauncher.launch(options);
+    }
+
+    private ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null) {
+            String qrContent = result.getContents();
+            AlertDialog.Builder builder = new AlertDialog.Builder(QRGenerator.this);
+
+            builder.setTitle("Got QR Code");
+            builder.setMessage(qrContent).show();
+
+            // TODO make database call to check if it is an in use QR code
+            db.collection("event").document(eventID).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            builder
+                                    .setTitle("Cannot Use")
+                                    .setMessage("QR Code already in use. Please use a different QR Code")
+                                    .show();
+                        }
+                        else {
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("reused QR Code", qrContent);
+                            db.collection("event").document(eventID).update(data);
+                        }
+                    });
+            //   if it has already been used
+            //      then ask to use another qr code
+            //   if it's not already been used
+            //      then upload the qrContent to the document using eventID
+            //      navigate to HomepageOrganizer activity
+        }
+
+
+    });
 }

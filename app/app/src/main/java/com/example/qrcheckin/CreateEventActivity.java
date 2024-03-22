@@ -18,6 +18,8 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -85,6 +87,8 @@ public class CreateEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        // Add QR Generator fragment to this Activity
 
 
         // Bind UI
@@ -158,6 +162,7 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+
     private void addEvent() {
         HashMap<String, Object> data = new HashMap<>();
         String attendeeCapacityString;
@@ -206,6 +211,8 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         // Only pass eventID to bundle for QR Code generation
+        // TODO try passing everything in Bundle to next activity
+        //  Make db write after confirm activity on QR Generator page
         Bundle bundle = new Bundle();
         bundle.putString("eventID", docID);
         Log.d("DEBUG", "eventID: " + docID);
@@ -214,22 +221,39 @@ public class CreateEventActivity extends AppCompatActivity {
                 .document(docID)
                 .set(data)
                 .addOnSuccessListener(v->{
+                    Log.d("DEBUG", "Firebase success - event added");
+
                     // On Success add eventID to user's organized events list
                                 db.collection("user")
                                         .document(mainUserID)
                                         .update("organizedEvent", FieldValue.arrayUnion(docID))
                                         .addOnSuccessListener(w->{
                                             // On success of above, navigate to QR Generator activity
+                                                /*
+                                                qrGeneratorFragment = new QRGeneratorFragment();
+                                                transaction = getSupportFragmentManager().beginTransaction();
+                                                transaction.add(R.id.qr_generator_container, qrGeneratorFragment);
+                                                // Commit the transaction after adding the fragment
+                                                transaction.commit();
+                                                */
+
+                                            Log.d("DEBUG", "Firebase success - organizedEvent added");
+
+
                                             Intent QRGeneratorIntent = new Intent(CreateEventActivity.this, QRGenerator.class);
                                             QRGeneratorIntent.putExtras(bundle);
                                             //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             //Log.d("DEBUG", "intent created: " + intent);
                                             startActivity(QRGeneratorIntent);
                                             finish();
+
+
                                         });
                         }
 
                 );
+
+
 
 
         /*
@@ -269,7 +293,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
         intent.putExtras(bundle);
         //Log.d("DEBUG", "intent created: " + intent);
-        startActivity(intent);
+        //startActivity(intent);
 
          */
 
@@ -345,9 +369,11 @@ public class CreateEventActivity extends AppCompatActivity {
             promoCodeBitmap = qrgEncoder.getBitmap(0);
             promoCodeBase64 = Helpers.bitmapToBase64(promoCodeBitmap);
             Log.d("Checkbox", "Checkbox is checked");
+            Log.e("nsp"," checked");
         } else {
             // CheckBox is not checked
             Log.d("Checkbox", "Checkbox is not checked");
+            Log.e("nsp","not checked");
         }
     }
 

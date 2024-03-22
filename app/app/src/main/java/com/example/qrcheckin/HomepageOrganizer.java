@@ -183,7 +183,7 @@ public class HomepageOrganizer extends AppCompatActivity {
                     Log.e("FirestoreError", "Error getting event details",error);
                     return;
                 }
-                Log.d("FirestoreSuccess", "Successfully fetched events.");
+                Log.d("FirestoreSuccess", "Homepage Organizer: Successfully fetched events.");
                 dataList.clear();
 
                 if(value.exists()) {

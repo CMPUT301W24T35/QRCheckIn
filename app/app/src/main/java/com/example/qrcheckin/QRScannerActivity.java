@@ -273,6 +273,7 @@ public class QRScannerActivity extends AppCompatActivity {
                     if (document.exists()) {
                         // Navigate to EventPage
                         Log.d("Firestore", "PromoCode Scanend and found document with EventID: " + reverseQRString);
+                        Intent intent = new Intent(QRScannerActivity.this, ViewEventActivity.class);
 
                     } else { // QR Code could be a Promo code
                         Log.d("Firestore", "No such document");

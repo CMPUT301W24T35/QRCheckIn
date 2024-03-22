@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-
+        Log.d("DEBUG", "MainActivity Launched ");
         checkIsUserProfile();
     }
 
@@ -82,9 +82,11 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
