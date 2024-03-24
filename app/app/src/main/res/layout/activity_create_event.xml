@@ -91,13 +91,24 @@
             android:layout_height="match_parent"
             android:background="@color/ElementBackground">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/eventStartTimeEditText"
-            style="@style/TextInputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Start" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <Button
+                android:id="@+id/startTimeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Start Time"
+                android:background="@color/ElementBackground"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                />
+            <TextView
+                android:id="@+id/selectedStartTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="4dp"
+                android:background="@color/ElementBackground"
+                android:text="Start Time Not Set" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInputStyle"
@@ -107,12 +118,24 @@
 
         >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/eventEndTimeEditText"
-            style="@style/TextInputStyle"
+        <Button
+            android:id="@+id/endTimeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="End" />
+            android:text="Select End Time"
+            android:background="@color/ElementBackground"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            />
+
+        <TextView
+            android:id="@+id/selectedEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="4dp"
+            android:background="@color/ElementBackground"
+            android:text="End Time Not Set" />
+
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,12 +179,6 @@
 
 
     </LinearLayout>
-
-
-
-
-
-
 
 
     <Button

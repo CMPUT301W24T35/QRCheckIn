@@ -1,6 +1,8 @@
 package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,20 +14,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,7 +30,10 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -58,7 +58,10 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText newAttendeeCapacity;
     Button continueButton;
     Button editPosterImageButton;
+    Button startTime;
+    Button endTime;
     CheckBox generatePromoQRCodeCheckbox;
+    TextView selectedStartTime, selectedEndTime;
     boolean needPromoQRCode;
 
     int attendeeCapacity;
@@ -98,8 +101,15 @@ public class CreateEventActivity extends AppCompatActivity {
         posterImage = findViewById(R.id.posterImageView);
         newAttendeeCapacity = findViewById(R.id.attendeeCapacityEditText);
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
+        startTime = findViewById(R.id.startTimeButton);
+        endTime = findViewById(R.id.endTimeButton);
+        selectedStartTime = findViewById(R.id.selectedStartTime);
+        selectedEndTime = findViewById(R.id.selectedEndTime);
         db = FirebaseFirestore.getInstance();
         getUserID();
+
+        startTime.setOnClickListener(v -> showDateTimePicker(true));
+        endTime.setOnClickListener(v -> showDateTimePicker(false));
 
 
         // TODO
@@ -150,6 +160,38 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         continueButton.setOnClickListener(v -> startNextActivity());
+    }
+
+    private void showDateTimePicker(final boolean isStart) {
+        // Explicit initialization at the method's start
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            // Once a date is picked, setup the calendar object with the selected date
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Proceed to time picking
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                updateDateTimeText(calendar, isStart); // Update the text view with the selected date and time
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+            timePickerDialog.show();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void updateDateTimeText(Calendar calendar, boolean isStart) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        String dateTimeText = format.format(calendar.getTime());
+        if (isStart) {
+            selectedStartTime.setText(String.format("Start: %s", dateTimeText));
+        } else {
+            selectedEndTime.setText(String.format("End: %s", dateTimeText));
+        }
     }
 
     private void startNextActivity() {
