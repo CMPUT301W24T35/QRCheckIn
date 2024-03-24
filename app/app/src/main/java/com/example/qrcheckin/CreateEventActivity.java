@@ -99,6 +99,8 @@ public class CreateEventActivity extends AppCompatActivity {
         newAttendeeCapacity = findViewById(R.id.attendeeCapacityEditText);
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
         db = FirebaseFirestore.getInstance();
+        getUserID();
+
 
         // TODO
         //  1. Display poster
@@ -157,7 +159,6 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-        Bundle bundle = new Bundle();
         HashMap<String, Object> data = new HashMap<>();
         String attendeeCapacityString;
 
@@ -173,23 +174,6 @@ public class CreateEventActivity extends AppCompatActivity {
         attendeeCapacityString = newAttendeeCapacity.getText().toString();
         Log.d("DEBUG", "attendeeCapacityString: " + attendeeCapacityString);
 
-
-        try {
-            FileInputStream fis = openFileInput("localStorage.txt");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            mainUserID = sb.toString();
-            Log.d("Main USER ID", mainUserID);
-            fis.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         checkPromoCodeAndGenerate();
 
         // TODO Temporary workaround solution
@@ -197,10 +181,8 @@ public class CreateEventActivity extends AppCompatActivity {
         generateQRCodeAndSetString();
 
         Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
-        // TODO profileID to organizerID
 
         data.put("eventName", eventName);
-        //data.put("OrganiserID", mainUserID);
         data.put("eventDescription", eventDescription);
         data.put("startTime", startTime);
         data.put("endTime", endTime);
@@ -223,17 +205,37 @@ public class CreateEventActivity extends AppCompatActivity {
             Log.d("DEBUG", "AttendeeCapacity: " + attendeeCapacityString);
         }
 
-
-
-        // TODO - only pass relevant bundle info for QR Code
-        //bundle.putString("eventName", eventName);
-        //bundle.putString("eventDescription", eventDescription);
-        //bundle.putString("startTime", startTime);
-        //bundle.putString("endTime", endTime);
-        //bundle.putString("location", location);
+        // Only pass eventID to bundle for QR Code generation
+        Bundle bundle = new Bundle();
         bundle.putString("eventID", docID);
+        Log.d("DEBUG", "eventID: " + docID);
 
-        DocumentReference userRef = db.collection("user").document(mainUserID);
+        db.collection("event")
+                .document(docID)
+                .set(data)
+                .addOnSuccessListener(v->{
+                    // On Success add eventID to user's organized events list
+                                db.collection("user")
+                                        .document(mainUserID)
+                                        .update("organizedEvent", FieldValue.arrayUnion(docID))
+                                        .addOnSuccessListener(w->{
+                                            // On success of above, navigate to QR Generator activity
+                                            Intent QRGeneratorIntent = new Intent(CreateEventActivity.this, QRGenerator.class);
+                                            QRGeneratorIntent.putExtras(bundle);
+                                            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            //Log.d("DEBUG", "intent created: " + intent);
+                                            startActivity(QRGeneratorIntent);
+                                            finish();
+                                        });
+                        }
+
+                );
+
+
+        /*
+        db.collection("user")
+                .document(mainUserID)
+                .update("organizedEvent", FieldValue.arrayUnion(docID));
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -243,32 +245,10 @@ public class CreateEventActivity extends AppCompatActivity {
                         // Check if organizedEvent field exists
                         if (document.contains("organizedEvent")) {
                             // If it exists, update the array by adding docID
-                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID))
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("Firestore", "Document successfully updated!");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("Firestore", "Error updating document", e);
-                                        }
-                                    });
+                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID));
                         } else {
                             // If it doesn't exist, create a new array with docID
-                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID))
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("Firestore", "New organizedEvent field created and document updated!");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("Firestore", "Error updating document", e);
-                                        }
-                                    });
+                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID));
                         }
                     } else {
                         Log.d("Firestore", "No such document");
@@ -279,14 +259,11 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        db.collection("event")
-                .document(docID)
-                .set(data);
+         */
 
-        Intent intent = new Intent(CreateEventActivity.this, HomepageOrganizer.class);
-        //intent.putExtras(bundle);
-        //Log.d("DEBUG", "intent created: " + intent);
-        startActivity(intent);
+
+
+
 
         /* CHANGED WORKFLOW TO NAVIGATE TO ORGANIZED EVENTS
         Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
@@ -387,6 +364,24 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // Convert bitmap to Base64 for Firebase
         checkinQRCodeBase64 = Helpers.bitmapToBase64(bitmap);
+    }
+
+    public void getUserID(){
+        try {
+            FileInputStream fis = openFileInput("localStorage.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            mainUserID = sb.toString();
+            Log.d("Main USER ID", mainUserID);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
