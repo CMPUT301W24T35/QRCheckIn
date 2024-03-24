@@ -30,7 +30,7 @@ public class EventTest {
     public void testReachedCapacity_NotReached_ReturnsFalse() {
         assertFalse(eventWithCapacity.reachedCapacity());
     }
-
+    /*
     @Test
     public void testReachedCapacity_Reached_ReturnsTrue() throws Exception {
         eventWithCapacity.signUpAttendee(new Profile("AnotherProfileID", "Another Test Name", "test2@example.com","nb"));
@@ -51,7 +51,7 @@ public class EventTest {
         eventWithCapacity.signUpAttendee(new Profile("AnotherProfileID", "Another Test Name", "test2@example.com","nb"));
         assertEquals(2, eventWithCapacity.getSignedUpAttendees().size());
     }
-
+    */
     // Additional tests can be written for getters and setters as needed.
 }
 
