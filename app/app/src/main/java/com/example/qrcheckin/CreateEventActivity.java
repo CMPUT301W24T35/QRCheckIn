@@ -1,6 +1,8 @@
 package com.example.qrcheckin;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,20 +14,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,7 +30,10 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -58,8 +58,11 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText newAttendeeCapacity;
     Button continueButton;
     Button editPosterImageButton;
+    Button startTime;
+    Button endTime;
     CheckBox generatePromoQRCodeCheckbox;
     boolean needPromoQRCode;
+    TextView selectedStartTime, selectedEndTime;
 
     int attendeeCapacity;
     ImageView posterImage;
@@ -90,18 +93,24 @@ public class CreateEventActivity extends AppCompatActivity {
         // Bind UI
         newEventName = findViewById(R.id.eventNameEditText);
         newEventDescription = findViewById(R.id.eventDescriptionEditText);
-        newStartTime = findViewById(R.id.eventStartTimeEditText);
-        newEndTime = findViewById(R.id.eventEndTimeEditText);
+        //newStartTime = findViewById(R.id.eventStartTimeEditText);
+        //newEndTime = findViewById(R.id.eventEndTimeEditText);
         newLocation = findViewById(R.id.eventLocationEditText);
         continueButton = findViewById(R.id.continueCreateEventButton);
         editPosterImageButton = findViewById(R.id.editPosterImageButton);
         posterImage = findViewById(R.id.posterImageView);
         newAttendeeCapacity = findViewById(R.id.attendeeCapacityEditText);
         generatePromoQRCodeCheckbox = findViewById(R.id.checkboxGeneratePromoQRCode);
+        startTime = findViewById(R.id.startTimeButton); // Assuming the ID in your layout is startTimeButton
+        endTime = findViewById(R.id.endTimeButton); // Assuming the ID in your layout is endTimeButton
+        selectedStartTime = findViewById(R.id.selectedStartTime);
+        selectedEndTime = findViewById(R.id.selectedEndTime);
+
         db = FirebaseFirestore.getInstance();
         getUserID();
 
-
+        startTime.setOnClickListener(v -> showDateTimePicker(true));
+        endTime.setOnClickListener(v -> showDateTimePicker(false));
         // TODO
         //  1. Display poster
         //  2. Assign poster to variable
@@ -152,6 +161,38 @@ public class CreateEventActivity extends AppCompatActivity {
         continueButton.setOnClickListener(v -> startNextActivity());
     }
 
+    private void showDateTimePicker(final boolean isStart) {
+        // Explicit initialization at the method's start
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            // Once a date is picked, setup the calendar object with the selected date
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Proceed to time picking
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                updateDateTimeText(calendar, isStart); // Update the text view with the selected date and time
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+            timePickerDialog.show();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void updateDateTimeText(Calendar calendar, boolean isStart) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        String dateTimeText = format.format(calendar.getTime());
+        if (isStart) {
+            selectedStartTime.setText(String.format("Start: %s", dateTimeText));
+        } else {
+            selectedEndTime.setText(String.format("End: %s", dateTimeText));
+        }
+    }
+
     private void startNextActivity() {
         if (isTextEditInputEmpty()) {
             addEvent();
@@ -164,10 +205,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         String eventName = newEventName.getText().toString();
         String eventDescription = newEventDescription.getText().toString();
-        String startTime = newStartTime.getText().toString();
-        String endTime = newEndTime.getText().toString();
+        String start = selectedStartTime.getText().toString();
+        String end = selectedEndTime.getText().toString();
         String location = newLocation.getText().toString();
-        docID = Helpers.createDocID(eventName, startTime, location);
+        docID = Helpers.createDocID(eventName, start, location);
         if (newAttendeeCapacity.getText() == null) {
             attendeeCapacityString = "";
         }
@@ -184,8 +225,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
         data.put("eventName", eventName);
         data.put("eventDescription", eventDescription);
-        data.put("startTime", startTime);
-        data.put("endTime", endTime);
+        data.put("startTime", start);
+        data.put("endTime", end);
         data.put("location", location);
         data.put("poster", posterImageBase64);
         data.put("checkinQRCode", checkinQRCodeBase64);
@@ -230,49 +271,6 @@ public class CreateEventActivity extends AppCompatActivity {
                         }
 
                 );
-
-
-        /*
-        db.collection("user")
-                .document(mainUserID)
-                .update("organizedEvent", FieldValue.arrayUnion(docID));
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Check if organizedEvent field exists
-                        if (document.contains("organizedEvent")) {
-                            // If it exists, update the array by adding docID
-                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID));
-                        } else {
-                            // If it doesn't exist, create a new array with docID
-                            userRef.update("organizedEvent", FieldValue.arrayUnion(docID));
-                        }
-                    } else {
-                        Log.d("Firestore", "No such document");
-                    }
-                } else {
-                    Log.d("Firestore", "get failed with ", task.getException());
-                }
-            }
-        });
-
-         */
-
-
-
-
-
-        /* CHANGED WORKFLOW TO NAVIGATE TO ORGANIZED EVENTS
-        Intent intent = new Intent(CreateEventActivity.this, QRGenerator.class);
-        intent.putExtras(bundle);
-        //Log.d("DEBUG", "intent created: " + intent);
-        startActivity(intent);
-
-         */
-
     }
 
     /**
@@ -280,27 +278,31 @@ public class CreateEventActivity extends AppCompatActivity {
      * also displays errors if they are empty.
      * @return true if no errors, false if errors
      */
-    public boolean isTextEditInputEmpty(){
-        if (String.valueOf(newEventName.getText()).isEmpty()){
+    public boolean isTextEditInputEmpty() {
+        if (String.valueOf(newEventName.getText()).isEmpty()) {
             newEventName.setError("Enter Event Name");
             return false;
         }
-        if (String.valueOf(newStartTime.getText()).isEmpty()){
-            newStartTime.setError("Enter Start Time");
+        // Since start and end times are now being selected via a DatePicker and set as text,
+        // we check the TextView content instead of EditText.
+        if (selectedStartTime.getText().toString().equals("Start Time Not Set") || selectedStartTime.getText().toString().isEmpty()) {
+            // Show some error or toast message indicating that start time hasn't been set
+            Toast.makeText(this, "Please select a start time.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (String.valueOf(newEndTime.getText()).isEmpty()){
-            newEndTime.setError("Enter End Time");
+        if (selectedEndTime.getText().toString().equals("End Time Not Set") || selectedEndTime.getText().toString().isEmpty()) {
+            // Show some error or toast message indicating that end time hasn't been set
+            Toast.makeText(this, "Please select an end time.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (String.valueOf(newLocation.getText()).isEmpty()){
-           newLocation.setError("Enter Event Location");
+        if (String.valueOf(newLocation.getText()).isEmpty()) {
+            newLocation.setError("Enter Event Location");
             return false;
         }
-
+        // Since newStartTime and newEndTime are no longer used, they've been removed from this check.
         return true;
-
     }
+
 
     public boolean isPosterChosen(){
         return false;
