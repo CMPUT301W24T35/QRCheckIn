@@ -2,10 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity">
+      <entry key="AdminViewProfileActivity">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="BrowseEventProfile">
+        <State />
+      </entry>
+      <entry key="HomepageActivity">
+        <State />
+      </entry>
+      <entry key="HomepageAdmin">
+        <State />
+      </entry>
+      <entry key="ProfileActivity">
         <State />
       </entry>
     </value>
