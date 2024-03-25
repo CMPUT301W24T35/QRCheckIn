@@ -27,8 +27,8 @@
         android:theme="@style/Base.Theme.QRCheckin"
         tools:targetApi="31">
         <activity
-            android:name=".BrowseEventProfile"
-            android:exported="false" />
+            android:name=".BrowseProfileAdmin"
+            android:exported="true" />
         <activity
             android:name=".BrowseImagesActivity"
             android:exported="true" />
