@@ -28,7 +28,6 @@ public class QRGenerator extends AppCompatActivity {
     ImageView QRCodeImage;
     String QRCodeBase64;
     Bitmap bitmap;
-    Bundle bundle;
 
 
     private FirebaseFirestore db;
@@ -38,23 +37,20 @@ public class QRGenerator extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_generator);
 
-        //Bundle bundle = getIntent().getExtras();
-        Intent newIntent = getIntent();
-        bundle = getIntent().getExtras();
-
         //assert bundle != null;
-        String eventID = newIntent.getStringExtra("eventID");
-        //Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        String eventID = getIntent().getExtras().getString("eventID");
+        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
 
         generateQRCodeButton = findViewById(R.id.generateCheckinQRCodeButton);
         reuseQRCodeButton = findViewById(R.id.reuseCheckinQRCodeButton);
         QRCodeImage = findViewById(R.id.checkinQRCodeImageView);
         createEventButton = findViewById(R.id.confirmEventCreationButton);
 
+        db = FirebaseFirestore.getInstance();
+        Log.d("DEBUG", "fetch db:" + db);
 
-        checkIfNullPointers();
 
-        Log.d("BUNDLE", "EventID passed into QR-Scanner: " + eventID);
+        //checkIfNullPointers();
 
         // Generate new QR Code
         generateQRCodeButton.setOnClickListener(v->{
@@ -80,8 +76,6 @@ public class QRGenerator extends AppCompatActivity {
         });
 
         createEventButton.setOnClickListener(v->{
-            db = FirebaseFirestore.getInstance();
-            Log.d("DEBUG", "fetch db:" + db);
 
             // Write checkinQRCode to database
             HashMap<String, Object> data = new HashMap<>();
@@ -89,11 +83,13 @@ public class QRGenerator extends AppCompatActivity {
 
             db.collection("event")
                     .document(eventID)
-                    .update(data);
+                    .update(data)
+                    .addOnSuccessListener(w->{
+                        // Navigate to Organizer Homepage
+                        Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
+                        startActivity(intent);
+                    });
 
-            // Navigate to Organizer Homepage
-            Intent intent = new Intent(QRGenerator.this, HomepageOrganizer.class);
-            startActivity(intent);
         });
 
     }

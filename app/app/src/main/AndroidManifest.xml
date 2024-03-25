@@ -94,6 +94,13 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.QRCheckin" />
+            android:theme="@style/Theme.QRCheckin">
+        </activity>
+        <activity
+            android:name=".QRGenerator"
+            android:exported="true"
+            android:theme="@style/Theme.QRCheckin" >
+        </activity>
     </application>
 
 </manifest>
