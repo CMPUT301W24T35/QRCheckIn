@@ -74,35 +74,33 @@ public class BrowseProfileAdmin extends AppCompatActivity {
         });
 
 
-//        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // Get the clicked event
-//                Event clickedEvent = dataList.get(position);
-//
-//
-//
-//                // Create an Intent to start the new activity
-//                Intent intent = new Intent(BrowseProfileAdmin.this, .class);
-//
-//                // Pass data to the eventDetail activity
-//                intent.putExtra("eventName", clickedEvent.getName()); // get name
-//                //intent.putExtra("organizerName", clickedEvent.getOrganizerID()); // And a getOrganizerName method
-//                intent.putExtra("startTime", clickedEvent.getStartTime());
-//                intent.putExtra("endTime", clickedEvent.getEndTime());
-//                intent.putExtra("eventDes", clickedEvent.getDescription());
-//                intent.putExtra("location", clickedEvent.getLocation());
-//                intent.putExtra("poster",clickedEvent.getPoster());
-//                intent.putExtra("qr",clickedEvent.getQrCode());
-//                intent.putExtra("promoqr",clickedEvent.getPromoQR());
-//                intent.putExtra("origin", "attendee");
-//
-//                // Add other event details as needed
-//
-//                // Start the
-//                startActivity(intent);
-//            }
-//        });
+        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the clicked event
+                Profile clickedEvent = dataList.get(position);
+
+
+
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(BrowseProfileAdmin.this, AdminViewProfileActivity.class);
+
+                // Pass data to the eventDetail activity
+                intent.putExtra("profileName", clickedEvent.getUserName()); // get name
+                intent.putExtra("profileEmail", clickedEvent.getEmail());
+                intent.putExtra("profilePhone", clickedEvent.getPhone());
+
+                Log.d("phone", "Phone no: " + clickedEvent.getPhone());
+
+
+
+
+                // Add other event details as needed
+
+                // Start the
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -122,6 +120,8 @@ public class BrowseProfileAdmin extends AppCompatActivity {
                     String profileName = doc.getString("name");
                     String profileEmail = doc.getString("email");
                     String profilePhone = doc.getString("phone");
+
+                    Log.d("-->phone", "Phone no: " + profilePhone);
 
                     Profile profile = new Profile(profileName, profilePhone, profileEmail, "Null");
 

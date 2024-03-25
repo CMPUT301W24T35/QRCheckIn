@@ -2,10 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="BrowseEventProfile">
+      <entry key="AdminViewProfileActivity">
         <State />
       </entry>
-      <entry key="BrowseImagesActivity">
+      <entry key="BrowseEventProfile">
         <State />
       </entry>
       <entry key="HomepageActivity">
