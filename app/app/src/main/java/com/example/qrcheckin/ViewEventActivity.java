@@ -198,18 +198,72 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
             }
         });
-
-
+        //get the document depending on the eventID
+        DocumentReference docRef = db.collection("event").document(eventID);
+        //wrapper for storing the attendeeCapacity from firebase
+        final int[] attendeeCapacityWrapper = new int[1];
+        final int[] attendeeSignUpCount = new int[1];
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    // Check if the document contains the attendeeCapacity field
+                    if (document.exists() && document.contains("attendeeCapacity")) {
+                        // Get the value of attendeeCapacity
+                        Number tempCapacity = document.getLong("attendeeCapacity"); // Firestore stores numbers as Long by default
+                        // deal with the case where attendeeCapacity does not exist
+                        if(tempCapacity != null) {
+                            attendeeCapacityWrapper[0] = tempCapacity.intValue();
+                            Log.d("Firestore", "Attendee Capacity: " + attendeeCapacityWrapper[0]);
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document or field");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    // Check if the document contains the attendeeCapacity field
+                    if (document.exists() && document.contains("countSignup")) {
+                        // Get the value of attendeeCapacity
+                        Number tempCapacity = document.getLong("countSignup"); // Firestore stores numbers as Long by default
+                        // deal with the case where attendeeCapacity does not exist
+                        if(tempCapacity != null) {
+                            attendeeSignUpCount[0] = tempCapacity.intValue();
+                            Log.d("Firestore", "countSignup: " + attendeeSignUpCount[0]);
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document or field");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
         // Sign up to the event as an attendee
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUpAttendee();
-
-                Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
-
-                Log.d("DEBUG", "intent created: " + intent);
-                startActivity(intent);
+                if (attendeeSignUpCount[0] < attendeeCapacityWrapper[0]) {
+                    // Process sign up
+                    signUpAttendee();
+                    // Increment the sign-up count
+                    signUpCount();
+                    // Navigate to the SignedUpEventActivity
+                    Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
+                    Log.d("DEBUG", "intent created: " + intent);
+                    startActivity(intent);
+                } else {
+                    // Show a toast indicating that the event is full
+                    Toast.makeText(ViewEventActivity.this, "The event is full. You cannot sign up anymore.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -333,6 +387,26 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
     }
 
+    public void signUpCount() {
+        DocumentReference eventRef = db.collection("event").document(eventID);
+
+        //increments the countSignup field by 1. If the field does not exist, it will be created with the value of 1.
+        eventRef.update("countSignup", FieldValue.increment(1))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("DEBUG", "countSignup successfully incremented");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DEBUG", "Error incrementing countSignup", e);
+
+                    }
+                });
+    }
     public void showAttendee() {
         db.collection("event").document(eventID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

@@ -117,8 +117,6 @@ public class QRScannerActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            int checkInNum;      //record the number of check in
-
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
