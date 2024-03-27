@@ -264,10 +264,13 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                     if (documentSnapshot.exists()) {
                         //  list of user IDs who have signed up
                         List<String> signedUpUsers = (List<String>) documentSnapshot.get("signedUpAttendees");
+                        List<String> checkInUsers = (List<String>) documentSnapshot.get("UserIdCheckIn");
                         if (signedUpUsers != null && signedUpUsers.contains(mainUserID)) {
                             // User ID is found in the list, indicating they've already signed up
                             Toast.makeText(ViewEventActivity.this, "You have already signed up for this event!", Toast.LENGTH_LONG).show();
-                        } else {
+                        } else if(checkInUsers != null && checkInUsers.contains(mainUserID)) {
+                            Toast.makeText(ViewEventActivity.this, "You have already checked In for this event!", Toast.LENGTH_LONG).show();
+                        }else {
                             // User ID is not in the list - proceed with the sign-up process
                             // Ensure there's capacity for more attendees before proceeding
                             //"capacity wrapper" is the max capacity for that event
