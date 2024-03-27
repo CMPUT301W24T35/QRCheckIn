@@ -2,6 +2,7 @@ package com.example.qrcheckin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Profile class represents a user profile within the application,
@@ -19,7 +20,9 @@ public class Profile {
     // This keeps track of the checked in events and the number of times
     // the attendee has checked into that event.
     private ArrayList<HashMap<Event, Integer>> checkedInEventsAndCheckedInCount;
+    private Map<String, Long> userCheckInCounts;
 
+    Long checkInCount;
 
 
     // Constructor
@@ -127,5 +130,21 @@ public class Profile {
         this.checkedInEventsAndCheckedInCount = checkedInEventsAndCheckedInCount;
     }
 
+    public Map<String, Long> getUserCheckInCounts() {
+        return userCheckInCounts;
+    }
+
+    public void setUserCheckInCounts(Map<String, Long> userCheckInCounts) {
+        this.userCheckInCounts = userCheckInCounts;
+    }
     // TODO implement method to update number of times checked in
+
+
+    public Long getCheckInCount() {
+        return checkInCount;
+    }
+
+    public void setCheckInCount(Long checkInCount) {
+        this.checkInCount = checkInCount;
+    }
 }

@@ -25,7 +25,7 @@ public class AttendeeAdapter extends ArrayAdapter<Profile> {
      * @param context The current context. Used to inflate the layout file.
      * @param attendees A list of Profile objects.
      */
-    public AttendeeAdapter(@NonNull Context context, ArrayList<Profile> attendees) {
+    public AttendeeAdapter(@NonNull Context context, ArrayList<Profile> attendees, String userID,String eventID) {
         super(context,0, attendees);
         this.attendees = attendees;
         this.context = context;
@@ -52,9 +52,10 @@ public class AttendeeAdapter extends ArrayAdapter<Profile> {
         }
         Profile attendee = getItem(position);
         TextView attendeeName = view.findViewById(R.id.attendee_text);
-
+        TextView attendeeCount = view.findViewById(R.id.check_in_times_text);
         assert attendee != null;
         attendeeName.setText(attendee.getUserName());
+        attendeeCount.setText(Math.toIntExact(attendee.getCheckInCount()));
         return view;
     }
 }

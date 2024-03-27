@@ -37,7 +37,10 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Map;
+
 
 /** ViewEventActivity allows users to view detailed information about an event.
  * Users can view event details, sign up for events, and view announcements related to the event.
@@ -322,7 +325,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         //  reject signup if capacity reached.
         attendeeDataList = new ArrayList<>();
         attendeeList = findViewById(R.id.attendees_list);
-        attendeeAdapter = new AttendeeAdapter(this, attendeeDataList);
+        attendeeAdapter = new AttendeeAdapter(this, attendeeDataList, mainUserID,eventID);
         attendeeList.setAdapter(attendeeAdapter);
 
         showAttendee();
@@ -406,7 +409,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 if(value.exists()) {
                     ArrayList<String> announcements = (ArrayList<String>) value.get("announcements");
                     if (announcements != null && !announcements.isEmpty()){
-                        for (String announcementMsg : announcements){
+                        for (String announcementMsg : announcements) {
                             Announcement announcement = new Announcement(announcementMsg);
                             announcementDataList.add(0, announcement);
                             announcementsAdapter.notifyDataSetChanged();
@@ -450,9 +453,9 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 Log.d("FirestoreSuccess", "Successfully fetched events.");
                 attendeeDataList.clear();
                 if(value.exists()) {
-                    ArrayList<String> attendees = (ArrayList<String>) value.get("userIDCheckIn");
-                    if (attendees != null && !attendees.isEmpty()){
-                        for (String attendeeID : attendees){
+                    Map<String, Long> userIDCheckIn = (Map<String, Long>) value.get("userIDCheckIn");
+                    if (userIDCheckIn != null && !userIDCheckIn.isEmpty()){
+                        for (String attendeeID : userIDCheckIn.keySet()){
                             DocumentReference attendeeRef = db.collection("user").document(attendeeID);
                             attendeeRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
@@ -462,7 +465,10 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                                         String attendeePhone = doc.getString("phone");
                                         String attendeeEmail = doc.getString("email");
                                         String attendeeHomepage = doc.getString("homepage");
+                                        Long checkInCount = userIDCheckIn.get(mainUserID);
+
                                         Profile attendee = new Profile(attendeeName, attendeePhone, attendeeEmail, attendeeHomepage);
+                                        attendee.setCheckInCount(checkInCount);
                                         attendeeDataList.add(attendee);
                                     }
                                     attendeeAdapter.notifyDataSetChanged();
