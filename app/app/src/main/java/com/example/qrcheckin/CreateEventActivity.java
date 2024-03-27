@@ -182,9 +182,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         checkPromoCodeAndGenerate();
 
-        // TODO Temporary workaround solution
-        //     Decide if we want to keep this workflow later
-
         Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
 
         data.put("eventName", eventName);
