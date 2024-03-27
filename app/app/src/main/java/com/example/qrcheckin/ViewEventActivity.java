@@ -264,7 +264,7 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                     if (documentSnapshot.exists()) {
                         //  list of user IDs who have signed up
                         List<String> signedUpUsers = (List<String>) documentSnapshot.get("signedUpAttendees");
-                        List<String> checkInUsers = (List<String>) documentSnapshot.get("UserIdCheckIn");
+                        List<String> checkInUsers = (List<String>) documentSnapshot.get("UserIDCheckIn");
                         if (signedUpUsers != null && signedUpUsers.contains(mainUserID)) {
                             // User ID is found in the list, indicating they've already signed up
                             Toast.makeText(ViewEventActivity.this, "You have already signed up for this event!", Toast.LENGTH_LONG).show();
