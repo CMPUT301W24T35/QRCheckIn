@@ -37,6 +37,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /** ViewEventActivity allows users to view detailed information about an event.
  * Users can view event details, sign up for events, and view announcements related to the event.
@@ -198,11 +199,16 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
                 startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
             }
         });
+        getUserID();
         //get the document depending on the eventID
         DocumentReference docRef = db.collection("event").document(eventID);
+        //get the users' documents by users' collection
+        //DocumentReference userRef = db.collection("users").document(mainUserID);
         //wrapper for storing the attendeeCapacity from firebase
         final int[] attendeeCapacityWrapper = new int[1];
         final int[] attendeeSignUpCount = new int[1];
+
+        // get the attendeeCapacity from firebase
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -251,21 +257,42 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (attendeeSignUpCount[0] < attendeeCapacityWrapper[0]) {
-                    // Process sign up
-                    signUpAttendee();
-                    // Increment the sign-up count
-                    signUpCount();
-                    // Navigate to the SignedUpEventActivity
-                    Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
-                    Log.d("DEBUG", "intent created: " + intent);
-                    startActivity(intent);
-                } else {
-                    // Show a toast indicating that the event is full
-                    Toast.makeText(ViewEventActivity.this, "The event is full. You cannot sign up anymore.", Toast.LENGTH_LONG).show();
-                }
+                // Reference to the specific event document
+                DocumentReference eventRef = db.collection("event").document(eventID);
+
+                eventRef.get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        //  list of user IDs who have signed up
+                        List<String> signedUpUsers = (List<String>) documentSnapshot.get("signedUpAttendees");
+                        if (signedUpUsers != null && signedUpUsers.contains(mainUserID)) {
+                            // User ID is found in the list, indicating they've already signed up
+                            Toast.makeText(ViewEventActivity.this, "You have already signed up for this event!", Toast.LENGTH_LONG).show();
+                        } else {
+                            // User ID is not in the list - proceed with the sign-up process
+                            // Ensure there's capacity for more attendees before proceeding
+                            //"capacity wrapper" is the max capacity for that event
+                            //"SignUpCount" is the total number of attendeeSignedUp
+                            if (attendeeSignUpCount[0] < attendeeCapacityWrapper[0]) {
+                                signUpAttendee();
+                                signUpCount();
+                                Intent intent = new Intent(ViewEventActivity.this, SignedUpEventActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // Event is full
+                                Toast.makeText(ViewEventActivity.this, "The event is full. You cannot sign up anymore.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    } else {
+                        // Handle the case where the event document does not exist
+                        Log.d("DEBUG", "Event document does not exist.");
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.e("Error", "Failed to fetch event document", e);
+                    // handle the failure case
+                });
             }
         });
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -387,6 +414,8 @@ public class ViewEventActivity extends AppCompatActivity implements AddAnnouncem
         });
     }
 
+    //increment the signUpCount in the firebase by 1
+    //reference: StackOverFlow, https://stackoverflow.com/questions/50762923/how-to-increment-existing-number-field-in-cloud-firestore
     public void signUpCount() {
         DocumentReference eventRef = db.collection("event").document(eventID);
 
