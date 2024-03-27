@@ -29,6 +29,9 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //source:https://www.bing.com/videos/riverview/relatedvideo?q=open%20camera%20scan%20qr%20code%20in%20android%20studio&mid=27B08E2657DEFA5CC74327B08E2657DEFA5CC743&ajaxhist=0
 /**
@@ -99,6 +102,7 @@ public class QRScannerActivity extends AppCompatActivity {
             // Specify the collection and document ID
             DocumentReference docRef = db.collection("event").document(qrContent);
 
+
             try {
                 FileInputStream fis = openFileInput("localStorage.txt");
                 InputStreamReader isr = new InputStreamReader(fis);
@@ -114,52 +118,83 @@ public class QRScannerActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            // hold the attendeeCapacity
+            final int[] attendeeCapacityWrapper = new int[1];
 
-            int checkInNum;      //record the number of check in
-
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            // Check if userIDCheckIn field exists
-                            if (document.contains("userIDCheckIn")) {
-                                // If it exists, update the array by adding docID
-                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.d("Firestore", "Document successfully updated!");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("Firestore", "Error updating document", e);
-                                            }
-                                        });
-                            }else {
-                                // If it doesn't exist, create a new array with docID
-                                docRef.update("userIDCheckIn", FieldValue.arrayUnion(userID))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.d("Firestore", "New organizedEvent field created and document updated!");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("Firestore", "Error updating document", e);
-                                            }
-                                        });
+                        // Check if the document contains the attendeeCapacity field
+                        if (document.exists() && document.contains("attendeeCapacity")) {
+                            // Get the value of attendeeCapacity
+                            Number tempCapacity = document.getLong("attendeeCapacity"); // Firestore stores numbers as Long by default
+                            // deal with the case where attendeeCapacity does not exist
+                            if(tempCapacity != null) {
+                                attendeeCapacityWrapper[0] = tempCapacity.intValue();
+                                Log.d("Firestore", "Attendee Capacity: " + attendeeCapacityWrapper[0]);
                             }
-                        } else { // QR Code could be a Promo code
-                            checkPromoCode();
-                            Log.d("Firestore", "No such document");
+                        } else {
+                            Log.d("Firestore", "No such document or field");
                         }
                     } else {
                         Log.d("Firestore", "get failed with ", task.getException());
                     }
+                }
+            });
+
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+
+                        Map<String, Long> userIDCheckIn = (Map<String, Long>) document.get("userIDCheckIn");
+                        if (userIDCheckIn == null) {
+                            userIDCheckIn = new HashMap<>();
+                        }
+                        //get the current count from fire base
+                        // reference: https://javatutorialhq.com/java/util/hashmap-class/getordefault-method-example/
+                        Long currentCheckInCount = userIDCheckIn.getOrDefault(userID, 0L);
+                        //if the current checkIn number is bigger than 1, it means we already checked in
+                        boolean isCheckedIn = currentCheckInCount > 0;
+
+                        //get the list of signedUp attendees
+                        List<String> signedUpUsers = (List<String>) document.get("signedUpUsers");
+                        // null = 0, not null = number of signed up
+                        int uniqueAttendees = signedUpUsers != null ? signedUpUsers.size() : 0;
+
+                        if (isCheckedIn || uniqueAttendees < attendeeCapacityWrapper[0]) {
+                            // If the user has already checked in or adding them does not exceed capacity
+                            userIDCheckIn.put(userID, currentCheckInCount + 1); // Increment or set their check-in count
+                            docRef.update("userIDCheckIn", userIDCheckIn)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(getApplicationContext(), "Checked in successfully!", Toast.LENGTH_LONG).show();
+
+                                            Log.d("Firestore", "Document successfully updated!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Event is at full capacity. Cannot check in.", Toast.LENGTH_LONG).show();
+
+                                            Log.w("Firestore", "Error updating document", e);
+                                        }
+                                    });
+                        } else if (!isCheckedIn && uniqueAttendees >= attendeeCapacityWrapper[0]) {
+                            // New attendee and capacity reached
+                            Log.d("Firestore", "Cannot check-in. Event is at full capacity.");
+                            // Handle full capacity (e.g., show a message to the user)
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document.");
+                        // Handle the case where the document does not exist
+                    }
+                } else {
+                    Log.e("Firestore", "Failed to fetch document.", task.getException());
+                    // Handle the failure to fetch the document
                 }
             });
 
@@ -209,41 +244,8 @@ public class QRScannerActivity extends AppCompatActivity {
                     }
                 }
             });
-            // Get the document
-            /*
-            docRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    // If EventID exists in Database
-                    // Check in:
-                    //  Update Event field "CheckedinAttendees" with userID
-                    //  Increment number of times checked in
-                    //  Update Event checked in Status to TRUE
-                    if(docRef.data().checkInUsers) {
 
-                    }
-                    int numCheckIn = 0;
-                    HashMap<String, HashMap<String,Object>> checkInUsers = new HashMap<>();
-                    HashMap<String, Object> userCheckIns = checkInUsers.get("checkInUsers");
-                    if(userCheckIns == null) {
-                        userCheckIns = new HashMap<>();
-                        checkInUsers.put("checkInUsers", userCheckIns);
-                    }
-                    numCheckIn+=1;
-                    userCheckIns.put(userID, numCheckIn);
-                    docRef.update(userCheckIns);
-                    Object data = documentSnapshot.getData();
-
-                    // Need
-                } else {
-                    Log.d("firebase", "wrong connection");
-                }
-            });
-
-             */
-
-
-
-            builder.setTitle("Checked In");
+            builder.setTitle("Scanned !!!");
             builder.setMessage(result.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override

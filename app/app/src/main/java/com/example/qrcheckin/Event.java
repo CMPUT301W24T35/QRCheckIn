@@ -1,6 +1,7 @@
 package com.example.qrcheckin;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Represents an event in the application. This class has event details
@@ -46,6 +47,7 @@ public class Event {
     private String organizerID; // ID string for Firebase (use built in firebase functionality to generate this)
     private ArrayList<Profile> SignedUpAttendees;
     private ArrayList<Profile> CheckedInAttendees;
+
 
     // TODO private ArrayList<Announcement> announcements;
 
