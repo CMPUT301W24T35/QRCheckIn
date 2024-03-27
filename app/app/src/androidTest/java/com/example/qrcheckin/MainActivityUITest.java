@@ -70,10 +70,6 @@ public class MainActivityUITest {
         */
 
 
-
-
-
-
     }
 
 }

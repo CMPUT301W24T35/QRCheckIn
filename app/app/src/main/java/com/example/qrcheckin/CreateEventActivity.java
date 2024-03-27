@@ -154,6 +154,7 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         continueButton.setOnClickListener(v -> startNextActivity());
+
     }
 
     private void startNextActivity() {
@@ -183,7 +184,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // TODO Temporary workaround solution
         //     Decide if we want to keep this workflow later
-        generateQRCodeAndSetString();
 
         Log.d("DEBUG", "docID in CreateEventActivity: " + docID);
 
@@ -193,7 +193,6 @@ public class CreateEventActivity extends AppCompatActivity {
         data.put("endTime", endTime);
         data.put("location", location);
         data.put("poster", posterImageBase64);
-        data.put("checkinQRCode", checkinQRCodeBase64);
 
 
         // OPTIONAL FIELDS
@@ -254,7 +253,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 );
 
 
-
+        return;
 
         /*
         db.collection("user")

@@ -146,7 +146,7 @@ public class QRGenerator extends AppCompatActivity {
             builder.setMessage(qrContent).show();
 
             // TODO make database call to check if it is an in use QR code
-            db.collection("event").document(eventID).get()
+            db.collection("event").document(qrContent).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             builder
